@@ -9,6 +9,7 @@ import TabBarIcon from '../components/TabBarIcon';
 import HomeScreen from '../screens/HomeScreen';
 import LinksScreen from '../screens/LinksScreen';
 import SettingsScreen from '../screens/SettingsScreen';
+import MapView from '../screens/MapScreen';
 import Camera from '../components/Camera'
 
 const HomeStack = createStackNavigator({
@@ -32,11 +33,24 @@ HomeStack.navigationOptions = {
 };
 
 const LinksStack = createStackNavigator({
-  Links: Camera,
+  Links: LinksScreen,
 });
 
 LinksStack.navigationOptions = {
   tabBarLabel: 'Links',
+  tabBarIcon: ({ focused }) => (
+    <TabBarIcon
+      focused={focused}
+      name={Platform.OS === 'ios' ? 'ios-link' : 'md-link'}
+    />
+  ),
+};
+const MapStack = createStackNavigator({
+  Maps: MapView,
+});
+
+MapStack.navigationOptions = {
+  tabBarLabel: 'Maps',
   tabBarIcon: ({ focused }) => (
     <TabBarIcon
       focused={focused}
@@ -61,6 +75,6 @@ SettingsStack.navigationOptions = {
 
 export default createBottomTabNavigator({
   HomeStack,
-  LinksStack,
+  MapStack,
   SettingsStack,
 });

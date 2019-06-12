@@ -15,8 +15,10 @@ export default function App(props) {
       <AppLoading
         startAsync={loadResourcesAsync}
         onError={handleLoadingError}
+        //autoHideSplash={false}
         onFinish={() => handleFinishLoading(setLoadingComplete)}
       />
+     
     );
   } else {
     return (

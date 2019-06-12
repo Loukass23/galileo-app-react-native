@@ -25,7 +25,8 @@
     "react-native-camera": "^2.10.0",
     "react-native-map-clustering": "^1.3.2",
     "react-native-web": "^0.11.4",
-    "react-navigation": "^3.11.0"
+    "react-navigation": "^3.11.0",
+    "supercluster": "4.1.1"
   },
   "devDependencies": {
     "babel-preset-expo": "^5.1.0",

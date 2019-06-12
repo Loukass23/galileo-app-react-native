@@ -1,3 +1,4 @@
+
 import React, { Component } from 'react'
 import MapView from 'react-native-map-clustering';
 import { Marker } from 'react-native-maps';
@@ -7,11 +8,12 @@ export default class MapClustering extends Component {
     render() {
         return (
             <MapView
+
                 clustering={true}
                 clusterColor='#000'
                 clusterTextColor='#fff'
                 clusterBorderColor='#fff'
-                clusterBorderWidth={4}
+                clusterBorderWidth={1}
                 region={{
                     latitude: 52.5, longitude: 19.2,
                     latitudeDelta: 8.5, longitudeDelta: 8.5
