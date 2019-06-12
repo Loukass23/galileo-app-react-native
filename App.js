@@ -1,7 +1,7 @@
 import { AppLoading } from 'expo';
 import { Asset } from 'expo-asset';
 import * as Font from 'expo-font';
-import React, { useState } from 'react';
+import React  from 'react';
 import { Image, Platform, ScrollView , Text, 
   StyleSheet, View , TouchableOpacity , Button } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
@@ -23,7 +23,7 @@ export default class App extends React.Component {
         <AppLoading
           startAsync={this._cacheResourcesAsync}
           onFinish={() => this.setState({ isReady: true })}
-          onError={handleLoadingError}
+          onError={console.warn}
         />
       );
     }
@@ -97,18 +97,19 @@ export default class App extends React.Component {
 }
 
 
-function handleLoadingError(error: Error) {
-  // In this case, you might want to report the error to your error reporting
-  // service, for example Sentry
-  console.warn(error);
-}
+// function handleLoadingError(error: Error) {
+//   // In this case, you might want to report the error to your error reporting
+//   // service, for example Sentry
+//   console.warn(error);
+// }
+
+
+
 function handleHelpPress() {
   WebBrowser.openBrowserAsync(
     'https://www.usegalileo.eu/'
   );
 }
-
-
 
 
 const styles = StyleSheet.create({

@@ -4,17 +4,13 @@ import {
   createStackNavigator,
   createBottomTabNavigator,
 } from 'react-navigation';
-
 import TabBarIcon from '../components/TabBarIcon';
 import HomeScreen from '../screens/HomeScreen';
 import SettingsScreen from '../screens/SettingsScreen';
 import MapView from '../screens/MapScreen';
-import Camera from '../components/Camera'
 
 const HomeStack = createStackNavigator({
   Home: HomeScreen,
- 
-
 });
 
 HomeStack.navigationOptions = {

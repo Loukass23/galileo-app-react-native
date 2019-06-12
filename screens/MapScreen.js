@@ -1,8 +1,12 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import {  MapView , Constants , Location, Permissions } from 'expo';
+// import {   Location } from 'expo-location';
+// import {   Permissions } from 'expo-permissions';
+import {  Location, Permissions } from 'expo';
 import ClusterMarker from "../components/ClusterMarker";
 import { getCluster } from "../components/MapUtils";
+import MapView, { Callout, Marker } from 'react-native-maps';
+
 
 const Style = StyleSheet.create({
   container: {
@@ -33,27 +37,36 @@ const COORDS = [
   { lat: 52.1, lon: 13 },
   { lat: 52.2, lon: 13 },
   { lat: 52.3, lon: 13 },
-  { lat: 52.4, lon: 13 }
+  { lat: 52.4852006, lon: 13.37 }
 ];
 
 export default class MapScreen extends React.Component {
-  state = {
-    region: INITIAL_POSITION,
-    mapRegion: null,
+  constructor(props) {
+    super(props);
+  this.state = {
+    viewRegion: INITIAL_POSITION,
+    userRegion: null,
     hasLocationPermissions: false,
-    locationResult: null
-  };
+    locationResult: null,
+  poi: null,
+};
 
-  componentDidMount() {
-    this._getLocationAsync();
-  }
+this.onPoiClick = this.onPoiClick.bind(this);
+}
 
+componentDidMount() {
+  this._getLocationAsync();
+}
 
-  _handleMapRegionChange = mapRegion => {
-    console.log(mapRegion);
-    this.setState({ mapRegion });
-  };
+onPoiClick = (e) => {
+const poi = e.nativeEvent;
 
+console.log(poi)
+
+this.setState({poi});
+}
+
+ 
   _getLocationAsync = async () => {
    let { status } = await Permissions.askAsync(Permissions.LOCATION);
    if (status !== 'granted') {
@@ -65,22 +78,20 @@ export default class MapScreen extends React.Component {
    }
 
    let location = await Location.getCurrentPositionAsync({});
-   this.setState({ locationResult: JSON.stringify(location) });
+   //this.setState({ locationResult: JSON.stringify(location) });
    
    // Center the map on the location we just fetched.
-   const currentRegion = { 
+   const userRegion = { 
     latitude: location.coords.latitude, 
     longitude: location.coords.longitude, 
     latitudeDelta: 0.0922, longitudeDelta: 0.0421 }
    
    this.setState(
       {
-        mapRegion: currentRegion ,
-        region: currentRegion ,
-    
+        userRegion ,
+        viewRegion: userRegion ,
   }
     );
-    console.log(this.state)
   };
 
   renderMarker = (marker, index) => {
@@ -91,7 +102,7 @@ export default class MapScreen extends React.Component {
     // If a cluster
     if (marker.properties) {
       return (
-        <MapView.Marker
+        <Marker
           key={key}
           coordinate={{
             latitude: marker.geometry.coordinates[1],
@@ -99,12 +110,13 @@ export default class MapScreen extends React.Component {
           }}
         >
           <ClusterMarker count={marker.properties.point_count} />
-        </MapView.Marker>
+        </Marker>
       );
     }
     // If a single marker
     return (
-      <MapView.Marker
+      <Marker
+      onPress= {this.onPoiClick}
         key={key}
         coordinate={{
           latitude: marker.geometry.coordinates[1],
@@ -115,7 +127,7 @@ export default class MapScreen extends React.Component {
   };
 
   render() {
-    const { region } = this.state;
+    const { viewRegion } = this.state;
 
     const allCoords = COORDS.map(c => ({
       geometry: {
@@ -123,7 +135,7 @@ export default class MapScreen extends React.Component {
       }
     }));
 
-    const cluster = getCluster(allCoords, region);
+    const cluster = getCluster(allCoords, viewRegion);
 
     return (
       <View style={Style.container}>
@@ -132,18 +144,30 @@ export default class MapScreen extends React.Component {
           style={Style.map}
           loadingIndicatorColor={"#ffbbbb"}
           loadingBackgroundColor={"#ffbbbb"}
-          region={region}
-          onRegionChangeComplete={region => this.setState({ region })}
+          region={viewRegion}
+          onRegionChangeComplete={viewRegion => this.setState({ viewRegion })}
         >
-          {this.state.mapRegion &&  
-           <MapView.Marker
+          {this.state.userRegion &&  
+           <Marker
           pinColor="#1500ff"
           coordinate={{
-            latitude: this.state.mapRegion.latitude,
-            longitude: this.state.mapRegion.longitude
+            latitude: this.state.userRegion.latitude,
+            longitude: this.state.userRegion.longitude
           }}
         />
         }
+        {this.state.poi && (
+            <Marker coordinate={this.state.poi.coordinate}>
+              <Callout>
+                <View>
+                  <Text>Type: </Text>
+                  <Text>Name: </Text>
+                   <Text>Lat: {this.state.poi.coordinate.latitude}</Text>
+                  <Text>Long: {this.state.poi.coordinate.longitude}</Text> 
+                </View>
+              </Callout>
+            </Marker>
+          )}
           {cluster.markers.map((marker, index) => this.renderMarker(marker, index))}
         </MapView>
       </View>
