@@ -17,18 +17,23 @@ const Style = StyleSheet.create({
 });
 
 const INITIAL_POSITION = {
-  latitude: 41.924447,
-  longitude: -87.687339,
+  latitude: 52.529015, 
+  longitude: 13.395032,
   latitudeDelta: 1,
   longitudeDelta: 1
 }
 
+
 const COORDS = [
-  { lat: 42, lon: -87 },
-  { lat: 42.1, lon: -87 },
-  { lat: 42.2, lon: -87 },
-  { lat: 42.3, lon: -87 },
-  { lat: 42.4, lon: -87 }
+  { lat: 52.529815, lon: 13.395032 },
+  { lat: 52.529915, lon: 13.395032 },
+  { lat: 52.531015, lon: 13.395032 },
+  { lat: 52.529015, lon: 13.395032 },
+  { lat: 52.529015, lon: 13.395032 },
+  { lat: 52.1, lon: 13 },
+  { lat: 52.2, lon: 13 },
+  { lat: 52.3, lon: 13 },
+  { lat: 52.4, lon: 13 }
 ];
 
 export default class App extends React.Component {

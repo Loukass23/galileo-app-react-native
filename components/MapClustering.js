@@ -1,4 +1,5 @@
 
+//Not used anymore (for V1 clustering)
 import React, { Component } from 'react'
 import MapView from 'react-native-map-clustering';
 import { Marker } from 'react-native-maps';
