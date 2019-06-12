@@ -10,10 +10,10 @@ const Style = StyleSheet.create({
         flex: 0,
         flexDirection: "row",
         alignSelf: "flex-start",
-        backgroundColor: "#ffbbbb",
+        backgroundColor: "#ae2157",
         padding: 4,
-        borderRadius: 4,
-        borderColor: "#ffbbbb",
+        borderRadius: 8,
+        borderColor: "#ae2157",
         borderWidth: 1
     },
     count: {

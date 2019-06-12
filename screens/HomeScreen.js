@@ -11,8 +11,10 @@ import {
 } from 'react-native';
 
 import { MonoText } from '../components/StyledText';
+import { Constants } from 'expo';
 
 export default function HomeScreen() {
+  const {deviceName  } = Constants
   return (
     <View style={styles.container}>
       <ScrollView
@@ -28,11 +30,11 @@ export default function HomeScreen() {
             style={styles.welcomeImage}
           />
         </View>
-
+        <Text style={styles.title}>Galileo App</Text>
         <View style={styles.getStartedContainer}>
           <DevelopmentModeNotice />
 
-          <Text style={styles.getStartedText}>Galileo App</Text>
+          
 
           <View
             style={[styles.codeHighlightContainer, styles.homeScreenFilename]}>
@@ -40,14 +42,14 @@ export default function HomeScreen() {
           </View>
 
           <Text style={styles.getStartedText}>
-            Change this text and your app will automatically reload.
+          Your current device  { deviceName } does not have Galileo chipset
           </Text>
         </View>
 
         <View style={styles.helpContainer}>
           <TouchableOpacity onPress={handleHelpPress} style={styles.helpLink}>
             <Text style={styles.helpLinkText}>
-              Help, it didn’t automatically reload!
+              Learn more about Galileo...
             </Text>
           </TouchableOpacity>
         </View>
@@ -104,7 +106,7 @@ function handleLearnMorePress() {
 
 function handleHelpPress() {
   WebBrowser.openBrowserAsync(
-    'https://docs.expo.io/versions/latest/workflow/up-and-running/#cant-see-your-changes'
+    'https://www.usegalileo.eu/'
   );
 }
 
@@ -153,6 +155,12 @@ const styles = StyleSheet.create({
   getStartedText: {
     fontSize: 17,
     color: 'rgba(96,100,109, 1)',
+    lineHeight: 24,
+    textAlign: 'center',
+  },
+  title: {
+    fontSize: 20,
+    color: 'rgb(174, 33, 87)',
     lineHeight: 24,
     textAlign: 'center',
   },

@@ -15,7 +15,7 @@
     "splash": {
       "image": "./assets/images/robot-dev.png",
       "resizeMode": "contain",
-      "backgroundColor": "#FEF9B0"
+      "backgroundColor": "#ffffff"
     },
     "updates": {
       "fallbackToCacheTimeout": 0
