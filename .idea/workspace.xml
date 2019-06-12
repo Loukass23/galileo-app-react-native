@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="a360526d-26ec-48d2-a50b-4a79a300a261" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/components/MapClustering2.js" beforeDir="false" afterPath="$PROJECT_DIR$/components/MapClustering2.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/screens/MapScreen.js" beforeDir="false" afterPath="$PROJECT_DIR$/screens/MapScreen.js" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />

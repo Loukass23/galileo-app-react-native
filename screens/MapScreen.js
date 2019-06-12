@@ -1,7 +1,6 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import { Marker, MapView , Constants, Location, Permissions } from 'expo';
-
+import {  MapView , Constants , Location, Permissions } from 'expo';
 import ClusterMarker from "../components/ClusterMarker";
 import { getCluster } from "../components/MapUtils";
 
@@ -69,7 +68,18 @@ export default class MapScreen extends React.Component {
    this.setState({ locationResult: JSON.stringify(location) });
    
    // Center the map on the location we just fetched.
-    this.setState({mapRegion: { latitude: location.coords.latitude, longitude: location.coords.longitude, latitudeDelta: 0.0922, longitudeDelta: 0.0421 }});
+   const currentRegion = { 
+    latitude: location.coords.latitude, 
+    longitude: location.coords.longitude, 
+    latitudeDelta: 0.0922, longitudeDelta: 0.0421 }
+   
+   this.setState(
+      {
+        mapRegion: currentRegion ,
+        region: currentRegion ,
+    
+  }
+    );
     console.log(this.state)
   };
 
