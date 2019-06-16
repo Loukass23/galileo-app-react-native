@@ -13,7 +13,7 @@ import {
 import { MonoText } from '../components/StyledText';
 import { Constants } from 'expo';
 
-export default function HomeScreen() {
+export default function IssuesScreen() {
   const {deviceName  } = Constants
   return (
     <View style={styles.container}>
@@ -71,7 +71,7 @@ export default function HomeScreen() {
   );
 }
 
-HomeScreen.navigationOptions = {
+IssuesScreen.navigationOptions = {
   header: null,
 };
 
