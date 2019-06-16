@@ -1,6 +1,8 @@
 import React from 'react';
 import ConfigDetails from '../components/ConfigDetails';
-//import Slider from '@react-native-community/slider';
+import { connect } from 'react-redux'
+import { setRadius } from '../redux/actions/issuesActions'
+
 import {
   ScrollView,
   View,
@@ -10,23 +12,21 @@ import {
 } from 'react-native';
 import { MonoText } from '../components/StyledText';
 
-export let radiusSetting = 0
 
-export default class SettingsScreen extends React.Component {
+class SettingsScreen extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-      radius: 100
-    };
+
 
   }
 
   handleRadiusChange = (radius) => {
-    radiusSetting = radius
-    this.setState({ radius })
-    console.log(radiusSetting)
+    this.props.setRadius(radius)
+
   }
   render() {
+    const { RADIUS } = this.props.issues
+
     return (
       <React.Fragment>
         <ConfigDetails />
@@ -35,18 +35,18 @@ export default class SettingsScreen extends React.Component {
             style={styles.container}
             contentContainerStyle={styles.contentContainer}>
             <View style={styles.welcomeContainer}>
-              <MonoText>Radius</MonoText>
+              <MonoText>Radius: {RADIUS}m</MonoText>
               <Slider
                 onValueChange={this.handleRadiusChange}
                 style={{ width: 200, height: 40 }}
-                value={this.state.radius}
+                value={RADIUS}
                 step={1}
                 minimumValue={0}
                 maximumValue={1000}
                 minimumTrackTintColor="#000000"
                 maximumTrackTintColor="#ae2157"
               />
-              <Text >{this.state.radius}</Text>
+
             </View>
           </ScrollView>
         </View>
@@ -81,3 +81,15 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
 })
+const mapStateToProp = (state) => {
+  return {
+    issues: state.issues,
+
+  }
+}
+const mapDispatchToProps = (dispatch) => {
+  return {
+    setRadius: (RADIUS) => dispatch(setRadius(RADIUS))
+  }
+}
+export default connect(mapStateToProp, mapDispatchToProps)(SettingsScreen)

@@ -3,6 +3,8 @@ import { Asset } from 'expo-asset';
 import * as Font from 'expo-font';
 import React from 'react';
 import * as WebBrowser from 'expo-web-browser';
+import { Provider } from 'react-redux'
+import { store } from './redux/app-redux'
 import {
   Image, Platform, ScrollView, Text,
   StyleSheet, View, TouchableOpacity, Button
@@ -14,7 +16,7 @@ import AppNavigator from './navigation/AppNavigator';
 export default class App extends React.Component {
   state = {
     isReady: false,
-    okButton: true
+    okButton: false
   };
   validate = () => {
     this.setState({ okButton: true })
@@ -35,6 +37,7 @@ export default class App extends React.Component {
 
       //Splash screen
       return (
+
         <View style={styles.container}>
           <ScrollView
             style={styles.container}
@@ -72,10 +75,12 @@ export default class App extends React.Component {
 
       //main app
       return (
-        <View style={styles.container}>
-          {Platform.OS === 'ios' && <StatusBar barStyle="default" />}
-          <AppNavigator />
-        </View>
+        <Provider store={store}>
+          <View style={styles.container}>
+            {Platform.OS === 'ios' && <StatusBar barStyle="default" />}
+            <AppNavigator />
+          </View>
+        </Provider>
       )
     }
   }
