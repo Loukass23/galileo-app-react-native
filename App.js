@@ -1,12 +1,18 @@
 import { AppLoading } from 'expo';
 import { Asset } from 'expo-asset';
 import * as Font from 'expo-font';
-import React  from 'react';
-import { Image, Platform, ScrollView , Text, 
-  StyleSheet, View , TouchableOpacity , Button } from 'react-native';
+import React from 'react';
+import * as WebBrowser from 'expo-web-browser';
+import { Provider } from 'react-redux'
+import { store } from './redux/app-redux'
+import {
+  Image, Platform, ScrollView, Text,
+  StyleSheet, View, TouchableOpacity, Button
+} from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { Constants } from 'expo';
 import AppNavigator from './navigation/AppNavigator';
+import Loader from './components/Loader'
 
 export default class App extends React.Component {
   state = {
@@ -14,10 +20,10 @@ export default class App extends React.Component {
     okButton: false
   };
   validate = () => {
-    this.setState({okButton : true})
+    this.setState({ okButton: true })
   }
   render() {
-    const {deviceName  } = Constants
+    const { deviceName } = Constants
     if (!this.state.isReady) {
       return (
         <AppLoading
@@ -28,70 +34,67 @@ export default class App extends React.Component {
       );
     }
 
- if(!this.state.okButton && this.state.isReady){
+    if (!this.state.okButton && this.state.isReady) {
 
-  //Splash screen
-   return (
-      <View style={styles.container}>
-      <ScrollView
-        style={styles.container}
-        contentContainerStyle={styles.contentContainer}>
-        <View style={styles.welcomeContainer}>
-        <Text style={styles.title}>Galileo App</Text>
-          <Image
-            source={require('./assets/images/Galileo_logo_animation_3.gif')}
-            style={styles.welcomeImage}
-          />
-        </View>
-        <Text style={styles.getStartedText}>
-          Your current device  { deviceName } does not have Galileo chipset
+      //Splash screen
+      return (
+
+        <View style={styles.container}>
+          <ScrollView
+            style={styles.container}
+            contentContainerStyle={styles.contentContainer}>
+            <Loader />
+
+            <Text style={styles.getStartedText}>
+              Your current device  {deviceName} does not have Galileo chipset
           </Text>
-        <View style={styles.helpContainer}>
-          <TouchableOpacity onPress={handleHelpPress} style={styles.helpLink}>
-            <Text style={styles.helpLinkText}>
-              Learn more about Galileo...
+            <View style={styles.helpContainer}>
+              <TouchableOpacity onPress={handleHelpPress} style={styles.helpLink}>
+                <Text style={styles.helpLinkText}>
+                  Learn more about Galileo...
             </Text>
-          </TouchableOpacity>
+              </TouchableOpacity>
+            </View>
+            <Button
+              style={styles.button}
+              onPress={this.validate}
+              title="OK"
+              color="#841584"
+              accessibilityLabel="Start looking at issues around you"
+            />
+          </ScrollView>
         </View>
-        <Button
-  onPress={this.validate}
-  title="OK"
-  color="#841584"
-  accessibilityLabel="Start looking at issues around you"
-/>
-        </ScrollView>
-        </View>
-     
-    );
- }
- else {
 
-  //main app
-   return (
-    <View style={styles.container}>
-             {Platform.OS === 'ios' && <StatusBar barStyle="default" />}
-             <AppNavigator />
-           </View>
-   )
- }
+      );
+    }
+    else {
 
-    
+      //main app
+      return (
+        <Provider store={store}>
+          <View style={styles.container}>
+            {Platform.OS === 'ios' && <StatusBar barStyle="default" />}
+            <AppNavigator />
+          </View>
+        </Provider>
+      )
+    }
   }
 
   async _cacheResourcesAsync() {
     await Promise.all([
-          Asset.loadAsync([
-            require('./assets/images/Galileo_logo_animation_3.gif'),
-            require('./assets/images/logo.png'),
-          ]),
-          Font.loadAsync({
-            // This is the font that we are using for our tab bar
-            ...Ionicons.font,
-            // We include SpaceMono because we use it in HomeScreen.js. Feel free to
-            // remove this if you are not using it in your app
-            'space-mono': require('./assets/fonts/SpaceMono-Regular.ttf'),
-          }),
-        ]);
+      Asset.loadAsync([
+        // require('./assets/images/Galileo_logo_animation_3.gif'),
+        // require('./assets/images/logo.png'),
+      ]),
+      Font.loadAsync({
+        // This is the font that we are using for our tab bar
+        ...Ionicons.font,
+        // We include SpaceMono because we use it in HomeScreen.js. Feel free to
+        // remove this if you are not using it in your app
+        'space-mono': require('./assets/fonts/SpaceMono-Regular.ttf'),
+      }),
+    ]);
 
   }
 }
@@ -127,22 +130,7 @@ const styles = StyleSheet.create({
   contentContainer: {
     paddingTop: 30,
   },
-  welcomeContainer: {
-    alignItems: 'center',
-    marginTop: 10,
-    marginBottom: 20,
-  },
-  welcomeImage: {
-    width: 200,
-    height: 200,
-    resizeMode: 'contain',
-    marginTop: 3,
-    marginLeft: -10,
-  },
-  getStartedContainer: {
-    alignItems: 'center',
-    marginHorizontal: 50,
-  },
+
   homeScreenFilename: {
     marginVertical: 7,
   },
@@ -204,5 +192,9 @@ const styles = StyleSheet.create({
   helpLinkText: {
     fontSize: 14,
     color: '#2e78b7',
+  },
+  button: {
+    marginTop: 10,
+
   },
 });

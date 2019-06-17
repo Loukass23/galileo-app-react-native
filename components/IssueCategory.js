@@ -27,6 +27,11 @@ class App extends Component {
             issues: issues
         })
     }
+    handleChange = (e) => {
+        this.setState({
+            [e.target.id]: e.target.value
+        })
+    }
     // constructor(props) {
     //     super(props);
     //     this.state = {

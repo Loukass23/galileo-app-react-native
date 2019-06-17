@@ -14,6 +14,7 @@
   "dependencies": {
     "@expo/samples": "~3.0.0",
     "@expo/vector-icons": "^10.0.1",
+    "axios": "^0.19.0",
     "expo": "^33.0.0",
     "expo-asset": "^5.0.0",
     "expo-constants": "~5.0.1",
@@ -23,11 +24,15 @@
     "expo-web-browser": "^5.0.0",
     "react": "16.8.3",
     "react-dom": "^16.8.6",
+    "react-gif-loader": "^0.6.0",
     "react-native": "https://github.com/expo/react-native/archive/sdk-33.0.0.tar.gz",
     "react-native-camera": "^2.10.0",
     "react-native-map-clustering": "^1.3.2",
     "react-native-web": "^0.11.4",
     "react-navigation": "^3.11.0",
+    "react-redux": "^7.1.0",
+    "redux": "^4.0.1",
+    "redux-thunk": "^2.3.0",
     "supercluster": "4.1.1"
   },
   "devDependencies": {

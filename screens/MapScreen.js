@@ -1,104 +1,90 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
-// import {   Location } from 'expo-location';
-// import {   Permissions } from 'expo-permissions';
-import {  Location, Permissions } from 'expo';
+import { connect } from 'react-redux'
+import { StyleSheet, Text, View, Dimensions } from 'react-native';
 import ClusterMarker from "../components/ClusterMarker";
 import { getCluster } from "../components/MapUtils";
-import MapView, { Callout, Marker } from 'react-native-maps';
+import MapView, { Callout, Marker, Circle } from 'react-native-maps';
+import Loader from '../components/Loader'
+import { getLocation } from '../redux/actions/locationActions'
 
+const { width, height } = Dimensions.get('window');
 
-const Style = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  map: {
-    ...StyleSheet.absoluteFill
-  }
-});
-
-const INITIAL_POSITION = {
-  latitude: 52.529015, 
-  longitude: 13.395032,
-  latitudeDelta: 1,
-  longitudeDelta: 1
-}
-
-
-const COORDS = [
-  { lat: 52.529815, lon: 13.395032 },
-  { lat: 52.529915, lon: 13.395032 },
-  { lat: 52.531015, lon: 13.395032 },
-  { lat: 52.529015, lon: 13.395032 },
-  { lat: 52.529015, lon: 13.395032 },
-  { lat: 52.1, lon: 13 },
-  { lat: 52.2, lon: 13 },
-  { lat: 52.3, lon: 13 },
-  { lat: 52.4852006, lon: 13.37 }
-];
-
-export default class MapScreen extends React.Component {
+class MapScreen extends React.Component {
   constructor(props) {
     super(props);
-  this.state = {
-    viewRegion: INITIAL_POSITION,
-    userRegion: null,
-    hasLocationPermissions: false,
-    locationResult: null,
-  poi: null,
-};
 
-this.onPoiClick = this.onPoiClick.bind(this);
-}
+    const { INITIAL_POSITION } = this.props.issues
 
-componentDidMount() {
-  this._getLocationAsync();
-}
+    this.state = {
+      viewRegion: INITIAL_POSITION,
+      poi: null,
+      loaded: false,
+      hackHeight: height
+    };
+    this.onPoiClick = this.onPoiClick.bind(this);
+    this._getLocationAsync = this._getLocationAsync.bind(this);
 
-onPoiClick = (e) => {
-const poi = e.nativeEvent;
-
-console.log(poi)
-
-this.setState({poi});
-}
-
- 
-  _getLocationAsync = async () => {
-   let { status } = await Permissions.askAsync(Permissions.LOCATION);
-   if (status !== 'granted') {
-     this.setState({
-       locationResult: 'Permission to access location was denied',
-     });
-   } else {
-     this.setState({ hasLocationPermissions: true });
-   }
-
-   let location = await Location.getCurrentPositionAsync({});
-   //this.setState({ locationResult: JSON.stringify(location) });
-   
-   // Center the map on the location we just fetched.
-   const userRegion = { 
-    latitude: location.coords.latitude, 
-    longitude: location.coords.longitude, 
-    latitudeDelta: 0.0922, longitudeDelta: 0.0421 }
-   
-   this.setState(
-      {
-        userRegion ,
-        viewRegion: userRegion ,
   }
-    );
-  };
+
+  componentDidMount() {
+
+    this._getLocationAsync()
+
+    //redux location
+    this.props.getLocation()
+
+    //work around for locate user button bug
+    setTimeout(() => this.setState({ hackHeight: height + 1 }), 2500);
+    setTimeout(() => this.setState({ hackHeight: height - 1 }), 3000);
+
+    setTimeout(() => this.setState({ loaded: true }), 2000);
+  }
+
+
+  _getLocationAsync = async () => {
+    // console.log('here')
+
+    // let userRegion = await this.props.location.USER_POSITION
+    // if (userRegion) console.log('userRegion', userRegion)
+
+
+    //   let { status } = await Permissions.askAsync(Permissions.LOCATION);
+    //   if (status !== 'granted') {
+    //     console.log('Permission to access location was denied')
+    //   } else {
+    //     console.log('Permission to access location was granted')
+    //   }
+
+    //   let location = await Location.getCurrentPositionAsync({})
+
+    //   if (location) {
+
+    //     const region = {
+    //       latitude: location.coords.latitude,
+    //       longitude: location.coords.longitude,
+    //       latitudeDelta: 1,
+    //       longitudeDelta: 1
+    //     };
+
+    //     this.setState({ userRegion: region });
+    //     console.log(this.refs)
+    //     //this.refs._map.animateToRegion(region, 500);
+    //   }
+
+
+  }
+
+  onPoiClick = (e) => {
+
+    const { coordinate } = e.nativeEvent;
+    console.log(this.state.poi)
+    this.setState({ poi: coordinate });
+  }
 
   renderMarker = (marker, index) => {
- 
-   // console.log(this.state.location)
 
     const key = index + marker.geometry.coordinates[0];
+    //console.log(marker)
     // If a cluster
     if (marker.properties) {
       return (
@@ -116,7 +102,7 @@ this.setState({poi});
     // If a single marker
     return (
       <Marker
-      onPress= {this.onPoiClick}
+        onPress={this.onPoiClick}
         key={key}
         coordinate={{
           latitude: marker.geometry.coordinates[1],
@@ -127,7 +113,12 @@ this.setState({poi});
   };
 
   render() {
-    const { viewRegion } = this.state;
+    const { viewRegion, poi, loaded } = this.state;
+    const { COORDS, RADIUS } = this.props.issues
+    const { USER_POSITION } = this.props.location
+
+
+
 
     const allCoords = COORDS.map(c => ({
       geometry: {
@@ -136,44 +127,90 @@ this.setState({poi});
     }));
 
     const cluster = getCluster(allCoords, viewRegion);
-
     return (
-      <View style={Style.container}>
-        <MapView
-          provider={MapView.PROVIDER_GOOGLE}
-          style={Style.map}
-          loadingIndicatorColor={"#ffbbbb"}
-          loadingBackgroundColor={"#ffbbbb"}
-          region={viewRegion}
-          onRegionChangeComplete={viewRegion => this.setState({ viewRegion })}
-        >
-          {this.state.userRegion &&  
-           <Marker
-          pinColor="#1500ff"
-          coordinate={{
-            latitude: this.state.userRegion.latitude,
-            longitude: this.state.userRegion.longitude
-          }}
-        />
-        }
-        {this.state.poi && (
-            <Marker coordinate={this.state.poi.coordinate}>
-              <Callout>
-                <View>
-                  <Text>Type: </Text>
-                  <Text>Name: </Text>
-                   <Text>Lat: {this.state.poi.coordinate.latitude}</Text>
-                  <Text>Long: {this.state.poi.coordinate.longitude}</Text> 
-                </View>
-              </Callout>
-            </Marker>
-          )}
-          {cluster.markers.map((marker, index) => this.renderMarker(marker, index))}
-        </MapView>
+      <View style={{ paddingBottom: this.state.hackHeight, flex: 1 }}>
+
+        {loaded ?
+          <MapView
+            ref={component => this._map = component}
+            style={Style.map}
+            showsMyLocationButton={true}
+            showsUserLocation={true}
+            provider={MapView.PROVIDER_GOOGLE}
+            loadingIndicatorColor={"#ffbbbb"}
+            loadingBackgroundColor={"#ffbbbb"}
+            region={viewRegion}
+            onRegionChangeComplete={viewRegion => this.setState({ viewRegion })}
+          >
+
+            {USER_POSITION &&
+              <Circle
+                center={USER_POSITION}
+                radius={RADIUS}
+                fillColor="rgba(163, 48, 87, 0.5)"
+              />
+            }
+
+            {poi && (
+              <Marker coordinate={poi}>
+                <Callout>
+                  <View>
+                    <Text>Type: </Text>
+                    <Text>Name: </Text>
+                    <Text>Lat: {poi.latitude}</Text>
+                    <Text>Long: {poi.longitude}</Text>
+                  </View>
+                </Callout>
+              </Marker>
+            )}
+            {cluster.markers.map((marker, index) => this.renderMarker(marker, index))}
+
+          </MapView>
+          : <Loader />}
+
       </View>
     );
+
   }
 }
 MapScreen.navigationOptions = {
   title: 'Issues Map',
 };
+
+const Style = StyleSheet.create({
+  container: {
+    ...StyleSheet.absoluteFillObject,
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+  },
+  map: {
+    ...StyleSheet.absoluteFillObject,
+  },
+  myLocationButton: {
+
+    position: 'absolute',
+    bottom: 50,
+    right: 50,
+    padding: 15,
+    elevation: 3,
+    alignItems: 'center',
+    alignSelf: 'flex-end',
+    justifyContent: 'center',
+    borderRadius: 50
+  }
+});
+
+const mapStateToProp = (state) => {
+  return {
+    issues: state.issues,
+    location: state.location
+
+  }
+}
+const mapDispatchToProps = (dispatch) => {
+  return {
+    getLocation: () => dispatch(getLocation())
+
+  }
+}
+export default connect(mapStateToProp, mapDispatchToProps)(MapScreen)
