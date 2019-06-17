@@ -12,6 +12,7 @@ import {
 import { Ionicons } from '@expo/vector-icons';
 import { Constants } from 'expo';
 import AppNavigator from './navigation/AppNavigator';
+import Loader from './components/Loader'
 
 export default class App extends React.Component {
   state = {
@@ -42,13 +43,8 @@ export default class App extends React.Component {
           <ScrollView
             style={styles.container}
             contentContainerStyle={styles.contentContainer}>
-            <View style={styles.welcomeContainer}>
-              <Text style={styles.title}>Galileo App</Text>
-              <Image
-                source={require('./assets/images/Galileo_logo_animation_3.gif')}
-                style={styles.welcomeImage}
-              />
-            </View>
+            <Loader />
+
             <Text style={styles.getStartedText}>
               Your current device  {deviceName} does not have Galileo chipset
           </Text>
@@ -88,8 +84,8 @@ export default class App extends React.Component {
   async _cacheResourcesAsync() {
     await Promise.all([
       Asset.loadAsync([
-        require('./assets/images/Galileo_logo_animation_3.gif'),
-        require('./assets/images/logo.png'),
+        // require('./assets/images/Galileo_logo_animation_3.gif'),
+        // require('./assets/images/logo.png'),
       ]),
       Font.loadAsync({
         // This is the font that we are using for our tab bar
@@ -134,22 +130,7 @@ const styles = StyleSheet.create({
   contentContainer: {
     paddingTop: 30,
   },
-  welcomeContainer: {
-    alignItems: 'center',
-    marginTop: 10,
-    marginBottom: 20,
-  },
-  welcomeImage: {
-    width: 200,
-    height: 200,
-    resizeMode: 'contain',
-    marginTop: 3,
-    marginLeft: -10,
-  },
-  getStartedContainer: {
-    alignItems: 'center',
-    marginHorizontal: 50,
-  },
+
   homeScreenFilename: {
     marginVertical: 7,
   },

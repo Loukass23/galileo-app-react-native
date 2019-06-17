@@ -16,7 +16,9 @@ import { MonoText } from '../components/StyledText';
 class SettingsScreen extends React.Component {
   constructor(props) {
     super(props);
-
+    // this.state = {
+    //   radius: 100
+    // };
 
   }
 
@@ -40,9 +42,9 @@ class SettingsScreen extends React.Component {
                 onValueChange={this.handleRadiusChange}
                 style={{ width: 200, height: 40 }}
                 value={RADIUS}
-                step={1}
+                step={50}
                 minimumValue={0}
-                maximumValue={1000}
+                maximumValue={10000}
                 minimumTrackTintColor="#000000"
                 maximumTrackTintColor="#ae2157"
               />

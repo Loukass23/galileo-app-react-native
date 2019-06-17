@@ -24,6 +24,7 @@
     "expo-web-browser": "^5.0.0",
     "react": "16.8.3",
     "react-dom": "^16.8.6",
+    "react-gif-loader": "^0.6.0",
     "react-native": "https://github.com/expo/react-native/archive/sdk-33.0.0.tar.gz",
     "react-native-camera": "^2.10.0",
     "react-native-map-clustering": "^1.3.2",

@@ -1,15 +1,11 @@
 import React from 'react';
 import { connect } from 'react-redux'
-
 import { StyleSheet, Text, View, Dimensions } from 'react-native';
-// import {   Location } from 'expo-location';
-// import {   Permissions } from 'expo-permissions';
-import { Location, Permissions } from 'expo';
 import ClusterMarker from "../components/ClusterMarker";
 import { getCluster } from "../components/MapUtils";
 import MapView, { Callout, Marker, Circle } from 'react-native-maps';
-import { Constants } from 'expo';
-import { Ionicons } from '@expo/vector-icons';
+import Loader from '../components/Loader'
+import { getLocation } from '../redux/actions/locationActions'
 
 const { width, height } = Dimensions.get('window');
 
@@ -17,60 +13,75 @@ class MapScreen extends React.Component {
   constructor(props) {
     super(props);
 
-    const { INITIAL_POSITION, RADIUS } = this.props
+    const { INITIAL_POSITION } = this.props.issues
+
     this.state = {
       viewRegion: INITIAL_POSITION,
-      userRegion: null,
       poi: null,
-      radius: RADIUS,
       loaded: false,
       hackHeight: height
     };
     this.onPoiClick = this.onPoiClick.bind(this);
-  }
-  componentWillMount() {
-    setTimeout(() => this.setState({ loaded: true }), 1500);
-  }
-  componentDidMount() {
-    //this._getLocationAsync();
-    this._getLocation();
-    setTimeout(() => this.setState({ hackHeight: height + 1 }), 500);
-    setTimeout(() => this.setState({ hackHeight: height }), 1000);
-  }
-  componentWillUpdate() {
-    // if (radiusSetting != this.state.radius) {
-    //   this.setState({ radius: radiusSetting })
+    this._getLocationAsync = this._getLocationAsync.bind(this);
 
-    // }
+  }
+
+  componentDidMount() {
+
+    this._getLocationAsync()
+
+    //redux location
+    this.props.getLocation()
+
+    //work around for locate user button bug
+    setTimeout(() => this.setState({ hackHeight: height + 1 }), 2500);
+    setTimeout(() => this.setState({ hackHeight: height - 1 }), 3000);
+
+    setTimeout(() => this.setState({ loaded: true }), 2000);
+  }
+
+
+  _getLocationAsync = async () => {
+    // console.log('here')
+
+    // let userRegion = await this.props.location.USER_POSITION
+    // if (userRegion) console.log('userRegion', userRegion)
+
+
+    //   let { status } = await Permissions.askAsync(Permissions.LOCATION);
+    //   if (status !== 'granted') {
+    //     console.log('Permission to access location was denied')
+    //   } else {
+    //     console.log('Permission to access location was granted')
+    //   }
+
+    //   let location = await Location.getCurrentPositionAsync({})
+
+    //   if (location) {
+
+    //     const region = {
+    //       latitude: location.coords.latitude,
+    //       longitude: location.coords.longitude,
+    //       latitudeDelta: 1,
+    //       longitudeDelta: 1
+    //     };
+
+    //     this.setState({ userRegion: region });
+    //     console.log(this.refs)
+    //     //this.refs._map.animateToRegion(region, 500);
+    //   }
+
+
   }
 
   onPoiClick = (e) => {
 
     const { coordinate } = e.nativeEvent;
-    console.log(e.nativeEvent, this.state.poi)
-    // this.setState({ poi: e.nativeEvent });
+    console.log(this.state.poi)
     this.setState({ poi: coordinate });
   }
-  _getLocation = async () => {
-    await navigator.geolocation.getCurrentPosition(position => {
-
-      const region = {
-        latitude: position.coords.latitude,
-        longitude: position.coords.longitude,
-        latitudeDelta: 0.012,
-        longitudeDelta: 0.01
-      };
-      this.setState({ userRegion: region, viewRegion: region });
-      //this.map.animateToRegion(region, 500);
-
-    });
-  };
-
-
 
   renderMarker = (marker, index) => {
-
-    // console.log(this.state.location)
 
     const key = index + marker.geometry.coordinates[0];
     //console.log(marker)
@@ -102,8 +113,12 @@ class MapScreen extends React.Component {
   };
 
   render() {
-    const { viewRegion, userRegion, poi } = this.state;
+    const { viewRegion, poi, loaded } = this.state;
     const { COORDS, RADIUS } = this.props.issues
+    const { USER_POSITION } = this.props.location
+
+
+
 
     const allCoords = COORDS.map(c => ({
       geometry: {
@@ -114,40 +129,45 @@ class MapScreen extends React.Component {
     const cluster = getCluster(allCoords, viewRegion);
     return (
       <View style={{ paddingBottom: this.state.hackHeight, flex: 1 }}>
-        <MapView
-          style={Style.map}
-          showsMyLocationButton={true}
-          showsUserLocation={true}
-          provider={MapView.PROVIDER_GOOGLE}
-          loadingIndicatorColor={"#ffbbbb"}
-          loadingBackgroundColor={"#ffbbbb"}
-          region={viewRegion}
-          onRegionChangeComplete={viewRegion => this.setState({ viewRegion })}
-        >
 
-          {userRegion &&
-            <Circle
-              center={userRegion}
-              radius={RADIUS}
-              fillColor="rgba(163, 48, 87, 0.5)"
-            />
-          }
+        {loaded ?
+          <MapView
+            ref={component => this._map = component}
+            style={Style.map}
+            showsMyLocationButton={true}
+            showsUserLocation={true}
+            provider={MapView.PROVIDER_GOOGLE}
+            loadingIndicatorColor={"#ffbbbb"}
+            loadingBackgroundColor={"#ffbbbb"}
+            region={viewRegion}
+            onRegionChangeComplete={viewRegion => this.setState({ viewRegion })}
+          >
 
-          {poi && (
-            <Marker coordinate={poi}>
-              <Callout>
-                <View>
-                  <Text>Type: </Text>
-                  <Text>Name: </Text>
-                  <Text>Lat: {poi.latitude}</Text>
-                  <Text>Long: {poi.longitude}</Text>
-                </View>
-              </Callout>
-            </Marker>
-          )}
-          {cluster.markers.map((marker, index) => this.renderMarker(marker, index))}
+            {USER_POSITION &&
+              <Circle
+                center={USER_POSITION}
+                radius={RADIUS}
+                fillColor="rgba(163, 48, 87, 0.5)"
+              />
+            }
 
-        </MapView>
+            {poi && (
+              <Marker coordinate={poi}>
+                <Callout>
+                  <View>
+                    <Text>Type: </Text>
+                    <Text>Name: </Text>
+                    <Text>Lat: {poi.latitude}</Text>
+                    <Text>Long: {poi.longitude}</Text>
+                  </View>
+                </Callout>
+              </Marker>
+            )}
+            {cluster.markers.map((marker, index) => this.renderMarker(marker, index))}
+
+          </MapView>
+          : <Loader />}
+
       </View>
     );
 
@@ -183,11 +203,13 @@ const Style = StyleSheet.create({
 const mapStateToProp = (state) => {
   return {
     issues: state.issues,
+    location: state.location
 
   }
 }
 const mapDispatchToProps = (dispatch) => {
   return {
+    getLocation: () => dispatch(getLocation())
 
   }
 }
