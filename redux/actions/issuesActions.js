@@ -9,21 +9,21 @@ export const setRadius = (radius) => {
         })
 
     }
-
 }
 
 export const getIssues = (radius, region) => {
     return (dispatch) => {
-        return axios.get(`http://kietz.herokuapp.com/api/issues?latitude=${region.latitude}&longitude=${region.latitude}&page=0&radius=${radius}&size=10`)
+        return axios.get(`http://kietz.herokuapp.com/api/issues?latitude=${region.latitude}
+        &longitude=${region.latitude}&page=0&radius=${radius}&size=10`)
             .then((res) => {
                 dispatch({
-                    type: 'GET_IG_DATA',
+                    type: 'GET_ISSUES',
                     user: res.data
                 })
             }).catch((err) => {
                 console.log(err)
                 dispatch({
-                    type: 'GET_IG_ERROR',
+                    type: 'GET_ISSUES_ERROR',
                     err
                 })
             })

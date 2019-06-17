@@ -1,5 +1,7 @@
 /*Issues Actions */
 export const SET_RADIUS = 'SET_RADIUS'
+export const GET_ISSUES = 'GET_ISSUES'
+export const GET_ISSUES_ERROR = 'GET_ISSUES_ERROR'
 
 
 /*Location Actions*/
