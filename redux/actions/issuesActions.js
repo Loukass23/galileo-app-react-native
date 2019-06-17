@@ -1,5 +1,7 @@
 import axios from 'axios';
 import { SET_RADIUS } from './actionTypes'
+import { GET_ISSUES } from './actionTypes'
+import { GET_ISSUES_ERROR } from './actionTypes'
 
 export const setRadius = (radius) => {
     return (dispatch) => {
@@ -11,20 +13,23 @@ export const setRadius = (radius) => {
     }
 }
 
-export const getIssues = (radius, region) => {
+export const getIssues = (radius, region, token) => {
+
     return (dispatch) => {
-        return axios.get(`http://kietz.herokuapp.com/api/issues?latitude=${region.latitude}
-        &longitude=${region.latitude}&page=0&radius=${radius}&size=10`)
+        const URL = `http://kietz.herokuapp.com/api/issues?latitude=${region.latitude}
+        &longitude=${region.latitude}&page=0&radius=${radius}&size=10`
+
+        return axios.get(URL, { headers: { "Authorization": `Bearer ${token}` } })
             .then((res) => {
                 dispatch({
-                    type: 'GET_ISSUES',
-                    user: res.data
+                    type: GET_ISSUES,
+                    payload: res.data
                 })
             }).catch((err) => {
                 console.log(err)
                 dispatch({
-                    type: 'GET_ISSUES_ERROR',
-                    err
+                    type: GET_ISSUES_ERROR,
+                    payload: err
                 })
             })
     }

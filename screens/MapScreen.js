@@ -6,6 +6,7 @@ import { getCluster } from "../components/MapUtils";
 import MapView, { Callout, Marker, Circle } from 'react-native-maps';
 import Loader from '../components/Loader'
 import { getLocation } from '../redux/actions/locationActions'
+import { getIssues } from '../redux/actions/issuesActions'
 
 const { width, height } = Dimensions.get('window');
 
@@ -28,11 +29,17 @@ class MapScreen extends React.Component {
 
   componentDidMount() {
 
-    this._getLocationAsync()
+    //this._getLocationAsync()
 
     //redux location
     this.props.getLocation()
 
+    const dummyRegion = {
+      latitude: 1,
+      longitude: 1
+
+    }
+    this.props.getIssues(5, dummyRegion, "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0ZXN0THVjYXMiLCJyb2xlIjpbIlJPTEVfVVNFUiJdLCJleHAiOjE1NjA4MDAwNzYsImlhdCI6MTU2MDc5NjQ3Nn0.Lz8EfNDBJLxCf8qD-pgJ-U-KO90Drj7giIQ_oF9egM5wGnPquY4E5CVDMyZQAHanMJT-ObOmIZcCpVeKzemzmw")
     //work around for locate user button bug
     setTimeout(() => this.setState({ hackHeight: height + 1 }), 2500);
     setTimeout(() => this.setState({ hackHeight: height - 1 }), 3000);
@@ -114,10 +121,10 @@ class MapScreen extends React.Component {
 
   render() {
     const { viewRegion, poi, loaded } = this.state;
-    const { COORDS, RADIUS } = this.props.issues
+    const { COORDS, RADIUS, ISSUES } = this.props.issues
     const { USER_POSITION } = this.props.location
 
-
+    console.log('issues', ISSUES)
 
 
     const allCoords = COORDS.map(c => ({
@@ -209,7 +216,8 @@ const mapStateToProp = (state) => {
 }
 const mapDispatchToProps = (dispatch) => {
   return {
-    getLocation: () => dispatch(getLocation())
+    getLocation: () => dispatch(getLocation()),
+    getIssues: (radius, region, token) => dispatch(getIssues(radius, region, token))
 
   }
 }

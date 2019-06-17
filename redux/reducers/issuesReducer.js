@@ -10,6 +10,8 @@ const initState = {
         { lat: 52.3, lon: 13 },
         { lat: 52.4852006, lon: 13.37 }
     ],
+    ISSUES: null,
+    ERR: null,
     INITIAL_POSITION: {
         latitude: 52.529015,
         longitude: 13.395032,
@@ -19,7 +21,7 @@ const initState = {
     RADIUS: 100
 }
 
-const authReducer = (state = initState, action) => {
+const issuesReducer = (state = initState, action) => {
     switch (action.type) {
         case 'SET_RADIUS':
             console.log('Radius set: ', action.payload)
@@ -27,30 +29,21 @@ const authReducer = (state = initState, action) => {
                 ...state,
                 RADIUS: action.payload
             }
-        // case 'LOGIN_SUCCESS':
-        //     console.log('login success')
-        //     return {
-        //         ...state,
-        //         authErr: null
-        //     }
-        // case 'SIGNOUT_SUCESS':
-        //     console.log('signout success')
-        //     return state
-        // case 'SIGNUP_SUCCESS':
-        //     console.log('signup success')
-        //     return {
-        //         ...state,
-        //         authErr: null
-        //     }
-        // case 'SIGNUP_ERROR':
-        //     console.log('signup faild')
-        //     return {
-        //         ...state,
-        //         authErr: action.err.message
-        //     }
+        case 'GET_ISSUES':
+            console.log('Retrieved issues', action.payload)
+            return {
+                ...state,
+                ISSUES: action.payload
+            }
+        case 'GET_ISSUES_ERROR':
+            console.log('Unable to retrieve issues', action.payload)
+            return {
+                ...state,
+                ERR: action.payload
+            }
         default:
             return state
     }
 
 }
-export default authReducer
+export default issuesReducer
