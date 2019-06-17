@@ -6,7 +6,7 @@ import { Camera } from "expo-camera";
 import { Ionicons } from "@expo/vector-icons";
 // import * as FileSystem from "expo-file-system";
 // import ReportIssueSecond from "../screens/ReportIssueScreen";
-//test
+
 export default class CameraExample extends React.Component {
   state = {
     hasCameraPermission: null,
