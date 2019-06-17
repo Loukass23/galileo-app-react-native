@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 
 import { Text, View, Image, StyleSheet } from "react-native";
-// import * as FileSystem from "expo-file-system";
+// // import * as FileSystem from "expo-file-system";
 import Camera from "../components/Camera";
 // export default class ReportIssueScreen extends Component {
 export default class ReportIssueScreen extends React.Component {
