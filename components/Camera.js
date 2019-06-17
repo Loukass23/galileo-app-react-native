@@ -2,7 +2,6 @@ import React from "react";
 import { Text, View, TouchableOpacity } from "react-native";
 import * as Permissions from "expo-permissions";
 import { Camera } from "expo-camera";
-
 import { Ionicons } from "@expo/vector-icons";
 // import * as FileSystem from "expo-file-system";
 // import ReportIssueSecond from "../screens/ReportIssueScreen";

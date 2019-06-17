@@ -1,8 +1,9 @@
 import React from 'react';
 import { connect } from 'react-redux'
-import { StyleSheet, Text, View, Dimensions } from 'react-native';
+import { StyleSheet, Text, View, Dimensions, TouchableHighlight } from 'react-native';
 import ClusterMarker from "../components/ClusterMarker";
 import { getCluster } from "../components/MapUtils";
+import IssueDetails from "../components/IssueDetails";
 import MapView, { Callout, Marker, Circle } from 'react-native-maps';
 import Loader from '../components/Loader'
 import { getLocation } from '../redux/actions/locationActions'
@@ -18,11 +19,10 @@ class MapScreen extends React.Component {
 
     this.state = {
       viewRegion: INITIAL_POSITION,
-      poi: null,
+      marker: null,
       loaded: false,
       hackHeight: height
     };
-    this.onPoiClick = this.onPoiClick.bind(this);
     this._getLocationAsync = this._getLocationAsync.bind(this);
 
   }
@@ -39,7 +39,8 @@ class MapScreen extends React.Component {
       longitude: 1
 
     }
-    this.props.getIssues(5, dummyRegion, "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0ZXN0THVjYXMiLCJyb2xlIjpbIlJPTEVfVVNFUiJdLCJleHAiOjE1NjA4MDAwNzYsImlhdCI6MTU2MDc5NjQ3Nn0.Lz8EfNDBJLxCf8qD-pgJ-U-KO90Drj7giIQ_oF9egM5wGnPquY4E5CVDMyZQAHanMJT-ObOmIZcCpVeKzemzmw")
+    //this.props.getIssues(5, dummyRegion, "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0ZXN0THVjYXMiLCJyb2xlIjpbIlJPTEVfVVNFUiJdLCJleHAiOjE1NjA4MTMzNTEsImlhdCI6MTU2MDgwOTc1MX0.N8JqK66jwGR7JAsGV532oqNuRY4w5Lm3oarZ4O_vOmArCVLq9YQsPWYzHNaT1XFyUsrQ_e8I1Xjb8GOx7NZGPQ")
+
     //work around for locate user button bug
     setTimeout(() => this.setState({ hackHeight: height + 1 }), 2500);
     setTimeout(() => this.setState({ hackHeight: height - 1 }), 3000);
@@ -81,17 +82,15 @@ class MapScreen extends React.Component {
 
   }
 
-  onPoiClick = (e) => {
-
-    const { coordinate } = e.nativeEvent;
-    console.log(this.state.poi)
-    this.setState({ poi: coordinate });
+  markerClick(marker) {
+    console.log(marker)
+    this.setState({ marker })
   }
+
 
   renderMarker = (marker, index) => {
 
     const key = index + marker.geometry.coordinates[0];
-    //console.log(marker)
     // If a cluster
     if (marker.properties) {
       return (
@@ -108,74 +107,70 @@ class MapScreen extends React.Component {
     }
     // If a single marker
     return (
-      <Marker
-        onPress={this.onPoiClick}
+      <MapView.Marker
         key={key}
         coordinate={{
           latitude: marker.geometry.coordinates[1],
           longitude: marker.geometry.coordinates[0]
         }}
-      />
+        title={marker.category}
+        description={marker.description}
+      >
+
+        <Callout
+          onPress={() => this.markerClick(marker)}>
+
+          <View >
+            <Text>
+              {marker.category}{"\n"}
+              {marker.description}</Text>
+          </View>
+
+        </Callout>
+      </MapView.Marker>
     );
   };
 
   render() {
-    const { viewRegion, poi, loaded } = this.state;
-    const { COORDS, RADIUS, ISSUES } = this.props.issues
+    const { viewRegion, marker, loaded } = this.state;
+    const { RADIUS, ISSUES } = this.props.issues
     const { USER_POSITION } = this.props.location
 
-    console.log('issues', ISSUES)
-
-
-    const allCoords = COORDS.map(c => ({
+    const allCoords = ISSUES.map(issue => ({
       geometry: {
-        coordinates: [c.lon, c.lat]
-      }
+        coordinates: [issue.location.longitude, issue.location.latitude],
+      },
+      category: issue.category,
+      description: issue.description,
+      image: issue.imageUrls
     }));
-
     const cluster = getCluster(allCoords, viewRegion);
-    return (
+
+    if (marker) return (<IssueDetails marker={marker} />)
+    else return (
       <View style={{ paddingBottom: this.state.hackHeight, flex: 1 }}>
-
-        {loaded ?
-          <MapView
-            ref={component => this._map = component}
-            style={Style.map}
-            showsMyLocationButton={true}
-            showsUserLocation={true}
-            provider={MapView.PROVIDER_GOOGLE}
-            loadingIndicatorColor={"#ffbbbb"}
-            loadingBackgroundColor={"#ffbbbb"}
-            region={viewRegion}
-            onRegionChangeComplete={viewRegion => this.setState({ viewRegion })}
-          >
-
-            {USER_POSITION &&
-              <Circle
-                center={USER_POSITION}
-                radius={RADIUS}
-                fillColor="rgba(163, 48, 87, 0.5)"
-              />
-            }
-
-            {poi && (
-              <Marker coordinate={poi}>
-                <Callout>
-                  <View>
-                    <Text>Type: </Text>
-                    <Text>Name: </Text>
-                    <Text>Lat: {poi.latitude}</Text>
-                    <Text>Long: {poi.longitude}</Text>
-                  </View>
-                </Callout>
-              </Marker>
-            )}
-            {cluster.markers.map((marker, index) => this.renderMarker(marker, index))}
-
-          </MapView>
-          : <Loader />}
-
-      </View>
+        {loaded ? <MapView
+          ref={component => this._map = component}
+          style={Style.map}
+          showsMyLocationButton={true}
+          showsUserLocation={true}
+          provider={MapView.PROVIDER_GOOGLE}
+          loadingIndicatorColor={"#ffbbbb"}
+          loadingBackgroundColor={"#ffbbbb"}
+          region={viewRegion}
+          onRegionChangeComplete={viewRegion => this.setState({ viewRegion })}
+        >
+          {USER_POSITION &&
+            <Circle
+              center={USER_POSITION}
+              radius={RADIUS}
+              fillColor="rgba(163, 48, 87, 0.5)"
+            />
+          }
+          {cluster.markers.map((marker, index) => this.renderMarker(marker, index))}
+        </MapView> :
+          <Loader />}
+      </View >
     );
 
   }
@@ -193,17 +188,11 @@ const Style = StyleSheet.create({
   map: {
     ...StyleSheet.absoluteFillObject,
   },
-  myLocationButton: {
+  calloutText: {
 
-    position: 'absolute',
-    bottom: 50,
-    right: 50,
-    padding: 15,
-    elevation: 3,
-    alignItems: 'center',
-    alignSelf: 'flex-end',
-    justifyContent: 'center',
-    borderRadius: 50
+  },
+  customView: {
+
   }
 });
 
