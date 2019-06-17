@@ -10,24 +10,38 @@ import IssuesScreen from '../screens/IssuesScreen';
 import SettingsScreen from '../screens/SettingsScreen';
 import MapView from '../screens/MapScreen';
 
-
-const IssuesStack = createStackNavigator({
-  Issues: IssuesScreen,
+const ReportIssueStack = createStackNavigator({
+  ReportIssue: ReportIssueScreen
 });
 
-IssuesStack.navigationOptions = {
-  tabBarLabel: 'Issues',
+ReportIssueStack.navigationOptions = {
+  tabBarLabel: "Report",
   tabBarIcon: ({ focused }) => (
     <TabBarIcon
       focused={focused}
-      name={
-        Platform.OS === 'ios'
-          ? `ios-information-circle${focused ? '' : '-outline'}`
-          : 'md-information-circle'
-      }
+      name={Platform.OS === "ios" ? "ios-camera" : "md-camera"}
     />
-  ),
+  )
 };
+
+
+// const IssuesStack = createStackNavigator({
+//   Issues: IssuesScreen,
+// });
+
+// IssuesStack.navigationOptions = {
+//   tabBarLabel: 'Issues',
+//   tabBarIcon: ({ focused }) => (
+//     <TabBarIcon
+//       focused={focused}
+//       name={
+//         Platform.OS === 'ios'
+//           ? `ios-information-circle${focused ? '' : '-outline'}`
+//           : 'md-information-circle'
+//       }
+//     />
+//   ),
+// };
 
 
 const MapStack = createStackNavigator({
@@ -60,6 +74,6 @@ SettingsStack.navigationOptions = {
 
 export default createBottomTabNavigator({
   MapStack,
-  IssuesStack,
+  ReportIssueStack,
   SettingsStack,
 });
