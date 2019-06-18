@@ -21,12 +21,7 @@ class Loader extends React.Component {
                     source={require('../assets/images/Galileo_logo_animation_3.gif')}
                     style={Styles.welcomeImage}
                 />
-                {/* <GifLoader
-                    loading={true}
-                    imageSrc="../assets/images/Galileo_logo_animation_3.gif"
-                    imageStyle={Styles.imageStyle}
-                    overlayBackground="rgba(0,0,0,0.5)"
-                /> */}
+
             </View>
         );
     }
@@ -37,14 +32,13 @@ const Styles = StyleSheet.create({
     },
     welcomeContainer: {
         alignItems: 'center',
-        marginTop: 10,
-        marginBottom: 20,
+
     },
     welcomeImage: {
         width: 200,
         height: 200,
         resizeMode: 'contain',
-        marginTop: 3,
+        marginTop: '50%',
         marginLeft: -10,
     },
 })

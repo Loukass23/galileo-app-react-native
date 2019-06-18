@@ -10,6 +10,14 @@ import { getLocation } from '../redux/actions/locationActions'
 import { getIssues, setMarker } from '../redux/actions/issuesActions'
 
 const { width, height } = Dimensions.get('window');
+const markerImages = {
+  Trash: require('../assets/images/Marker1.png'),
+  Road: require('../assets/images/Marker2.png'),
+  Category3: require('../assets/images/Marker3.png'),
+  Category4: require('../assets/images/Marker4.png'),
+  Category5: require('../assets/images/Marker5.png'),
+
+};
 
 class MapScreen extends React.Component {
   constructor(props) {
@@ -21,15 +29,12 @@ class MapScreen extends React.Component {
       viewRegion: INITIAL_POSITION,
       marker: null,
       loaded: false,
-      hackHeight: height
+      hackHeight: height,
     };
-    this._getLocationAsync = this._getLocationAsync.bind(this);
-
+    this.showsMyLocationButtonWorkaroudFix = this.showsMyLocationButtonWorkaroudFix.bind(this)
   }
 
   componentDidMount() {
-
-    //this._getLocationAsync()
 
     //redux location
     this.props.getLocation()
@@ -39,58 +44,26 @@ class MapScreen extends React.Component {
       longitude: 1
 
     }
-    //this.props.getIssues(5, dummyRegion, "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0ZXN0THVjYXMiLCJyb2xlIjpbIlJPTEVfVVNFUiJdLCJleHAiOjE1NjA4MTMzNTEsImlhdCI6MTU2MDgwOTc1MX0.N8JqK66jwGR7JAsGV532oqNuRY4w5Lm3oarZ4O_vOmArCVLq9YQsPWYzHNaT1XFyUsrQ_e8I1Xjb8GOx7NZGPQ")
-
-    //work around for locate user button bug
-    setTimeout(() => this.setState({ hackHeight: height + 1 }), 2500);
-    setTimeout(() => this.setState({ hackHeight: height - 1 }), 3000);
-
+    const token = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0ZXN0THVjYXMiLCJyb2xlIjpbIlJPTEVfVVNFUiJdLCJleHAiOjE1NjA4NjE3NDEsImlhdCI6MTU2MDg1ODE0MX0.-vAYsof4vn-uy-equ_avLSe2Gek3KdtUAEb8QhqXHxz-ukJ5gDGy7majly9WMi4lpdlt5D8lTwQk5dRWIhw55w"
+    this.props.getIssues(5, dummyRegion, token)
     setTimeout(() => this.setState({ loaded: true }), 2000);
   }
 
-
-  _getLocationAsync = async () => {
-    // console.log('here')
-
-    // let userRegion = await this.props.location.USER_POSITION
-    // if (userRegion) console.log('userRegion', userRegion)
-
-
-    //   let { status } = await Permissions.askAsync(Permissions.LOCATION);
-    //   if (status !== 'granted') {
-    //     console.log('Permission to access location was denied')
-    //   } else {
-    //     console.log('Permission to access location was granted')
-    //   }
-
-    //   let location = await Location.getCurrentPositionAsync({})
-
-    //   if (location) {
-
-    //     const region = {
-    //       latitude: location.coords.latitude,
-    //       longitude: location.coords.longitude,
-    //       latitudeDelta: 1,
-    //       longitudeDelta: 1
-    //     };
-
-    //     this.setState({ userRegion: region });
-    //     console.log(this.refs)
-    //     //this.refs._map.animateToRegion(region, 500);
-    //   }
-
-
+  //work around for locate user button bug
+  showsMyLocationButtonWorkaroudFix() {
+    setTimeout(() => this.setState({ hackHeight: height + 1 }), 1500);
+    setTimeout(() => this.setState({ hackHeight: height - 1 }), 2000);
   }
+
 
   markerClick(marker) {
     console.log(marker)
     this.props.setMarker(marker)
-    //this.setState({ marker })
+    this.setState({ LocButtonFix: true })
   }
 
 
   renderMarker = (marker, index) => {
-
     const key = index + marker.geometry.coordinates[0];
     // If a cluster
     if (marker.properties) {
@@ -110,6 +83,7 @@ class MapScreen extends React.Component {
     return (
       <MapView.Marker
         key={key}
+        image={markerImages[marker.category]}
         coordinate={{
           latitude: marker.geometry.coordinates[1],
           longitude: marker.geometry.coordinates[0]
@@ -117,25 +91,24 @@ class MapScreen extends React.Component {
         title={marker.category}
         description={marker.description}
       >
-
         <Callout
           onPress={() => this.markerClick(marker)}>
-
           <View >
             <Text>
               {marker.category}{"\n"}
               {marker.description}</Text>
           </View>
-
         </Callout>
       </MapView.Marker>
     );
   };
-
   render() {
-    const { viewRegion, marker, loaded } = this.state;
-    const { RADIUS, ISSUES, MARKER } = this.props.issues
+    const { viewRegion, marker, loaded, LocButtonFix } = this.state;
+    const { RADIUS, ISSUES, MARKER, ISSUES_LOADING } = this.props.issues
     const { USER_POSITION } = this.props.location
+
+    //workaroud to fix locate me button
+
 
     const allCoords = ISSUES.map(issue => ({
       geometry: {
@@ -148,29 +121,32 @@ class MapScreen extends React.Component {
     const cluster = getCluster(allCoords, viewRegion);
 
     if (MARKER) return (<IssueDetails marker={MARKER} />)
-    else return (
+    return (
       <View style={{ paddingBottom: this.state.hackHeight, flex: 1 }}>
-        {loaded ? <MapView
-          ref={component => this._map = component}
-          style={Style.map}
-          showsMyLocationButton={true}
-          showsUserLocation={true}
-          provider={MapView.PROVIDER_GOOGLE}
-          loadingIndicatorColor={"#ffbbbb"}
-          loadingBackgroundColor={"#ffbbbb"}
-          region={viewRegion}
-          onRegionChangeComplete={viewRegion => this.setState({ viewRegion })}
-        >
-          {USER_POSITION &&
-            <Circle
-              center={USER_POSITION}
-              radius={RADIUS}
-              fillColor="rgba(163, 48, 87, 0.5)"
-            />
-          }
-          {cluster.markers.map((marker, index) => this.renderMarker(marker, index))}
-        </MapView> :
-          <Loader />}
+        {ISSUES_LOADING ? < Loader /> :
+          <MapView
+            ref={component => this._map = component}
+            style={Style.map}
+            onMapReady={this.showsMyLocationButtonWorkaroudFix}
+            showsMyLocationButton={true}
+            showsUserLocation={true}
+            provider={MapView.PROVIDER_GOOGLE}
+            loadingIndicatorColor={"#ffbbbb"}
+            loadingBackgroundColor={"#ffbbbb"}
+            region={viewRegion}
+            onRegionChangeComplete={viewRegion => this.setState({ viewRegion })}
+          >
+            {MARKER && <IssueDetails marker={MARKER} />}
+            {USER_POSITION &&
+              <Circle
+                center={USER_POSITION}
+                radius={RADIUS}
+                fillColor="rgba(163, 48, 87, 0.5)"
+              />
+            }
+            {cluster.markers.map((marker, index) => this.renderMarker(marker, index))}
+          </MapView>
+        }
       </View >
     );
 
