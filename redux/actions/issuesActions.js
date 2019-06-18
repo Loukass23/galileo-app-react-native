@@ -1,5 +1,7 @@
 import axios from 'axios';
 import { SET_RADIUS } from './actionTypes'
+import { SET_MARKER } from './actionTypes'
+import { CLEAR_MARKER } from './actionTypes'
 import { GET_ISSUES } from './actionTypes'
 import { GET_ISSUES_ERROR } from './actionTypes'
 
@@ -8,6 +10,24 @@ export const setRadius = (radius) => {
         dispatch({
             type: SET_RADIUS,
             payload: radius
+        })
+
+    }
+}
+export const setMarker = (marker) => {
+    return (dispatch) => {
+        dispatch({
+            type: SET_MARKER,
+            payload: marker
+        })
+
+    }
+}
+export const clearMarker = () => {
+    return (dispatch) => {
+        dispatch({
+            type: CLEAR_MARKER,
+
         })
 
     }

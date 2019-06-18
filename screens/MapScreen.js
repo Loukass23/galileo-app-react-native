@@ -7,7 +7,7 @@ import IssueDetails from "../components/IssueDetails";
 import MapView, { Callout, Marker, Circle } from 'react-native-maps';
 import Loader from '../components/Loader'
 import { getLocation } from '../redux/actions/locationActions'
-import { getIssues } from '../redux/actions/issuesActions'
+import { getIssues, setMarker } from '../redux/actions/issuesActions'
 
 const { width, height } = Dimensions.get('window');
 
@@ -84,7 +84,8 @@ class MapScreen extends React.Component {
 
   markerClick(marker) {
     console.log(marker)
-    this.setState({ marker })
+    this.props.setMarker(marker)
+    //this.setState({ marker })
   }
 
 
@@ -133,7 +134,7 @@ class MapScreen extends React.Component {
 
   render() {
     const { viewRegion, marker, loaded } = this.state;
-    const { RADIUS, ISSUES } = this.props.issues
+    const { RADIUS, ISSUES, MARKER } = this.props.issues
     const { USER_POSITION } = this.props.location
 
     const allCoords = ISSUES.map(issue => ({
@@ -146,7 +147,7 @@ class MapScreen extends React.Component {
     }));
     const cluster = getCluster(allCoords, viewRegion);
 
-    if (marker) return (<IssueDetails marker={marker} />)
+    if (MARKER) return (<IssueDetails marker={MARKER} />)
     else return (
       <View style={{ paddingBottom: this.state.hackHeight, flex: 1 }}>
         {loaded ? <MapView
@@ -206,6 +207,7 @@ const mapStateToProp = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     getLocation: () => dispatch(getLocation()),
+    setMarker: (marker) => dispatch(setMarker(marker)),
     getIssues: (radius, region, token) => dispatch(getIssues(radius, region, token))
 
   }

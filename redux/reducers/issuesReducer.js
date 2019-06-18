@@ -43,7 +43,8 @@ const initState = {
         latitudeDelta: 1,
         longitudeDelta: 1
     },
-    RADIUS: 100
+    RADIUS: 100,
+    MARKER: null
 }
 
 const issuesReducer = (state = initState, action) => {
@@ -53,6 +54,18 @@ const issuesReducer = (state = initState, action) => {
             return {
                 ...state,
                 RADIUS: action.payload
+            }
+        case 'SET_MARKER':
+            console.log('Marker set: ', action.payload)
+            return {
+                ...state,
+                MARKER: action.payload
+            }
+        case 'CLEAR_MARKER':
+            console.log('Marker cleared')
+            return {
+                ...state,
+                MARKER: null
             }
         case 'GET_ISSUES':
             console.log('Retrieved issues', action.payload)
