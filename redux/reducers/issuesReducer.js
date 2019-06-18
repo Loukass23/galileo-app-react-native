@@ -47,6 +47,7 @@ const initState = {
     },
     RADIUS: 100,
     MARKER: null,
+
 }
 
 const issuesReducer = (state = initState, action) => {

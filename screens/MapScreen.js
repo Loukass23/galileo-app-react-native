@@ -7,7 +7,7 @@ import IssueDetails from "../components/IssueDetails";
 import MapView, { Callout, Marker, Circle } from 'react-native-maps';
 import Loader from '../components/Loader'
 import { getLocation } from '../redux/actions/locationActions'
-import { getIssues, setMarker } from '../redux/actions/issuesActions'
+import { getIssues, setMarker, startTimer } from '../redux/actions/issuesActions'
 
 const { width, height } = Dimensions.get('window');
 const markerImages = {
@@ -27,26 +27,27 @@ class MapScreen extends React.Component {
 
     this.state = {
       viewRegion: INITIAL_POSITION,
-      marker: null,
-      loaded: false,
       hackHeight: height,
     };
     this.showsMyLocationButtonWorkaroudFix = this.showsMyLocationButtonWorkaroudFix.bind(this)
   }
 
   componentDidMount() {
-
-    //redux location
     this.props.getLocation()
+    this.props.startTimer()
+    //triger redux location every 10sec
+    //setInterval(this.props.getLocation(), 10000);
+
 
     const dummyRegion = {
       latitude: 1,
       longitude: 1
 
     }
-    const token = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0ZXN0THVjYXMiLCJyb2xlIjpbIlJPTEVfVVNFUiJdLCJleHAiOjE1NjA4NjE3NDEsImlhdCI6MTU2MDg1ODE0MX0.-vAYsof4vn-uy-equ_avLSe2Gek3KdtUAEb8QhqXHxz-ukJ5gDGy7majly9WMi4lpdlt5D8lTwQk5dRWIhw55w"
+    const token =
+      "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0ZXN0THVjYXMiLCJyb2xlIjpbIlJPTEVfVVNFUiJdLCJleHAiOjE1NjA4NzYzMjcsImlhdCI6MTU2MDg3MjcyN30.WdBImtNfv19WdDZLL1md4lKEsQZiLXGkpuPHXY14DatagKLR-7KDL-M0Ov7Y2USWzpTxw9B1oMXz-WKs6aEquQ"
     this.props.getIssues(5, dummyRegion, token)
-    setTimeout(() => this.setState({ loaded: true }), 2000);
+    //this.props.getIssues(5, dummyRegion, token), 5000)
   }
 
   //work around for locate user button bug
@@ -59,7 +60,6 @@ class MapScreen extends React.Component {
   markerClick(marker) {
     console.log(marker)
     this.props.setMarker(marker)
-    this.setState({ LocButtonFix: true })
   }
 
 
@@ -103,7 +103,7 @@ class MapScreen extends React.Component {
     );
   };
   render() {
-    const { viewRegion, marker, loaded, LocButtonFix } = this.state;
+    const { viewRegion } = this.state;
     const { RADIUS, ISSUES, MARKER, ISSUES_LOADING } = this.props.issues
     const { USER_POSITION } = this.props.location
 
@@ -123,7 +123,7 @@ class MapScreen extends React.Component {
     if (MARKER) return (<IssueDetails marker={MARKER} />)
     return (
       <View style={{ paddingBottom: this.state.hackHeight, flex: 1 }}>
-        {ISSUES_LOADING ? < Loader /> :
+        {ISSUES_LOADING ? < Loader message="Loading Issues" /> :
           <MapView
             ref={component => this._map = component}
             style={Style.map}
@@ -184,6 +184,7 @@ const mapDispatchToProps = (dispatch) => {
   return {
     getLocation: () => dispatch(getLocation()),
     setMarker: (marker) => dispatch(setMarker(marker)),
+    startTimer: () => dispatch(startTimer()),
     getIssues: (radius, region, token) => dispatch(getIssues(radius, region, token))
 
   }

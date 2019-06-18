@@ -5,6 +5,9 @@ import { CLEAR_MARKER } from './actionTypes'
 import { GET_ISSUES } from './actionTypes'
 import { ISSUES_LOADING } from './actionTypes'
 import { GET_ISSUES_ERROR } from './actionTypes'
+import { START_TIMER } from 'redux-timer';
+
+
 
 export const setRadius = (radius) => {
     return (dispatch) => {
@@ -47,7 +50,7 @@ export const getIssues = (radius, region, token) => {
 
         return axios.get(URL, { headers: { "Authorization": `Bearer ${token}` } })
             .then((res) => {
-                console.log(res.data)
+
                 dispatch({
                     type: GET_ISSUES,
                     payload: res.data
@@ -63,3 +66,19 @@ export const getIssues = (radius, region, token) => {
 
 }
 
+
+
+
+export const startTimer = () => async dispatch => {
+    dispatch({
+        type: START_TIMER,
+        payload: {
+            name: 'getIssueTimer',
+            action: async () => {
+                dispatch(getIssues());
+            },
+            interval: 5000,
+            runImmediately: false
+        }
+    });
+};

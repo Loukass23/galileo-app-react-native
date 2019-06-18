@@ -11,19 +11,18 @@ import {
 import { clearMarker } from '../redux/actions/issuesActions'
 
 function IssueDetails({ marker, clearMarker }) {
-    console.log('details', marker)
     return (
-        <ScrollView>
-            <View >
-                <Text>
-                    {marker.category}{"\n"}
-                    {marker.description}</Text>
-
-                {marker.image.map(image => <Image
-                    source={{ uri: image }}
-                    key={image}
-
-                />)}
+        <View style={styles.container} >
+            <ScrollView>
+                <View style={styles.view} >
+                    <Text>
+                        {marker.category}</Text>
+                    <Text>{marker.description}</Text>
+                </View>
+                <Image
+                    source={{ uri: marker.image[0] }}
+                    style={styles.image}
+                />
                 <Button
                     style={styles.button}
                     onPress={clearMarker}
@@ -31,8 +30,9 @@ function IssueDetails({ marker, clearMarker }) {
                     color="#841584"
                     accessibilityLabel="Start looking at issues around you"
                 />
-            </View>
-        </ScrollView>
+
+            </ScrollView>
+        </View>
     )
 }
 
@@ -40,10 +40,17 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: '#fff',
+        alignItems: 'center',
+    },
+    view: {
+
     },
     button: {
-
-    }
+        marginTop: 10,
+        paddingHorizontal: 50,
+        marginBottom: 0
+    },
+    image: { width: 400, height: 400 }
 })
 
 
