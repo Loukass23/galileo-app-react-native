@@ -37,17 +37,7 @@ class MapScreen extends React.Component {
     this.props.getLocation()
 
     this.props.startTimer()
-
-
-
-    const dummyRegion = {
-      latitude: 1,
-      longitude: 1
-
-    }
-    const token =
-      "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0ZXN0THVjYXMiLCJyb2xlIjpbIlJPTEVfVVNFUiJdLCJleHAiOjE1NjEwMjU5OTEsImlhdCI6MTU2MTAyMjM5MX0.3e0lX7UYRQaJtvdEEKf1J937Td1dkutUoQVY7MDft28NBsXN-nJkXUI4b1E_GfC54WuwSHeWeWOvNUw8Nw-IMw"
-    this.props.getIssues(5, dummyRegion, token)
+    this.props.getIssues()
   }
 
   //work around for locate user button bug
@@ -190,7 +180,7 @@ const mapDispatchToProps = (dispatch) => {
     getLocation: () => dispatch(getLocation()),
     setMarker: (marker) => dispatch(setMarker(marker)),
     startTimer: () => dispatch(startTimer()),
-    getIssues: (radius, region, token) => dispatch(getIssues(radius, region, token))
+    getIssues: () => dispatch(getIssues())
 
   }
 }

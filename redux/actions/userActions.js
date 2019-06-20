@@ -1,89 +1,52 @@
-import axios from 'axios';
-import qs from 'qs';
+import { SET_USER } from './actionTypes'
 
 
 
 export const registerUser = (user) => {
-    return dispatch => {
+    return async dispatch => {
         console.log(user, 'user');
-        const input = `name=${user.name}&email=${user.email}&username=${user.email}&password=OAuth_generic`
+        //const string = `{\n\t\"name\": \"${user.name}\",\n\t\"email\": \"${user.email}\",\n\t\"username\": \"${user.email}\",\n\t\"password\": \"OAuth_generic\"\n}`
+        const string = '{\n\t\"name\": \"' + user.name + '\",\n\t\"email\": \"' + user.email + '\",\n\t\"username\": \"' + user.name + '",\n\t\"password\": \"OAuth_generic\"\n}'
 
-
-        //return axios(options)
-        return axios({
+        const rawResponse = await fetch('http://kietz.herokuapp.com/signup', {
             method: 'POST',
-            url: 'http://kietz.herokuapp.com/signup',
             headers: {
-                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
             },
-            data: input
-        })
-
-            .then((res) => {
-                console.log('response', res);
-                // dispatch({
-                //     type: GET_ISSUES,
-                //     payload: res.data
-                // })
-            }).catch((err) => {
-                console.log(err)
-                // dispatch({
-                //     type: GET_ISSUES_ERROR,
-                //     payload: err
-                // })
-            })
-        // axios({
-        //     method: 'POST',
-        //     url: 'kietz.herokuapp.com/signup',
-        //     headers: { 'Content-Type': 'application/json' },
-        //     data: {
-        //         foo: {
-
-        //             "name": user.name,
-        //             "email": user.email,
-        //             "username": user.email,
-        //             "password": "OAuth_generic"
-
-        //         }, // This is the body part in an axios call ^^
-        //     }
-        // })
-        // const params = new URLSearchParams();
-        // params.append('name', user.name);
-        // params.append('email', user.email);
-        // params.append('username', user.email);
-        // params.append('password', 'OAuth_generic');
-        // axios.post('/foo', params)
+            body: string
+        });
+        const { username } = await rawResponse.json();
+        console.log(username)
+        dispatch(login({
+            username,
+            password: 'OAuth_generic'
+        }))
 
     }
-
 }
-export const login = (user) => {
+
+export const login = ({ username, password }) => {
     return async dispatch => {
-        return
-        axios({
-            method: 'post',
-            url: 'kietz.herokuapp.com/login',
-            headers: { 'Content-Type': 'application/json' },
-            data: {
-                foo: {
-                    "username": user.username,
-                    "password": user.password
-                }
+        const string = `{\n\t\"username\": \"${username}\",\n\t\"password\": \"${password}\"\n}`
+        const rawResponse = await fetch('http://kietz.herokuapp.com/login', {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: string
+
+        });
+        const { token } = await rawResponse.json();
+        console.log(token)
+        dispatch({
+            type: SET_USER,
+            payload: {
+                username,
+                token
             }
         })
-            .then((res) => {
-                console.log(res);
-                // dispatch({
-                //     type: GET_ISSUES,
-                //     payload: res.data
-                // })
-            }).catch((err) => {
-                console.log(err)
-                // dispatch({
-                //     type: GET_ISSUES_ERROR,
-                //     payload: err
-                // })
-            })
     }
-
 }
+

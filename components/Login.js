@@ -13,8 +13,6 @@ import {
     StyleSheet, View, TouchableOpacity, Button, StatusBar
 } from 'react-native';
 
-
-
 class Login extends React.Component {
 
     _handleGoogleLogin = async () => {
@@ -99,9 +97,7 @@ class Login extends React.Component {
         }
     };
     render() {
-
         return (
-
             <View style={styles.container}>
                 {/* <AuthScreen /> */}
                 <View style={styles.elevationContainer}>

@@ -46,9 +46,15 @@ export const getIssuesLoading = () => {
         type: ISSUES_LOADING
     };
 };
-export const getIssues = (radius, region, token) => {
-    return (dispatch) => {
+export const getIssues = () => {
+    return (dispatch, getState) => {
         dispatch(getIssuesLoading());
+
+        const state = getState();
+        const region = state.location.USER_POSITION
+        const token = state.user.USER.token
+        const radius = state.issues.RADIUS
+
         const URL = `http://kietz.herokuapp.com/api/issues?latitude=${region.latitude}
         &longitude=${region.latitude}&page=0&radius=${radius}&size=10`
 
@@ -85,7 +91,7 @@ export const startTimer = () => {
                     dispatch(getLocation());
 
                 },
-                interval: 10000,
+                interval: 1000000,
                 runImmediately: false
             }
         });
