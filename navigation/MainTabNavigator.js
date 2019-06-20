@@ -1,14 +1,16 @@
-import React from 'react';
-import { Platform } from 'react-native';
+import React from "react";
+import { Platform } from "react-native";
 import {
   createStackNavigator,
-  createBottomTabNavigator,
-} from 'react-navigation';
-import TabBarIcon from '../components/TabBarIcon';
-import Camera from '../components/Camera';
-import ReportIssueScreen from '../screens/ReportIssueScreen';
-import SettingsScreen from '../screens/SettingsScreen';
-import MapView from '../screens/MapScreen';
+
+  createBottomTabNavigator
+} from "react-navigation";
+import TabBarIcon from "../components/TabBarIcon";
+import Camera from "../components/Camera";
+import ReportIssueScreen from "../screens/ReportIssueScreen";
+import SettingsScreen from "../screens/SettingsScreen";
+import MapView from "../screens/MapScreen";
+
 
 const ReportIssueStack = createStackNavigator({
   ReportIssue: ReportIssueScreen
@@ -23,7 +25,6 @@ ReportIssueStack.navigationOptions = {
     />
   )
 };
-
 
 // const IssuesStack = createStackNavigator({
 //   Issues: IssuesScreen,
@@ -43,37 +44,62 @@ ReportIssueStack.navigationOptions = {
 //   ),
 // };
 
-
 const MapStack = createStackNavigator({
-  Maps: MapView,
+  Maps: MapView
 });
 
 MapStack.navigationOptions = {
-  tabBarLabel: 'Maps',
+  tabBarLabel: "Maps",
   tabBarIcon: ({ focused }) => (
     <TabBarIcon
       focused={focused}
-      name={Platform.OS === 'ios' ? 'ios-map' : 'md-map'}
+      name={Platform.OS === "ios" ? "ios-map" : "md-map"}
     />
-  ),
+  )
 };
 
 const SettingsStack = createStackNavigator({
-  Settings: SettingsScreen,
+  Settings: SettingsScreen
 });
 
 SettingsStack.navigationOptions = {
-  tabBarLabel: 'Settings',
+  tabBarLabel: "Settings",
   tabBarIcon: ({ focused }) => (
     <TabBarIcon
       focused={focused}
-      name={Platform.OS === 'ios' ? 'ios-options' : 'md-options'}
+      name={Platform.OS === "ios" ? "ios-options" : "md-options"}
     />
-  ),
+  )
 };
+// const ReportIssueStack = createStackNavigator({
+//   ReportIssue: Camera
+// });
+
+// ReportIssueStack.navigationOptions = {
+//   tabBarLabel: "Report",
+//   tabBarIcon: ({ focused }) => (
+//     <TabBarIcon
+//       focused={focused}
+//       name={Platform.OS === "ios" ? "ios-camera" : "md-camera"}
+//     />
+//   )
+// };
+// const ReportIssueStack = createStackNavigator({
+//   ReportIssue: ReportIssueScreen
+// });
+
+// ReportIssueStack.navigationOptions = {
+//   tabBarLabel: "Report",
+//   tabBarIcon: ({ focused }) => (
+//     <TabBarIcon
+//       focused={focused}
+//       name={Platform.OS === "ios" ? "ios-camera" : "md-camera"}
+//     />
+//   )
+// };
 
 export default createBottomTabNavigator({
   MapStack,
-  ReportIssueStack,
   SettingsStack,
+  ReportIssueStack
 });
