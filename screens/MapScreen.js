@@ -4,6 +4,7 @@ import { StyleSheet, Text, View, Dimensions, TouchableHighlight } from 'react-na
 import ClusterMarker from "../components/ClusterMarker";
 import { getCluster } from "../components/MapUtils";
 import IssueDetails from "../components/IssueDetails";
+import OnMapMessage from "../components/OnMapMessage";
 import MapView, { Callout, Marker, Circle } from 'react-native-maps';
 import Loader from '../components/Loader'
 import { getLocation } from '../redux/actions/locationActions'
@@ -34,9 +35,9 @@ class MapScreen extends React.Component {
 
   componentDidMount() {
     this.props.getLocation()
+
     this.props.startTimer()
-    //triger redux location every 10sec
-    //setInterval(this.props.getLocation(), 10000);
+
 
 
     const dummyRegion = {
@@ -45,9 +46,8 @@ class MapScreen extends React.Component {
 
     }
     const token =
-      "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0ZXN0THVjYXMiLCJyb2xlIjpbIlJPTEVfVVNFUiJdLCJleHAiOjE1NjA4NzYzMjcsImlhdCI6MTU2MDg3MjcyN30.WdBImtNfv19WdDZLL1md4lKEsQZiLXGkpuPHXY14DatagKLR-7KDL-M0Ov7Y2USWzpTxw9B1oMXz-WKs6aEquQ"
+      "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0ZXN0THVjYXMiLCJyb2xlIjpbIlJPTEVfVVNFUiJdLCJleHAiOjE1NjEwMjU5OTEsImlhdCI6MTU2MTAyMjM5MX0.3e0lX7UYRQaJtvdEEKf1J937Td1dkutUoQVY7MDft28NBsXN-nJkXUI4b1E_GfC54WuwSHeWeWOvNUw8Nw-IMw"
     this.props.getIssues(5, dummyRegion, token)
-    //this.props.getIssues(5, dummyRegion, token), 5000)
   }
 
   //work around for locate user button bug
@@ -91,6 +91,7 @@ class MapScreen extends React.Component {
         title={marker.category}
         description={marker.description}
       >
+
         <Callout
           onPress={() => this.markerClick(marker)}>
           <View >
@@ -104,7 +105,7 @@ class MapScreen extends React.Component {
   };
   render() {
     const { viewRegion } = this.state;
-    const { RADIUS, ISSUES, MARKER, ISSUES_LOADING } = this.props.issues
+    const { RADIUS, ISSUES, MARKER, ISSUES_LOADING, ERR } = this.props.issues
     const { USER_POSITION } = this.props.location
 
     //workaroud to fix locate me button
@@ -122,8 +123,9 @@ class MapScreen extends React.Component {
 
     if (MARKER) return (<IssueDetails marker={MARKER} />)
     return (
-      <View style={{ paddingBottom: this.state.hackHeight, flex: 1 }}>
-        {ISSUES_LOADING ? < Loader message="Loading Issues" /> :
+      <View >
+        {/* {ISSUES_LOADING ? < Loader message="Loading Issues" /> : */}
+        <View style={{ paddingBottom: this.state.hackHeight, flex: 1 }}>
           <MapView
             ref={component => this._map = component}
             style={Style.map}
@@ -136,6 +138,7 @@ class MapScreen extends React.Component {
             region={viewRegion}
             onRegionChangeComplete={viewRegion => this.setState({ viewRegion })}
           >
+
             {MARKER && <IssueDetails marker={MARKER} />}
             {USER_POSITION &&
               <Circle
@@ -146,7 +149,9 @@ class MapScreen extends React.Component {
             }
             {cluster.markers.map((marker, index) => this.renderMarker(marker, index))}
           </MapView>
-        }
+          <OnMapMessage message={ERR} />
+        </View>
+        {/* } */}
       </View >
     );
 

@@ -15,7 +15,7 @@ function IssueDetails({ marker, clearMarker }) {
         <View style={styles.container} >
             <ScrollView>
                 <View style={styles.view} >
-                    <Text>
+                    <Text style={styles.title}>
                         {marker.category}</Text>
                     <Text>{marker.description}</Text>
                 </View>
@@ -41,6 +41,12 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: '#fff',
         alignItems: 'center',
+    },
+    title: {
+        fontSize: 20,
+        color: 'rgb(174, 33, 87)',
+        lineHeight: 24,
+        textAlign: 'center',
     },
     view: {
 
