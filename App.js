@@ -7,7 +7,7 @@ import { Provider } from 'react-redux'
 import { store } from './redux/app-redux'
 import {
   Image, Platform, ScrollView, Text,
-  StyleSheet, View, TouchableOpacity, Button
+  StyleSheet, View, TouchableOpacity, Button, StatusBar
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { Constants } from 'expo';
@@ -195,6 +195,8 @@ const styles = StyleSheet.create({
   },
   button: {
     marginTop: 10,
+    paddingHorizontal: 50,
+    marginBottom: 0
 
   },
 });

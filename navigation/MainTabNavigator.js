@@ -2,6 +2,7 @@ import React from "react";
 import { Platform } from "react-native";
 import {
   createStackNavigator,
+
   createBottomTabNavigator
 } from "react-navigation";
 import TabBarIcon from "../components/TabBarIcon";
@@ -9,6 +10,7 @@ import Camera from "../components/Camera";
 import ReportIssueScreen from "../screens/ReportIssueScreen";
 import SettingsScreen from "../screens/SettingsScreen";
 import MapView from "../screens/MapScreen";
+
 
 const ReportIssueStack = createStackNavigator({
   ReportIssue: ReportIssueScreen
