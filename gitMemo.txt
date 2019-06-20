@@ -3,3 +3,4 @@ retrieve from master/ git pull origin master
 add and commit / git add . / git commit -m "message"
 git push origin myNewBranch
 *origine = remote if not set: git remote add origin https://github.com/Loukass23/galileo-app-react-native.git
+to show only the branch you are working on: git rev-parse --abbrev-ref HEAD
