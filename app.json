@@ -24,7 +24,17 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "Galileo.app",
+      "config": {
+        "googleSignIn": {
+          "reservedClientId": "com.googleusercontent.apps.38614223082-b2qfncci36on18h4s1les23osnq9t452"
+        }
+      }
+    },
+    "android": {
+      "package": "Galileo.app",
+      "googleServicesFile": "./google-services.json"
     }
   }
 }

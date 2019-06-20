@@ -21,8 +21,6 @@ export function getLocation() {
         }
 
         let location = await Location.getCurrentPositionAsync({})
-        console.log('location', location)
-
         if (location) {
             const region = {
                 latitude: location.coords.latitude,

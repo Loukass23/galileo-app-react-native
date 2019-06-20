@@ -1,4 +1,4 @@
-import { AppLoading } from 'expo';
+import { AppLoading, Constants, Facebook, Google } from 'expo';
 import { Asset } from 'expo-asset';
 import * as Font from 'expo-font';
 import React from 'react';
@@ -6,13 +6,13 @@ import * as WebBrowser from 'expo-web-browser';
 import { Provider } from 'react-redux'
 import { store } from './redux/app-redux'
 import {
-  Image, Platform, ScrollView, Text,
+  Image, Platform, ScrollView, Text, Alert,
   StyleSheet, View, TouchableOpacity, Button, StatusBar
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { Constants } from 'expo';
 import AppNavigator from './navigation/AppNavigator';
 import Loader from './components/Loader'
+import Login from './components/Login'
 
 export default class App extends React.Component {
   state = {
@@ -34,52 +34,51 @@ export default class App extends React.Component {
       );
     }
 
-    if (!this.state.okButton && this.state.isReady) {
-
+    else
       //Splash screen
       return (
-
-        <View style={styles.container}>
-          <ScrollView
-            style={styles.container}
-            contentContainerStyle={styles.contentContainer}>
-            <Loader />
-
-            <Text style={styles.getStartedText}>
-              Your current device  {deviceName} does not have Galileo chipset
+        <Provider store={store}>
+          {!this.state.okButton ?
+            <View style={styles.container}>
+              <ScrollView
+                style={styles.container}
+                contentContainerStyle={styles.contentContainer}>
+                <Loader />
+                <Text style={styles.getStartedText}>
+                  Your current device  {deviceName} does not have Galileo chipset
           </Text>
-            <View style={styles.helpContainer}>
-              <TouchableOpacity onPress={handleHelpPress} style={styles.helpLink}>
-                <Text style={styles.helpLinkText}>
-                  Learn more about Galileo...
+                <View style={styles.helpContainer}>
+                  <TouchableOpacity onPress={handleHelpPress} style={styles.helpLink}>
+                    <Text style={styles.helpLinkText}>
+                      Learn more about Galileo...
             </Text>
-              </TouchableOpacity>
-            </View>
-            <Button
-              style={styles.button}
-              onPress={this.validate}
-              title="OK"
-              color="#841584"
-              accessibilityLabel="Start looking at issues around you"
-            />
-          </ScrollView>
-        </View>
+                  </TouchableOpacity>
+                </View>
+                <View style={styles.elevationContainer}>
+                  <View style={styles.logInOption}>
+                    <Login />
+                  </View>
+                  <Button
+                    style={styles.button}
+                    onPress={this.validate}
+                    title="OK"
+                    color="#841584"
+                    accessibilityLabel="Start looking at issues around you"
+                  />
+
+                </View>
+              </ScrollView>
+            </View> :
+            //main app
+            <View style={styles.container}>
+              {Platform.OS === 'ios' && <StatusBar barStyle="default" />}
+              <AppNavigator />
+            </View>}
+        </Provider>
 
       );
-    }
-    else {
-
-      //main app
-      return (
-        <Provider store={store}>
-          <View style={styles.container}>
-            {Platform.OS === 'ios' && <StatusBar barStyle="default" />}
-            <AppNavigator />
-          </View>
-        </Provider>
-      )
-    }
   }
+
 
   async _cacheResourcesAsync() {
     await Promise.all([
@@ -99,48 +98,28 @@ export default class App extends React.Component {
   }
 }
 
-
-// function handleLoadingError(error: Error) {
-//   // In this case, you might want to report the error to your error reporting
-//   // service, for example Sentry
-//   console.warn(error);
-// }
-
-
-
 function handleHelpPress() {
   WebBrowser.openBrowserAsync(
     'https://www.usegalileo.eu/'
   );
 }
 
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
   },
-  developmentModeText: {
-    marginBottom: 20,
-    color: 'rgba(0,0,0,0.4)',
-    fontSize: 14,
-    lineHeight: 19,
-    textAlign: 'center',
+  row: {
+    flex: 1,
+    flexDirection: "row"
+  },
+  logInOption: {
+    flex: 1,
+    flexDirection: "row",
+
   },
   contentContainer: {
     paddingTop: 30,
-  },
-
-  homeScreenFilename: {
-    marginVertical: 7,
-  },
-  codeHighlightText: {
-    color: 'rgba(96,100,109, 0.8)',
-  },
-  codeHighlightContainer: {
-    backgroundColor: 'rgba(0,0,0,0.05)',
-    borderRadius: 3,
-    paddingHorizontal: 4,
   },
   getStartedText: {
     fontSize: 17,
@@ -154,11 +133,8 @@ const styles = StyleSheet.create({
     lineHeight: 24,
     textAlign: 'center',
   },
-  tabBarInfoContainer: {
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
+  elevationContainer: {
+
     ...Platform.select({
       ios: {
         shadowColor: 'black',
@@ -194,9 +170,14 @@ const styles = StyleSheet.create({
     color: '#2e78b7',
   },
   button: {
-    marginTop: 10,
-    paddingHorizontal: 50,
-    marginBottom: 0
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+
+  },
+  button2: {
+    paddingHorizontal: 10
 
   },
 });

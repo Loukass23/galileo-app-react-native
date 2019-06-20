@@ -1,5 +1,11 @@
 const initState = {
-    USER_POSITION: null,
+    USER_POSITION:
+    {
+        latitude: 1,
+        longitude: 1,
+        latitudeDelta: 1,
+        longitudeDelta: 1
+    },
     STATUS: ""
 }
 
