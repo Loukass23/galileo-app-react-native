@@ -32,32 +32,6 @@ class App extends Component {
             [e.target.id]: e.target.value
         })
     }
-    // constructor(props) {
-    //     super(props);
-    //     this.state = {
-    //         isCameraVisible: false
-    //     }
-    // }
-    // showCameraView = () => {
-    //     this.setState({ isCameraVisible: true });
-    // }
-    // render() {
-    //     const { isCameraVisible } = this.state;
-    //     return (
-    //         <View style={styles.container}>
-    //             {!isCameraVisible && <Button title="Take a photo" onPress={this.showCameraView} />}
-    //             {isCameraVisible &&
-    //                 <Camera
-    //                     ref={(cam) => {
-    //                         this.camera = cam;
-    //                     }}
-    //                     style={styles.preview}
-    //                     aspect={Camera.constants.Aspect.fill}>
-    //                     <Text style={styles.capture} onPress={this.takePicture.bind(this)}>[CAPTURE]</Text>
-    //                 </Camera>}
-    //         </View>
-    //     );
-    // }
     componentDidMount() {
         console.log("App.js Component mounted");
     }
