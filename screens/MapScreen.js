@@ -1,13 +1,24 @@
 import React from 'react';
 import { connect } from 'react-redux'
-import { StyleSheet, Text, View, Dimensions } from 'react-native';
+import { StyleSheet, Text, View, Dimensions, TouchableHighlight } from 'react-native';
 import ClusterMarker from "../components/ClusterMarker";
 import { getCluster } from "../components/MapUtils";
+import IssueDetails from "../components/IssueDetails";
+import OnMapMessage from "../components/OnMapMessage";
 import MapView, { Callout, Marker, Circle } from 'react-native-maps';
 import Loader from '../components/Loader'
 import { getLocation } from '../redux/actions/locationActions'
+import { getIssues, setMarker, startTimer } from '../redux/actions/issuesActions'
 
 const { width, height } = Dimensions.get('window');
+const markerImages = {
+  Trash: require('../assets/images/Marker1.png'),
+  Road: require('../assets/images/Marker2.png'),
+  Category3: require('../assets/images/Marker3.png'),
+  Category4: require('../assets/images/Marker4.png'),
+  Category5: require('../assets/images/Marker5.png'),
+
+};
 
 class MapScreen extends React.Component {
   constructor(props) {
@@ -17,74 +28,43 @@ class MapScreen extends React.Component {
 
     this.state = {
       viewRegion: INITIAL_POSITION,
-      poi: null,
-      loaded: false,
-      hackHeight: height
+      hackHeight: height,
     };
-    this.onPoiClick = this.onPoiClick.bind(this);
-    this._getLocationAsync = this._getLocationAsync.bind(this);
-
+    this.showsMyLocationButtonWorkaroudFix = this.showsMyLocationButtonWorkaroudFix.bind(this)
   }
 
   componentDidMount() {
-
-    this._getLocationAsync()
-
-    //redux location
     this.props.getLocation()
 
-    //work around for locate user button bug
-    setTimeout(() => this.setState({ hackHeight: height + 1 }), 2500);
-    setTimeout(() => this.setState({ hackHeight: height - 1 }), 3000);
+    this.props.startTimer()
 
-    setTimeout(() => this.setState({ loaded: true }), 2000);
+
+
+    const dummyRegion = {
+      latitude: 1,
+      longitude: 1
+
+    }
+    const token =
+      "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0ZXN0THVjYXMiLCJyb2xlIjpbIlJPTEVfVVNFUiJdLCJleHAiOjE1NjEwMjU5OTEsImlhdCI6MTU2MTAyMjM5MX0.3e0lX7UYRQaJtvdEEKf1J937Td1dkutUoQVY7MDft28NBsXN-nJkXUI4b1E_GfC54WuwSHeWeWOvNUw8Nw-IMw"
+    this.props.getIssues(5, dummyRegion, token)
+  }
+
+  //work around for locate user button bug
+  showsMyLocationButtonWorkaroudFix() {
+    setTimeout(() => this.setState({ hackHeight: height + 1 }), 1500);
+    setTimeout(() => this.setState({ hackHeight: height - 1 }), 2000);
   }
 
 
-  _getLocationAsync = async () => {
-    // console.log('here')
-
-    // let userRegion = await this.props.location.USER_POSITION
-    // if (userRegion) console.log('userRegion', userRegion)
-
-
-    //   let { status } = await Permissions.askAsync(Permissions.LOCATION);
-    //   if (status !== 'granted') {
-    //     console.log('Permission to access location was denied')
-    //   } else {
-    //     console.log('Permission to access location was granted')
-    //   }
-
-    //   let location = await Location.getCurrentPositionAsync({})
-
-    //   if (location) {
-
-    //     const region = {
-    //       latitude: location.coords.latitude,
-    //       longitude: location.coords.longitude,
-    //       latitudeDelta: 1,
-    //       longitudeDelta: 1
-    //     };
-
-    //     this.setState({ userRegion: region });
-    //     console.log(this.refs)
-    //     //this.refs._map.animateToRegion(region, 500);
-    //   }
-
-
+  markerClick(marker) {
+    console.log(marker)
+    this.props.setMarker(marker)
   }
 
-  onPoiClick = (e) => {
-
-    const { coordinate } = e.nativeEvent;
-    console.log(this.state.poi)
-    this.setState({ poi: coordinate });
-  }
 
   renderMarker = (marker, index) => {
-
     const key = index + marker.geometry.coordinates[0];
-    //console.log(marker)
     // If a cluster
     if (marker.properties) {
       return (
@@ -101,39 +81,55 @@ class MapScreen extends React.Component {
     }
     // If a single marker
     return (
-      <Marker
-        onPress={this.onPoiClick}
+      <MapView.Marker
         key={key}
+        image={markerImages[marker.category]}
         coordinate={{
           latitude: marker.geometry.coordinates[1],
           longitude: marker.geometry.coordinates[0]
         }}
-      />
+        title={marker.category}
+        description={marker.description}
+      >
+
+        <Callout
+          onPress={() => this.markerClick(marker)}>
+          <View >
+            <Text>
+              {marker.category}{"\n"}
+              {marker.description}</Text>
+          </View>
+        </Callout>
+      </MapView.Marker>
     );
   };
-
   render() {
-    const { viewRegion, poi, loaded } = this.state;
-    const { COORDS, RADIUS } = this.props.issues
+    const { viewRegion } = this.state;
+    const { RADIUS, ISSUES, MARKER, ISSUES_LOADING, ERR } = this.props.issues
     const { USER_POSITION } = this.props.location
 
+    //workaroud to fix locate me button
 
 
-
-    const allCoords = COORDS.map(c => ({
+    const allCoords = ISSUES.map(issue => ({
       geometry: {
-        coordinates: [c.lon, c.lat]
-      }
+        coordinates: [issue.location.longitude, issue.location.latitude],
+      },
+      category: issue.category,
+      description: issue.description,
+      image: issue.imageUrls
     }));
-
     const cluster = getCluster(allCoords, viewRegion);
-    return (
-      <View style={{ paddingBottom: this.state.hackHeight, flex: 1 }}>
 
-        {loaded ?
+    if (MARKER) return (<IssueDetails marker={MARKER} />)
+    return (
+      <View >
+        {/* {ISSUES_LOADING ? < Loader message="Loading Issues" /> : */}
+        <View style={{ paddingBottom: this.state.hackHeight, flex: 1 }}>
           <MapView
             ref={component => this._map = component}
             style={Style.map}
+            onMapReady={this.showsMyLocationButtonWorkaroudFix}
             showsMyLocationButton={true}
             showsUserLocation={true}
             provider={MapView.PROVIDER_GOOGLE}
@@ -143,6 +139,7 @@ class MapScreen extends React.Component {
             onRegionChangeComplete={viewRegion => this.setState({ viewRegion })}
           >
 
+            {MARKER && <IssueDetails marker={MARKER} />}
             {USER_POSITION &&
               <Circle
                 center={USER_POSITION}
@@ -150,25 +147,12 @@ class MapScreen extends React.Component {
                 fillColor="rgba(163, 48, 87, 0.5)"
               />
             }
-
-            {poi && (
-              <Marker coordinate={poi}>
-                <Callout>
-                  <View>
-                    <Text>Type: </Text>
-                    <Text>Name: </Text>
-                    <Text>Lat: {poi.latitude}</Text>
-                    <Text>Long: {poi.longitude}</Text>
-                  </View>
-                </Callout>
-              </Marker>
-            )}
             {cluster.markers.map((marker, index) => this.renderMarker(marker, index))}
-
           </MapView>
-          : <Loader />}
-
-      </View>
+          <OnMapMessage message={ERR} />
+        </View>
+        {/* } */}
+      </View >
     );
 
   }
@@ -186,17 +170,11 @@ const Style = StyleSheet.create({
   map: {
     ...StyleSheet.absoluteFillObject,
   },
-  myLocationButton: {
+  calloutText: {
 
-    position: 'absolute',
-    bottom: 50,
-    right: 50,
-    padding: 15,
-    elevation: 3,
-    alignItems: 'center',
-    alignSelf: 'flex-end',
-    justifyContent: 'center',
-    borderRadius: 50
+  },
+  customView: {
+
   }
 });
 
@@ -209,7 +187,10 @@ const mapStateToProp = (state) => {
 }
 const mapDispatchToProps = (dispatch) => {
   return {
-    getLocation: () => dispatch(getLocation())
+    getLocation: () => dispatch(getLocation()),
+    setMarker: (marker) => dispatch(setMarker(marker)),
+    startTimer: () => dispatch(startTimer()),
+    getIssues: (radius, region, token) => dispatch(getIssues(radius, region, token))
 
   }
 }

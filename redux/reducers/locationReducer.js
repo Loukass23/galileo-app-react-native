@@ -1,9 +1,15 @@
 const initState = {
-    USER_POSITION: null,
+    USER_POSITION:
+    {
+        latitude: 1,
+        longitude: 1,
+        latitudeDelta: 1,
+        longitudeDelta: 1
+    },
     STATUS: ""
 }
 
-const authReducer = (state = initState, action) => {
+const locationReducer = (state = initState, action) => {
     switch (action.type) {
         case 'SET_USER_LOCATION':
             console.log('User Position: ', action.payload)
@@ -22,4 +28,4 @@ const authReducer = (state = initState, action) => {
     }
 
 }
-export default authReducer
+export default locationReducer
