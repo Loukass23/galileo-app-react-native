@@ -10,6 +10,7 @@ import {
 } from "../redux/actions/pictureActions";
 import Loader from "../components/Loader";
 import { connect } from "react-redux";
+import * as ImageManipulator from "expo-image-manipulator";
 class CameraExample extends React.Component {
   state = {
     hasCameraPermission: null,
@@ -25,12 +26,12 @@ class CameraExample extends React.Component {
 
   async snapPhoto() {
     console.log("Button Pressed");
-    // console.log(this.camera);
+
     if (this.camera) {
       console.log("Taking photo");
       const options = {
         quality: 0,
-        base64: true,
+        // base64: true,
         fixOrientation: true,
         exif: true
       };
@@ -40,14 +41,35 @@ class CameraExample extends React.Component {
         const { USER_POSITION } = this.props.currentLocation;
 
         photo.exif.Orientation = 1;
-        // console.log(photo);
+        console.log(photo);
 
+        // this.resizeImage(photo.uri);
         this.props.setPictureFile(photo.uri);
         this.props.setPictureLocation(USER_POSITION);
         this.props.setPictureLoader(false);
       });
     }
   }
+
+  // resizeImage = async uri => {
+  //   const manipResult = await ImageManipulator.manipulateAsync(uri, [], {
+  //     compress: 0.75,
+  //     format: "jpeg"
+  //   });
+  //   console.log
+  //   // const image = `${Expo.FileSystem.documentDirectory}${userID}/${time}.${fileType}`;
+  //   // Expo.FileSystem.copyAsync({
+  //   //   from: manipResult.uri,
+  //   //   to: image
+  //   // }).then(() => {
+  //   //   alert('It finished!');
+  //   // }).catch((error) => {
+  //   //   alert(JSON.stringify(error));
+  //   // });
+  //   console.log("aaaaaaaaaaaaaaaaaaaaaaaaaaaa");
+  //   this.props.setPictureFile(manipResult);
+  // };
+
   render() {
     const { hasCameraPermission } = this.state;
 
