@@ -20,8 +20,8 @@ class Login extends React.Component {
             const { type, user } = await Google.logInAsync({
                 androidStandaloneAppClientId: '<ANDROID_CLIENT_ID>',
                 iosStandaloneAppClientId: '<IOS_CLIENT_ID>',
-                androidClientId: '603386649315-9rbv8vmv2vvftetfbvlrbufcps1fajqf.apps.googleusercontent.com',
-                iosClientId: '603386649315-vp4revvrcgrcjme51ebuhbkbspl048l9.apps.googleusercontent.com',
+                androidClientId: '173460738439-q9p2nt1fii1s09va4rfuq58bogebbc28.apps.googleusercontent.com',
+                iosClientId: '173460738439-9su8rvl99luou2c98hi6jsv1n4chk7t0.apps.googleusercontent.com',
                 scopes: ['profile', 'email']
             });
 
@@ -129,6 +129,7 @@ const styles = StyleSheet.create({
     logInOption: {
         flex: 1,
         flexDirection: "row",
+        marginHorizontal: 10
 
     },
     contentContainer: {
@@ -190,6 +191,7 @@ const styles = StyleSheet.create({
 
     },
     button2: {
+        marginHorizontal: 10,
         paddingHorizontal: 10
 
     },

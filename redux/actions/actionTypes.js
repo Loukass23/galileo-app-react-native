@@ -18,3 +18,4 @@ export const SET_PICTURE_LOADER = "SET_PICTURE_LOADER";
 
 /*User Actions */
 export const SET_USER = "SET_USER";
+export const SET_USER_INFO = "SET_USER_INFO";

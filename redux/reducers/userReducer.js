@@ -1,6 +1,13 @@
 const initState = {
     USER: null,
-    USER_ERROR: null
+    USER_ERROR: null,
+    USER_LOADING: false,
+    USER_INFO:
+    {
+        loggedIn: false,
+        loading: false,
+        message: ""
+    }
 }
 const userReducer = (state = initState, action) => {
     switch (action.type) {
@@ -15,6 +22,11 @@ const userReducer = (state = initState, action) => {
             return {
                 ...state,
                 USER_ERROR: action.payload
+            }
+        case 'SET_USER_INFO':
+            return {
+                ...state,
+                USER_INFO: action.payload
             }
         default:
             return state

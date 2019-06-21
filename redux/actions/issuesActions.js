@@ -79,24 +79,7 @@ export const getIssues = () => {
 
 
 
-export const startTimer = () => {
-    return (dispatch, getState) => {
-        const state = getState();
-        dispatch({
-            type: START_TIMER,
-            payload: {
-                name: 'getIssueTimer',
-                action: async () => {
 
-                    dispatch(getLocation());
-
-                },
-                interval: 1000000,
-                runImmediately: false
-            }
-        });
-    }
-}
 // export const startTimer = () => {
 //     return (dispatch, getState) => {
 //         const state = getState();
