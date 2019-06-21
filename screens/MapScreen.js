@@ -7,8 +7,8 @@ import IssueDetails from "../components/IssueDetails";
 import OnMapMessage from "../components/OnMapMessage";
 import MapView, { Callout, Marker, Circle } from 'react-native-maps';
 import Loader from '../components/Loader'
-import { getLocation } from '../redux/actions/locationActions'
-import { getIssues, setMarker, startTimer } from '../redux/actions/issuesActions'
+import { getLocation, startTimer } from '../redux/actions/locationActions'
+import { getIssues, setMarker, } from '../redux/actions/issuesActions'
 
 const { width, height } = Dimensions.get('window');
 const markerImages = {
@@ -29,25 +29,16 @@ class MapScreen extends React.Component {
     this.state = {
       viewRegion: INITIAL_POSITION,
       hackHeight: height,
+      showMessage: true
     };
     this.showsMyLocationButtonWorkaroudFix = this.showsMyLocationButtonWorkaroudFix.bind(this)
   }
 
   componentDidMount() {
-    this.props.getLocation()
+    //this.props.getLocation()
 
     this.props.startTimer()
-
-
-
-    const dummyRegion = {
-      latitude: 1,
-      longitude: 1
-
-    }
-    const token =
-      "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0ZXN0THVjYXMiLCJyb2xlIjpbIlJPTEVfVVNFUiJdLCJleHAiOjE1NjEwMjU5OTEsImlhdCI6MTU2MTAyMjM5MX0.3e0lX7UYRQaJtvdEEKf1J937Td1dkutUoQVY7MDft28NBsXN-nJkXUI4b1E_GfC54WuwSHeWeWOvNUw8Nw-IMw"
-    this.props.getIssues(5, dummyRegion, token)
+    this.props.getIssues()
   }
 
   //work around for locate user button bug
@@ -56,7 +47,9 @@ class MapScreen extends React.Component {
     setTimeout(() => this.setState({ hackHeight: height - 1 }), 2000);
   }
 
-
+  onMapMessage() {
+    setTimeout(() => this.setState({ showMessage: false }), 10000);
+  }
   markerClick(marker) {
     console.log(marker)
     this.props.setMarker(marker)
@@ -104,7 +97,7 @@ class MapScreen extends React.Component {
     );
   };
   render() {
-    const { viewRegion } = this.state;
+    const { viewRegion, showMessage } = this.state;
     const { RADIUS, ISSUES, MARKER, ISSUES_LOADING, ERR } = this.props.issues
     const { USER_POSITION } = this.props.location
 
@@ -149,7 +142,7 @@ class MapScreen extends React.Component {
             }
             {cluster.markers.map((marker, index) => this.renderMarker(marker, index))}
           </MapView>
-          <OnMapMessage message={ERR} />
+          {showMessage && <OnMapMessage message={ERR} />}
         </View>
         {/* } */}
       </View >
@@ -190,7 +183,7 @@ const mapDispatchToProps = (dispatch) => {
     getLocation: () => dispatch(getLocation()),
     setMarker: (marker) => dispatch(setMarker(marker)),
     startTimer: () => dispatch(startTimer()),
-    getIssues: (radius, region, token) => dispatch(getIssues(radius, region, token))
+    getIssues: () => dispatch(getIssues())
 
   }
 }

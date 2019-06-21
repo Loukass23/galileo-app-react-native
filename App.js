@@ -13,8 +13,11 @@ import { Ionicons } from '@expo/vector-icons';
 import AppNavigator from './navigation/AppNavigator';
 import Loader from './components/Loader'
 import Login from './components/Login'
+import HomeScreen from './screens/HomeScreen'
+import { connect } from 'react-redux'
 
-export default class App extends React.Component {
+
+class App extends React.Component {
   state = {
     isReady: false,
     okButton: false
@@ -23,6 +26,7 @@ export default class App extends React.Component {
     this.setState({ okButton: true })
   }
   render() {
+    //const { USER_LOADING } = this.props.user
     const { deviceName } = Constants
     if (!this.state.isReady) {
       return (
@@ -38,12 +42,13 @@ export default class App extends React.Component {
       //Splash screen
       return (
         <Provider store={store}>
-          {!this.state.okButton ?
+          <HomeScreen />
+          {/* {!this.state.okButton ?
             <View style={styles.container}>
               <ScrollView
                 style={styles.container}
                 contentContainerStyle={styles.contentContainer}>
-                <Loader />
+                <Loader massage="loading user" />
                 <Text style={styles.getStartedText}>
                   Your current device  {deviceName} does not have Galileo chipset
           </Text>
@@ -73,7 +78,7 @@ export default class App extends React.Component {
             <View style={styles.container}>
               {Platform.OS === 'ios' && <StatusBar barStyle="default" />}
               <AppNavigator />
-            </View>}
+            </View>} */}
         </Provider>
 
       );
@@ -181,3 +186,16 @@ const styles = StyleSheet.create({
 
   },
 });
+
+
+const mapStateToProp = (state) => {
+  return {
+    user: state.user,
+  }
+}
+const mapDispatchToProps = (dispatch) => {
+  return {
+
+  }
+}
+export default App
