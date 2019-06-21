@@ -7,6 +7,8 @@ import Camera from "../components/Camera";
 import { connect } from "react-redux";
 import axios from "axios";
 
+import * as firebase from "firebase";
+
 class ReportIssueScreen extends React.Component {
   state = {
     // pictureURI: null,
@@ -17,22 +19,48 @@ class ReportIssueScreen extends React.Component {
     const { PICTURE_FILE } = this.props.pictureURI;
     const { PICTURE_LOCATION } = this.props.pictureURI;
     const { PICTURE_LOADER } = this.props.pictureURI;
-    console.log(PICTURE_FILE);
-    let api_key = "848653823763635";
-    let api_secret = "1yOwrzV2V4yXjXvmkN2SGSjovl0";
-    let cloud = "dgiubh3ed";
-    // let hash_string = 'timestamp=' + timestamp + api_secret
-    // let signature = CryptoJS.SHA1(hash_string).toString();
-    let upload_url =
-      "https://api.cloudinary.com/v1_1/" + cloud + "/image/upload";
-    axios
-      .post(upload_url, {
-        upload_preset: "issue-upload"
-      })
-      .then(res => {
-        console.log(res);
-      })
-      .catch(err => console.log(err));
+    console.log("FILE IN REPORT ISSUE" + PICTURE_FILE);
+    // const file = PICTURE_FILE.split("Camera/")[1];
+    // console.log(file);
+    const firebaseConfig = {
+      apiKey: "AIzaSyD9IXzl3kSQhoMwgQcBUdWDK4XHZDtqSiY",
+      authDomain: "galileoapp.firebaseapp.com",
+      databaseURL: "https://galileoapp.firebaseio.com",
+      projectId: "galileoapp",
+      storageBucket: "galileoapp.appspot.com",
+      messagingSenderId: "45488988036",
+      appId: "1:45488988036:web:45ee461427207715"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const storageService = firebase.storage();
+    const storageRef = storageService.ref();
+
+    console.log(storageRef);
+
+    const uploadTask = storageRef
+      .child(`images/${PICTURE_FILE}`)
+      .put(PICTURE_FILE);
+    uploadTask.on(
+      "state_changed",
+      snapshot => {
+        // console.log(snapshot)
+        // let prog = Math.round(snapshot.bytesTransferred * 100 / snapshot.totalBytes)
+        // this.setState({ progress: prog, buffer: 100 });
+      },
+      error => {
+        console.log(error);
+      },
+      () => {
+        console.log("success");
+        // this.setState({ isUploading: false, progress: 100, })
+        firebase
+          .storage()
+          .ref("images")
+          .child(`${PICTURE_FILE}`)
+          .getDownloadURL()
+          .then(url => console.log(url));
+      }
+    );
   };
 
   render() {
