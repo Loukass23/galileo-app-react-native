@@ -24,6 +24,7 @@
     "expo-location": "~5.0.1",
     "expo-permissions": "~5.0.1",
     "expo-web-browser": "^5.0.0",
+    "firebase": "^6.2.1",
     "qs": "^6.7.0",
     "querystring": "^0.2.0",
     "react": "16.8.3",
