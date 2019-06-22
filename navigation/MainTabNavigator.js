@@ -8,6 +8,7 @@ import {
 import TabBarIcon from "../components/TabBarIcon";
 import Camera from "../components/Camera";
 import ReportIssueScreen from "../screens/ReportIssueScreen";
+import IssuesScreen from "../screens/IssuesScreen";
 import SettingsScreen from "../screens/SettingsScreen";
 import MapView from "../screens/MapScreen";
 

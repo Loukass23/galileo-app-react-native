@@ -44,23 +44,28 @@ const Styles = StyleSheet.create({
         backgroundColor: '#fff',
         flex: 1,
         flexDirection: "row",
+        textAlign: 'center',
 
         alignItems: 'stretch',
+
 
     },
     welcomeImage: {
 
-        marginTop: 15,
+        marginTop: 14,
         width: 30,
-        height: 35,
+        height: 37,
         marginLeft: 15
     },
     text: {
-        marginTop: 15,
+        marginTop: 14,
+        padding: 5,
         textAlign: 'center',
+        alignItems: 'center',
         width: 200,
-        height: 35,
-        backgroundColor: '#fff',
+        height: 37,
+        backgroundColor: 'rgba(255, 255, 255, .7)',
+        color: 'grey'
     },
 })
 

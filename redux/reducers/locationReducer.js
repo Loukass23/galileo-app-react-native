@@ -6,7 +6,8 @@ const initState = {
         latitudeDelta: 1,
         longitudeDelta: 1
     },
-    STATUS: ""
+    STATUS: "",
+    ADDRESS: null
 }
 
 const locationReducer = (state = initState, action) => {
@@ -22,6 +23,12 @@ const locationReducer = (state = initState, action) => {
             return {
                 ...state,
                 STATUS: action.payload
+            }
+        case 'SET_ADDRESS':
+            console.log('Address: ', action.payload)
+            return {
+                ...state,
+                ADDRESS: action.payload
             }
         default:
             return state
