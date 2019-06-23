@@ -14,7 +14,7 @@ const { width, height } = Dimensions.get('window');
 const markerImages = {
   Trash: require('../assets/images/Marker1.png'),
   Road: require('../assets/images/Marker2.png'),
-  Category3: require('../assets/images/Marker3.png'),
+  Vandalism: require('../assets/images/Marker3.png'),
   Category4: require('../assets/images/Marker4.png'),
   Category5: require('../assets/images/Marker5.png'),
 
@@ -35,11 +35,12 @@ class MapScreen extends React.Component {
   }
 
   componentDidMount() {
-    this.props.getLocation()
+    //this.props.getLocation()
     //this.props.startTimer()
 
-    // this.props.getIssues()
+    this.props.getIssues()
   }
+
 
   //work around for locate user button bug
   showsMyLocationButtonWorkaroudFix() {
@@ -151,6 +152,7 @@ class MapScreen extends React.Component {
 }
 MapScreen.navigationOptions = {
   title: 'Issues Map',
+
 };
 
 const Style = StyleSheet.create({

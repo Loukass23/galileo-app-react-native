@@ -53,14 +53,16 @@ export const getIssues = () => {
         const state = getState();
         const region = state.location.USER_POSITION
         const token = state.user.USER.token
-        const radius = state.issues.RADIUS
+
+        //const radius = state.issues.RADIUS  //radius in m
+        const radius = state.issues.RADIUS / 1000 //radius in km
 
         const URL = `http://kietz.herokuapp.com/api/issues?latitude=${region.latitude}
-        &longitude=${region.latitude}&page=0&radius=${radius}&size=10`
-
+        &longitude=${region.longitude}&page=0&radius=${radius}`
+        console.log(URL);
         return axios.get(URL, { headers: { "Authorization": `Bearer ${token}` } })
             .then((res) => {
-
+                console.log(res.data);
                 dispatch({
                     type: GET_ISSUES,
                     payload: res.data
