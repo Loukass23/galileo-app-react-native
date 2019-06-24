@@ -37,8 +37,6 @@ class MapScreen extends React.Component {
   }
 
   componentDidMount() {
-    //this.props.getLocation()
-    //this.props.startTimer()
 
     this.props.getIssues()
   }
@@ -50,9 +48,6 @@ class MapScreen extends React.Component {
     setTimeout(() => this.setState({ hackHeight: height - 1 }), 2000);
   }
 
-  onMapMessage() {
-    setTimeout(() => this.setState({ showMessage: false }), 10000);
-  }
   markerClick(marker) {
     console.log(marker)
     this.props.setMarker(marker)
@@ -156,8 +151,9 @@ class MapScreen extends React.Component {
             }
             {this.state.poi && (
               <Marker coordinate={this.state.poi.coordinate}
-                showCallout>
-                <Callout>
+              >
+                <Callout
+                  onPress={() => this.markerClick(this.state.poi)}>
                   <View>
                     <Text>Add Issue Here (WIP)</Text>
                     {/* <Text>Name: {this.state.poi.name}</Text> */}
@@ -168,7 +164,7 @@ class MapScreen extends React.Component {
 
             {cluster.markers.map((marker, index) => this.renderMarker(marker, index))}
           </MapView>
-          {showMessage && this.state.showMessage && <OnMapMessage message={ERR} />}
+          {ERR && <OnMapMessage message={ERR} />}
         </View>
         {/* } */}
       </View >

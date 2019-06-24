@@ -1,7 +1,8 @@
-import { AppLoading, Constants, Facebook, Google } from 'expo';
+import { Constants } from 'expo';
 import { getLocation } from '../redux/actions/locationActions'
 import { getStorageToken, logout } from '../redux/actions/userActions'
 // import DeviceInfo from 'react-native-device-info';
+import { galileoDevices, androidDevices } from '../constants/Devices'
 import { Asset } from 'expo-asset';
 import * as Font from 'expo-font';
 import React from 'react';
@@ -30,6 +31,7 @@ class HomeScreen extends React.Component {
     }
 
     componentDidMount() {
+        this.isDeviceGalileoEnabled()
         this.props.getLocation()
         this.props.getStorageToken()
 
@@ -37,7 +39,19 @@ class HomeScreen extends React.Component {
         // console.log(DeviceInfo.getModel());
 
     };
-
+    isDeviceGalileoEnabled() {
+        const { deviceName } = Constants
+        if (deviceName.contain('Apple')) {
+            console.log(deviceName)
+        }
+        else {
+            const device =
+                androidDevices.filter(device => {
+                    return deviceName.model == deviceName
+                })
+            console.log(device)
+        }
+    }
     validate = () => {
         this.setState({ okButton: true })
     }
@@ -49,14 +63,14 @@ class HomeScreen extends React.Component {
         return (
             <View style={styles.container}>
                 {/* {!this.state.okButton ? <ScrollView */}
-                {!USER ? <ScrollView
+                {!USER || !this.state.okButton ? <ScrollView
                     style={styles.container}
                     contentContainerStyle={styles.contentContainer}>
                     <Text style={styles.title}>Kietz</Text>
-                    {USER && <Text style={styles.title}>{USER.username}</Text>}
+                    {USER && <Text style={styles.title}>Hi {USER.username}</Text>}
                     {USER_INFO.loading && <Loader message={USER_INFO.message} />}
                     <Text style={styles.getStartedText}>
-                        Your current device  {deviceName} does not have Galileo chipset
+                        Accuracy matters! Your current device  {deviceName} does not have Galileo chipset
           </Text>
                     <View style={styles.helpContainer}>
                         <TouchableOpacity onPress={handleHelpPress} style={styles.helpLink}>
