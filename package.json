@@ -32,6 +32,8 @@
     "react-dom": "^16.8.6",
     "react-native": "https://github.com/expo/react-native/archive/sdk-33.0.0.tar.gz",
     "react-native-camera": "^2.10.0",
+    "react-native-device-info": "^2.1.3",
+    "react-native-flash-message": "^0.1.13",
     "react-native-map-clustering": "^1.3.2",
     "react-native-web": "^0.11.4",
     "react-navigation": "^3.11.0",

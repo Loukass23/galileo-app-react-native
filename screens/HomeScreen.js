@@ -1,4 +1,7 @@
 import { AppLoading, Constants, Facebook, Google } from 'expo';
+import { getLocation } from '../redux/actions/locationActions'
+import { getStorageToken, logout } from '../redux/actions/userActions'
+// import DeviceInfo from 'react-native-device-info';
 import { Asset } from 'expo-asset';
 import * as Font from 'expo-font';
 import React from 'react';
@@ -12,13 +15,29 @@ import AppNavigator from '../navigation/AppNavigator';
 import Loader from '../components/Loader'
 import Login from '../components/Login'
 import { connect } from 'react-redux'
+import { SecureStore } from 'expo';
+
+
 
 
 class HomeScreen extends React.Component {
-    state = {
-        isReady: false,
-        okButton: false
+    constructor(props) {
+        super(props);
+        this.state = {
+            isReady: false,
+            okButton: false
+        };
+    }
+
+    componentDidMount() {
+        this.props.getLocation()
+        this.props.getStorageToken()
+
+        // console.log(DeviceInfo.getManufacturer());
+        // console.log(DeviceInfo.getModel());
+
     };
+
     validate = () => {
         this.setState({ okButton: true })
     }
@@ -28,14 +47,13 @@ class HomeScreen extends React.Component {
         console.log(USER_INFO);
         //Splash screen
         return (
-
             <View style={styles.container}>
-
-                {/* {!USER_INFO.logged ? <ScrollView */}
-                {USER_INFO.logged ? <ScrollView
+                {/* {!this.state.okButton ? <ScrollView */}
+                {!USER ? <ScrollView
                     style={styles.container}
                     contentContainerStyle={styles.contentContainer}>
                     <Text style={styles.title}>Kietz</Text>
+                    {USER && <Text style={styles.title}>{USER.username}</Text>}
                     {USER_INFO.loading && <Loader message={USER_INFO.message} />}
                     <Text style={styles.getStartedText}>
                         Your current device  {deviceName} does not have Galileo chipset
@@ -48,16 +66,29 @@ class HomeScreen extends React.Component {
                         </TouchableOpacity>
                     </View>
                     <View style={styles.elevationContainer}>
-                        <View style={styles.logInOption}>
-                            {!USER_INFO.loading && <Login />}
-                        </View>
-                        {/* <Button
-                            style={styles.button}
-                            onPress={this.validate}
-                            title="OK"
-                            color="#841584"
-                            accessibilityLabel="Start looking at issues around you"
-                        /> */}
+                        {!USER ?
+                            <View style={styles.logInOption}>
+                                <Login />
+
+                            </View> :
+                            <View>
+                                <Button
+                                    style={styles.button}
+                                    onPress={this.props.logout}
+                                    title="LOG OUT"
+                                    color="#841584"
+                                    accessibilityLabel="Log Out"
+                                />
+                                <Button
+                                    style={styles.button}
+                                    onPress={this.validate}
+                                    title="GO"
+                                    color="#841584"
+                                    accessibilityLabel="Start looking at issues around you"
+                                />
+
+                            </View>
+                        }
 
                     </View>
                 </ScrollView> :
@@ -167,7 +198,9 @@ const mapStateToProp = (state) => {
 }
 const mapDispatchToProps = (dispatch) => {
     return {
-
+        getLocation: () => dispatch(getLocation()),
+        logout: () => dispatch(logout()),
+        getStorageToken: () => dispatch(getStorageToken())
     }
 }
 export default connect(mapStateToProp, mapDispatchToProps)(HomeScreen)

@@ -1,5 +1,8 @@
 import { SET_USER } from './actionTypes'
 import { SET_USER_INFO } from './actionTypes'
+import { SecureStore } from 'expo';
+
+
 
 export const registerUser = (user) => {
     return async dispatch => {
@@ -28,6 +31,18 @@ export const registerUser = (user) => {
 
     }
 }
+export const logout = () => {
+    return async dispatch => {
+
+        removeStorageToken()
+
+        dispatch({
+            type: SET_USER,
+            payload: null
+        })
+    }
+}
+
 
 export const login = ({ username, password }) => {
     return async dispatch => {
@@ -47,7 +62,9 @@ export const login = ({ username, password }) => {
 
         });
         const { token } = await rawResponse.json();
-        console.log(token)
+
+        setStorageToken(token, username);
+
         dispatch({
             type: SET_USER,
             payload: {
@@ -61,5 +78,52 @@ export const login = ({ username, password }) => {
         })
 
     }
+}
+
+
+export const getStorageToken = () => {
+    return async dispatch => {
+        try {
+            const token = await SecureStore.getItemAsync('secure_token');
+            const username = await SecureStore.getItemAsync('username');
+            if (username && token) {
+                dispatch({
+                    type: SET_USER,
+                    payload: {
+                        username,
+                        token
+                    }
+                })
+            }
+
+
+        } catch (e) {
+            console.log('No token found', e)
+        }
+    }
+}
+
+setStorageToken = async (token, username) => {
+
+    try {
+        await SecureStore.setItemAsync('secure_token', token);
+        await SecureStore.setItemAsync('username', username);
+    } catch (e) {
+        console.log('failed to set storage token', e);
+    }
+
+    console.log('set storage token')
+}
+
+removeStorageToken = async () => {
+
+    try {
+        await SecureStore.deleteItemAsync('secure_token');
+        await SecureStore.deleteItemAsync('username');
+    } catch (e) {
+        console.log('failed to delete storage token', e);
+    }
+
+    console.log('deleted storage token')
 }
 
