@@ -29,9 +29,11 @@ class MapScreen extends React.Component {
     this.state = {
       viewRegion: INITIAL_POSITION,
       hackHeight: height,
-      showMessage: true
+      showMessage: true,
+      poi: null
     };
     this.showsMyLocationButtonWorkaroudFix = this.showsMyLocationButtonWorkaroudFix.bind(this)
+    this.mapLongClick = this.mapLongClick.bind(this)
   }
 
   componentDidMount() {
@@ -55,6 +57,16 @@ class MapScreen extends React.Component {
     console.log(marker)
     this.props.setMarker(marker)
   }
+  mapLongClick(e) {
+    console.log(e.nativeEvent)
+    const poi = e.nativeEvent;
+
+    this.setState({
+      poi,
+    });
+
+  }
+
 
 
   renderMarker = (marker, index) => {
@@ -101,7 +113,6 @@ class MapScreen extends React.Component {
     const { viewRegion, showMessage } = this.state;
     const { RADIUS, ISSUES, MARKER, ISSUES_LOADING, ERR } = this.props.issues
     const { USER_POSITION } = this.props.location
-    //workaroud to fix locate me button
 
 
     const allCoords = ISSUES.map(issue => ({
@@ -129,6 +140,9 @@ class MapScreen extends React.Component {
             loadingIndicatorColor={"#ffbbbb"}
             loadingBackgroundColor={"#ffbbbb"}
             region={viewRegion}
+            showsBuildings={true}
+            onLongPress={this.mapLongClick}
+            onPress={() => this.setState({ poi: null })}
             onRegionChangeComplete={viewRegion => this.setState({ viewRegion })}
           >
 
@@ -140,6 +154,18 @@ class MapScreen extends React.Component {
                 fillColor="rgba(163, 48, 87, 0.5)"
               />
             }
+            {this.state.poi && (
+              <Marker coordinate={this.state.poi.coordinate}
+                showCallout>
+                <Callout>
+                  <View>
+                    <Text>Add Issue Here (WIP)</Text>
+                    {/* <Text>Name: {this.state.poi.name}</Text> */}
+                  </View>
+                </Callout>
+              </Marker>
+            )}
+
             {cluster.markers.map((marker, index) => this.renderMarker(marker, index))}
           </MapView>
           {showMessage && this.state.showMessage && <OnMapMessage message={ERR} />}
