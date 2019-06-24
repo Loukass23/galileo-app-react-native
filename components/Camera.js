@@ -27,6 +27,7 @@ class CameraExample extends React.Component {
   async snapPhoto() {
     console.log("Button Pressed");
 
+
     if (this.camera) {
       console.log("Taking photo");
       const options = {

@@ -38,7 +38,7 @@ const initState = {
             },
         },
     ],
-    ERR: "",
+    ERR: "No issues to show",
     INITIAL_POSITION: {
         latitude: 52.529015,
         longitude: 13.395032,

@@ -1,7 +1,9 @@
 import { Location, Permissions } from 'expo';
+import { googleAPIkey } from '../../constants/config'
 import { START_TIMER } from 'redux-timer';
 import { SET_USER_LOCATION } from './actionTypes'
 import { SET_USER_LOCATION_STATUS } from './actionTypes'
+import { SET_ADDRESS } from './actionTypes'
 
 export function getLocation() {
     return async dispatch => {
@@ -28,12 +30,32 @@ export function getLocation() {
                 latitudeDelta: 1,
                 longitudeDelta: 1
             };
+            dispatch(getAddress(region));
             dispatch({
                 type: SET_USER_LOCATION,
                 payload: region
             })
         }
 
+    }
+}
+export const getAddress = (region) => {
+    return (dispatch) => {
+        fetch('https://maps.googleapis.com/maps/api/geocode/json?address=' + region.latitude + ',' + region.longitude + '&key=' + googleAPIkey)
+            .then((response) => response.json())
+            .then((responseJson) => {
+                const array = responseJson.results[0].address_components
+                const address = {
+                    formatted: responseJson.results[0].formatted_address,
+                    city: array[array.length - 3].short_name,
+                    country: array[array.length - 2].short_name
+                }
+
+                dispatch({
+                    type: SET_ADDRESS,
+                    payload: address
+                })
+            })
     }
 }
 export const startTimer = () => {

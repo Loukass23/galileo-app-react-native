@@ -30,10 +30,12 @@ class HomeScreen extends React.Component {
         return (
 
             <View style={styles.container}>
-                <Text style={styles.title}>Kietz</Text>
-                {!USER_INFO.logged ? <ScrollView
+
+                {/* {!USER_INFO.logged ? <ScrollView */}
+                {USER_INFO.logged ? <ScrollView
                     style={styles.container}
                     contentContainerStyle={styles.contentContainer}>
+                    <Text style={styles.title}>Kietz</Text>
                     {USER_INFO.loading && <Loader message={USER_INFO.message} />}
                     <Text style={styles.getStartedText}>
                         Your current device  {deviceName} does not have Galileo chipset

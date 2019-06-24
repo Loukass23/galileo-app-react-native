@@ -35,10 +35,10 @@ class MapScreen extends React.Component {
   }
 
   componentDidMount() {
-    //this.props.getLocation()
+    this.props.getLocation()
+    //this.props.startTimer()
 
-    this.props.startTimer()
-    this.props.getIssues()
+    // this.props.getIssues()
   }
 
   //work around for locate user button bug
@@ -100,7 +100,6 @@ class MapScreen extends React.Component {
     const { viewRegion, showMessage } = this.state;
     const { RADIUS, ISSUES, MARKER, ISSUES_LOADING, ERR } = this.props.issues
     const { USER_POSITION } = this.props.location
-
     //workaroud to fix locate me button
 
 
@@ -142,7 +141,7 @@ class MapScreen extends React.Component {
             }
             {cluster.markers.map((marker, index) => this.renderMarker(marker, index))}
           </MapView>
-          {showMessage && <OnMapMessage message={ERR} />}
+          {showMessage && this.state.showMessage && <OnMapMessage message={ERR} />}
         </View>
         {/* } */}
       </View >

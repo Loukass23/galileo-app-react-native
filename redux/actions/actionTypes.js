@@ -10,6 +10,7 @@ export const GET_ISSUES_ERROR = 'GET_ISSUES_ERROR'
 /*Location Actions*/
 export const SET_USER_LOCATION = "SET_USER_LOCATION";
 export const SET_USER_LOCATION_STATUS = "SET_USER_LOCATION_STATUS";
+export const SET_ADDRESS = "SET_ADDRESS";
 
 /*Picture Actions*/
 export const SET_PICTURE_FILE = "SET_PICTURE_FILE";
