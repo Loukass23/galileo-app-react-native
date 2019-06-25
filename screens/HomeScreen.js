@@ -26,12 +26,14 @@ class HomeScreen extends React.Component {
         super(props);
         this.state = {
             isReady: false,
-            okButton: false
+            okButton: false,
+            device: null,
+            galileoEnabled: false
         };
     }
 
     componentDidMount() {
-        this.isDeviceGalileoEnabled()
+        this.galileoEnabled()
         this.props.getLocation()
         this.props.getStorageToken()
 
@@ -39,26 +41,40 @@ class HomeScreen extends React.Component {
         // console.log(DeviceInfo.getModel());
 
     };
-    isDeviceGalileoEnabled() {
-        const { deviceName } = Constants
-        if (deviceName.contain('Apple')) {
-            console.log(deviceName)
+    galileoEnabled = async () => {
+        const device = await this.deviceIosAndroid()
+
+        const galileoEnabled = galileoDevices.find(e => {
+            return e.Model == device
+        })
+        console.log('resr', galileoEnabled);
+        this.setState({ device, galileoEnabled })
+    }
+
+    deviceIosAndroid() {
+        const { deviceName, platform } = Constants
+
+        if (platform == "ios") {
+            return platform.model
         }
         else {
             const device =
                 androidDevices.filter(device => {
-                    return deviceName.model == deviceName
+                    return device.model == deviceName
                 })
-            console.log(device)
+            console.log(device);
+            return device == [] ? 'Device unknown' : device[0].market_name
         }
     }
+
     validate = () => {
         this.setState({ okButton: true })
     }
+
     render() {
         const { deviceName } = Constants
         const { USER, USER_INFO } = this.props.user
-        console.log(USER_INFO);
+        const { galileoEnabled, device } = this.state
         //Splash screen
         return (
             <View style={styles.container}>
@@ -69,9 +85,12 @@ class HomeScreen extends React.Component {
                     <Text style={styles.title}>Kietz</Text>
                     {USER && <Text style={styles.title}>Hi {USER.username}</Text>}
                     {USER_INFO.loading && <Loader message={USER_INFO.message} />}
-                    <Text style={styles.getStartedText}>
-                        Accuracy matters! Your current device  {deviceName} does not have Galileo chipset
-          </Text>
+                    {galileoEnabled ? <Text style={styles.getStartedText}>
+                        Accuracy matters! Your current device  {device} has a Galileo chipset!
+          </Text> :
+                        <Text style={styles.getStartedText}>
+                            Accuracy matters! Your current device  {device} does not have Galileo chipset
+          </Text>}
                     <View style={styles.helpContainer}>
                         <TouchableOpacity onPress={handleHelpPress} style={styles.helpLink}>
                             <Text style={styles.helpLinkText}>
