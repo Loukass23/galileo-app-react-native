@@ -13,11 +13,17 @@ import Colors from "../constants/Colors";
 import Camera from "../components/Camera";
 import { connect } from "react-redux";
 
+
 import { postIssue } from "../redux/actions/issuesActions";
+
+import axios from "axios";
+import IssueCategory from "../components/IssueCategory";
+
 
 import * as firebase from "firebase";
 
 class ReportIssueScreen extends React.Component {
+
   constructor(props) {
     super(props);
     this.state = {
@@ -30,10 +36,12 @@ class ReportIssueScreen extends React.Component {
   }
   componentDidMount() {}
 
+
   submitIssue = () => {
     const { PICTURE_FILE } = this.props.pictureURI;
     const { PICTURE_LOCATION } = this.props.pictureURI;
     const { PICTURE_LOADER } = this.props.pictureURI;
+
 
     console.log("FILE IN REPORT ISSUE" + PICTURE_FILE);
     this.setState({ photoUploading: true });
@@ -99,12 +107,7 @@ class ReportIssueScreen extends React.Component {
           <Camera />
         </View>
       );
-    }
-
-    //else if category has not been choosen yet, render category component
-    // else if (this.props.pictureURI.PICTURE_LOADER) {
-    //   return <Loader />;
-    // }
+    }   //else if category has not been choosen yet, render category component
     else {
       if (this.props.pictureURI.PICTURE_LOCATION == null) {
         return <Text>Loading..</Text>;
@@ -140,7 +143,7 @@ class ReportIssueScreen extends React.Component {
               progress={this.state.progress}
             />
           </View>
-        );
+        );        
       }
     }
   }

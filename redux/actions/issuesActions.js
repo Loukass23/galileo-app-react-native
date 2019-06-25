@@ -1,29 +1,38 @@
-import axios from "axios";
-import { SET_RADIUS } from "./actionTypes";
-import { SET_MARKER } from "./actionTypes";
-import { CLEAR_MARKER } from "./actionTypes";
-import { GET_ISSUES } from "./actionTypes";
-import { ISSUES_LOADING } from "./actionTypes";
-import { GET_ISSUES_ERROR } from "./actionTypes";
-import { START_TIMER } from "redux-timer";
-import { getLocation } from "./locationActions";
+import axios from 'axios';
+import { SET_RADIUS } from './actionTypes'
+import { SET_MARKER } from './actionTypes'
+import { CLEAR_MARKER } from './actionTypes'
+import { GET_ISSUES } from './actionTypes'
+import { ISSUES_LOADING } from './actionTypes'
+import { GET_ISSUES_ERROR } from './actionTypes'
+import { CLEAR_ERROR } from './actionTypes'
+import { START_TIMER } from 'redux-timer';
+import { getLocation } from './locationActions'
 
-export const setRadius = radius => {
-  return dispatch => {
-    dispatch({
-      type: SET_RADIUS,
-      payload: radius
-    });
-  };
-};
-export const setMarker = marker => {
-  return dispatch => {
-    dispatch({
-      type: SET_MARKER,
-      payload: marker
-    });
-  };
-};
+
+
+
+
+
+export const setRadius = (radius) => {
+    return (dispatch) => {
+        dispatch({
+            type: SET_RADIUS,
+            payload: radius
+        })
+
+    }
+}
+export const setMarker = (marker) => {
+    return (dispatch) => {
+        dispatch({
+            type: SET_MARKER,
+            payload: marker
+        })
+
+    }
+}
+
 export const clearMarker = () => {
   return dispatch => {
     dispatch({
@@ -48,8 +57,27 @@ export const getIssues = () => {
     //const radius = state.issues.RADIUS  //radius in m
     const radius = state.issues.RADIUS / 1000; //radius in km
 
-    const URL = `http://kietz.herokuapp.com/api/issues?latitude=${
-      region.latitude
+
+        const URL = `http://kietz.herokuapp.com/api/issues?latitude=${region.latitude}
+        &longitude=${region.longitude}&page=0&radius=${radius}`
+        console.log(URL);
+        return axios.get(URL, { headers: { "Authorization": `Bearer ${token}` } })
+            .then((res) => {
+                console.log(res.data);
+                dispatch({
+                    type: GET_ISSUES,
+                    payload: res.data
+                })
+                setTimeout(() => dispatch(clearFetchMessage()), 10000);
+
+            }).catch((err) => {
+                console.log(err)
+                dispatch({
+                    type: GET_ISSUES_ERROR,
+                    payload: err
+                })
+            })
+
     }
         &longitude=${region.longitude}&page=0&radius=${radius}`;
     console.log(URL);
@@ -71,6 +99,8 @@ export const getIssues = () => {
       });
   };
 };
+
+
 
 export const postIssue = issue => {
   return async (dispatch, getState) => {
@@ -98,26 +128,22 @@ export const postIssue = issue => {
       },
       body: string2
     });
-    // const string = `{\n\t\"category\": \"${
-    //   issue.category
-    // }\",\n\t\"imgUrls\": \"[${issue.imageUrls}]\",
-    // \n\t\"location\": {\n\t\"longitude\": \"${issue.location.longitude}\",
-    // \n\t\"latitude\": \"${issue.location.latitude}\"\n\t\}
-    // }`;
-
-    // console.log(string);
-    //     console.log("state in post issue", state);
-    //     console.log("issue in post issue", issue);
-    //     return axios
-
-    //       .post(URL, {
-    //         headers: { Authorization: `Bearer ${token}` },
-    //         body: string2
-    //       })
-    //       .then(res => console.log("issue posted", res))
-    //       .catch(err => console.log("error", err));
   };
 };
+
+
+
+
+export const clearFetchMessage = () => {
+    return dispatch => {
+        console.log('clear')
+        dispatch({
+            type: CLEAR_ERROR,
+        })
+
+    }
+}
+
 
 // export const startTimer = () => {
 //     return (dispatch, getState) => {

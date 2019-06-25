@@ -52,18 +52,18 @@ const Styles = StyleSheet.create({
     },
     welcomeImage: {
 
-        marginTop: 14,
+        marginTop: 13,
         width: 30,
-        height: 37,
-        marginLeft: 15
+        height: 38,
+        marginLeft: 60
     },
     text: {
-        marginTop: 14,
+        marginTop: 13,
         padding: 5,
         textAlign: 'center',
         alignItems: 'center',
         width: 200,
-        height: 37,
+        height: 38,
         backgroundColor: 'rgba(255, 255, 255, .7)',
         color: 'grey'
     },
