@@ -6,6 +6,8 @@ import Colors from "../constants/Colors";
 import Camera from "../components/Camera";
 import { connect } from "react-redux";
 import axios from "axios";
+import IssueCategory from "../components/IssueCategory";
+
 
 class ReportIssueScreen extends React.Component {
   state = {
@@ -40,16 +42,13 @@ class ReportIssueScreen extends React.Component {
     const { PICTURE_FILE } = this.props.pictureURI;
     if (PICTURE_FILE == null) {
       return (
-        <View style={styleCamera}>
+        <View >
           <Camera />
         </View>
       );
     }
 
     //else if category has not been choosen yet, render category component
-    // else if (this.props.pictureURI.PICTURE_LOADER) {
-    //   return <Loader />;
-    // }
     else {
       if (this.props.pictureURI.PICTURE_LOCATION == null) {
         return <Text>Loading..</Text>;

@@ -7,6 +7,7 @@ import {
 } from "react-navigation";
 import TabBarIcon from "../components/TabBarIcon";
 import Camera from "../components/Camera";
+import IssueCategory from "../components/IssueCategory";
 import ReportIssueScreen from "../screens/ReportIssueScreen";
 import SettingsScreen from "../screens/SettingsScreen";
 import MapView from "../screens/MapScreen";
