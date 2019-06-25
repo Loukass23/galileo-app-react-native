@@ -15,22 +15,22 @@ import { getLocation } from './locationActions'
 
 
 export const setRadius = (radius) => {
-    return (dispatch) => {
-        dispatch({
-            type: SET_RADIUS,
-            payload: radius
-        })
+  return (dispatch) => {
+    dispatch({
+      type: SET_RADIUS,
+      payload: radius
+    })
 
-    }
+  }
 }
 export const setMarker = (marker) => {
-    return (dispatch) => {
-        dispatch({
-            type: SET_MARKER,
-            payload: marker
-        })
+  return (dispatch) => {
+    dispatch({
+      type: SET_MARKER,
+      payload: marker
+    })
 
-    }
+  }
 }
 
 export const clearMarker = () => {
@@ -58,46 +58,28 @@ export const getIssues = () => {
     const radius = state.issues.RADIUS / 1000; //radius in km
 
 
-        const URL = `http://kietz.herokuapp.com/api/issues?latitude=${region.latitude}
+    const URL = `http://kietz.herokuapp.com/api/issues?latitude=${region.latitude}
         &longitude=${region.longitude}&page=0&radius=${radius}`
-        console.log(URL);
-        return axios.get(URL, { headers: { "Authorization": `Bearer ${token}` } })
-            .then((res) => {
-                console.log(res.data);
-                dispatch({
-                    type: GET_ISSUES,
-                    payload: res.data
-                })
-                setTimeout(() => dispatch(clearFetchMessage()), 10000);
-
-            }).catch((err) => {
-                console.log(err)
-                dispatch({
-                    type: GET_ISSUES_ERROR,
-                    payload: err
-                })
-            })
-
-    }
-        &longitude=${region.longitude}&page=0&radius=${radius}`;
     console.log(URL);
-    return axios
-      .get(URL, { headers: { Authorization: `Bearer ${token}` } })
-      .then(res => {
+    return axios.get(URL, { headers: { "Authorization": `Bearer ${token}` } })
+      .then((res) => {
         console.log(res.data);
         dispatch({
           type: GET_ISSUES,
           payload: res.data
-        });
-      })
-      .catch(err => {
-        console.log(err);
+        })
+        setTimeout(() => dispatch(clearFetchMessage()), 10000);
+
+      }).catch((err) => {
+        console.log(err)
         dispatch({
           type: GET_ISSUES_ERROR,
           payload: err
-        });
-      });
-  };
+        })
+      })
+
+  }
+
 };
 
 
@@ -135,13 +117,13 @@ export const postIssue = issue => {
 
 
 export const clearFetchMessage = () => {
-    return dispatch => {
-        console.log('clear')
-        dispatch({
-            type: CLEAR_ERROR,
-        })
+  return dispatch => {
+    console.log('clear')
+    dispatch({
+      type: CLEAR_ERROR,
+    })
 
-    }
+  }
 }
 
 
