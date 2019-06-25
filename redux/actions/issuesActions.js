@@ -5,6 +5,7 @@ import { CLEAR_MARKER } from './actionTypes'
 import { GET_ISSUES } from './actionTypes'
 import { ISSUES_LOADING } from './actionTypes'
 import { GET_ISSUES_ERROR } from './actionTypes'
+import { CLEAR_ERROR } from './actionTypes'
 import { START_TIMER } from 'redux-timer';
 import { getLocation } from './locationActions'
 
@@ -46,19 +47,29 @@ export const getIssuesLoading = () => {
         type: ISSUES_LOADING
     };
 };
-export const getIssues = (radius, region, token) => {
-    return (dispatch) => {
+export const getIssues = () => {
+    return (dispatch, getState) => {
         dispatch(getIssuesLoading());
-        const URL = `http://kietz.herokuapp.com/api/issues?latitude=${region.latitude}
-        &longitude=${region.latitude}&page=0&radius=${radius}&size=10`
 
+        const state = getState();
+        const region = state.location.USER_POSITION
+        const token = state.user.USER.token
+
+        //const radius = state.issues.RADIUS  //radius in m
+        const radius = state.issues.RADIUS / 1000 //radius in km
+
+        const URL = `http://kietz.herokuapp.com/api/issues?latitude=${region.latitude}
+        &longitude=${region.longitude}&page=0&radius=${radius}`
+        console.log(URL);
         return axios.get(URL, { headers: { "Authorization": `Bearer ${token}` } })
             .then((res) => {
-
+                console.log(res.data);
                 dispatch({
                     type: GET_ISSUES,
                     payload: res.data
                 })
+                setTimeout(() => dispatch(clearFetchMessage()), 10000);
+
             }).catch((err) => {
                 console.log(err)
                 dispatch({
@@ -70,27 +81,16 @@ export const getIssues = (radius, region, token) => {
 
 }
 
-
-
-
-export const startTimer = () => {
-    return (dispatch, getState) => {
-        const state = getState();
+export const clearFetchMessage = () => {
+    return dispatch => {
+        console.log('clear')
         dispatch({
-            type: START_TIMER,
-            payload: {
-                name: 'getIssueTimer',
-                action: async () => {
+            type: CLEAR_ERROR,
+        })
 
-                    dispatch(getLocation());
-
-                },
-                interval: 10000,
-                runImmediately: false
-            }
-        });
     }
 }
+
 // export const startTimer = () => {
 //     return (dispatch, getState) => {
 //         const state = getState();

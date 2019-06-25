@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "Galileo App",
-    "slug": "GalileoNative",
+    "name": "Kietz",
+    "slug": "GalileoApp",
     "privacy": "public",
     "sdkVersion": "33.0.0",
     "platforms": [

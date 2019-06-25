@@ -7,14 +7,14 @@ import IssueDetails from "../components/IssueDetails";
 import OnMapMessage from "../components/OnMapMessage";
 import MapView, { Callout, Marker, Circle } from 'react-native-maps';
 import Loader from '../components/Loader'
-import { getLocation } from '../redux/actions/locationActions'
-import { getIssues, setMarker, startTimer } from '../redux/actions/issuesActions'
+import { getLocation, startTimer } from '../redux/actions/locationActions'
+import { getIssues, setMarker, } from '../redux/actions/issuesActions'
 
 const { width, height } = Dimensions.get('window');
 const markerImages = {
   Trash: require('../assets/images/Marker1.png'),
   Road: require('../assets/images/Marker2.png'),
-  Category3: require('../assets/images/Marker3.png'),
+  Vandalism: require('../assets/images/Marker3.png'),
   Category4: require('../assets/images/Marker4.png'),
   Category5: require('../assets/images/Marker5.png'),
 
@@ -29,26 +29,18 @@ class MapScreen extends React.Component {
     this.state = {
       viewRegion: INITIAL_POSITION,
       hackHeight: height,
+      showMessage: true,
+      poi: null
     };
     this.showsMyLocationButtonWorkaroudFix = this.showsMyLocationButtonWorkaroudFix.bind(this)
+    this.mapLongClick = this.mapLongClick.bind(this)
   }
 
   componentDidMount() {
-    this.props.getLocation()
 
-    this.props.startTimer()
-
-
-
-    const dummyRegion = {
-      latitude: 1,
-      longitude: 1
-
-    }
-    const token =
-      "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0ZXN0THVjYXMiLCJyb2xlIjpbIlJPTEVfVVNFUiJdLCJleHAiOjE1NjEwMjU5OTEsImlhdCI6MTU2MTAyMjM5MX0.3e0lX7UYRQaJtvdEEKf1J937Td1dkutUoQVY7MDft28NBsXN-nJkXUI4b1E_GfC54WuwSHeWeWOvNUw8Nw-IMw"
-    this.props.getIssues(5, dummyRegion, token)
+    this.props.getIssues()
   }
+
 
   //work around for locate user button bug
   showsMyLocationButtonWorkaroudFix() {
@@ -56,11 +48,20 @@ class MapScreen extends React.Component {
     setTimeout(() => this.setState({ hackHeight: height - 1 }), 2000);
   }
 
-
   markerClick(marker) {
     console.log(marker)
     this.props.setMarker(marker)
   }
+  mapLongClick(e) {
+    console.log(e.nativeEvent)
+    const poi = e.nativeEvent;
+
+    this.setState({
+      poi,
+    });
+
+  }
+
 
 
   renderMarker = (marker, index) => {
@@ -104,11 +105,9 @@ class MapScreen extends React.Component {
     );
   };
   render() {
-    const { viewRegion } = this.state;
+    const { viewRegion, showMessage } = this.state;
     const { RADIUS, ISSUES, MARKER, ISSUES_LOADING, ERR } = this.props.issues
     const { USER_POSITION } = this.props.location
-
-    //workaroud to fix locate me button
 
 
     const allCoords = ISSUES.map(issue => ({
@@ -136,6 +135,9 @@ class MapScreen extends React.Component {
             loadingIndicatorColor={"#ffbbbb"}
             loadingBackgroundColor={"#ffbbbb"}
             region={viewRegion}
+            showsBuildings={true}
+            onLongPress={this.mapLongClick}
+            onPress={() => this.setState({ poi: null })}
             onRegionChangeComplete={viewRegion => this.setState({ viewRegion })}
           >
 
@@ -147,9 +149,22 @@ class MapScreen extends React.Component {
                 fillColor="rgba(163, 48, 87, 0.5)"
               />
             }
+            {this.state.poi && (
+              <Marker coordinate={this.state.poi.coordinate}
+              >
+                <Callout
+                  onPress={() => this.markerClick(this.state.poi)}>
+                  <View>
+                    <Text>Add Issue Here (WIP)</Text>
+                    {/* <Text>Name: {this.state.poi.name}</Text> */}
+                  </View>
+                </Callout>
+              </Marker>
+            )}
+
             {cluster.markers.map((marker, index) => this.renderMarker(marker, index))}
           </MapView>
-          <OnMapMessage message={ERR} />
+          {ERR && <OnMapMessage message={ERR} />}
         </View>
         {/* } */}
       </View >
@@ -159,6 +174,7 @@ class MapScreen extends React.Component {
 }
 MapScreen.navigationOptions = {
   title: 'Issues Map',
+
 };
 
 const Style = StyleSheet.create({
@@ -190,7 +206,7 @@ const mapDispatchToProps = (dispatch) => {
     getLocation: () => dispatch(getLocation()),
     setMarker: (marker) => dispatch(setMarker(marker)),
     startTimer: () => dispatch(startTimer()),
-    getIssues: (radius, region, token) => dispatch(getIssues(radius, region, token))
+    getIssues: () => dispatch(getIssues())
 
   }
 }

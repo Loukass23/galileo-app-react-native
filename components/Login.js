@@ -13,8 +13,6 @@ import {
     StyleSheet, View, TouchableOpacity, Button, StatusBar
 } from 'react-native';
 
-
-
 class Login extends React.Component {
 
     _handleGoogleLogin = async () => {
@@ -22,8 +20,8 @@ class Login extends React.Component {
             const { type, user } = await Google.logInAsync({
                 androidStandaloneAppClientId: '<ANDROID_CLIENT_ID>',
                 iosStandaloneAppClientId: '<IOS_CLIENT_ID>',
-                androidClientId: '603386649315-9rbv8vmv2vvftetfbvlrbufcps1fajqf.apps.googleusercontent.com',
-                iosClientId: '603386649315-vp4revvrcgrcjme51ebuhbkbspl048l9.apps.googleusercontent.com',
+                androidClientId: '173460738439-q9p2nt1fii1s09va4rfuq58bogebbc28.apps.googleusercontent.com',
+                iosClientId: '173460738439-9su8rvl99luou2c98hi6jsv1n4chk7t0.apps.googleusercontent.com',
                 scopes: ['profile', 'email']
             });
 
@@ -62,7 +60,7 @@ class Login extends React.Component {
     _handleFacebookLogin = async () => {
         try {
             const { type, token } = await Facebook.logInWithReadPermissionsAsync(
-                '1201211719949057', // Replace with your own app id in standalone app
+                '468611403684854', // Replace with your own app id in standalone app
                 { permissions: ['public_profile'] }
             );
             switch (type) {
@@ -70,11 +68,17 @@ class Login extends React.Component {
                     // Get the user's name using Facebook's Graph API
                     const response = await fetch(`https://graph.facebook.com/me?access_token=${token}`);
                     const profile = await response.json();
-                    console.log(profile)
-                    Alert.alert(
-                        'Logged in!',
-                        `Hi ${profile.name}!`,
-                    );
+
+                    const user = {
+                        name: profile.name,
+                        email: 'NoNeedFor@Email.com'
+                    }
+                    console.log(user)
+                    this.props.registerUser(user)
+                    // Alert.alert(
+                    //     'Logged in!',
+                    //     `Hi ${profile.name}!`,
+                    // );
                     break;
                 }
                 case 'cancel': {
@@ -99,9 +103,7 @@ class Login extends React.Component {
         }
     };
     render() {
-
         return (
-
             <View style={styles.container}>
                 {/* <AuthScreen /> */}
                 <View style={styles.elevationContainer}>
@@ -133,6 +135,7 @@ const styles = StyleSheet.create({
     logInOption: {
         flex: 1,
         flexDirection: "row",
+        marginHorizontal: 10
 
     },
     contentContainer: {
@@ -194,6 +197,7 @@ const styles = StyleSheet.create({
 
     },
     button2: {
+        marginHorizontal: 10,
         paddingHorizontal: 10
 
     },

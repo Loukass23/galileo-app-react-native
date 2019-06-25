@@ -19,10 +19,10 @@ function IssueDetails({ marker, clearMarker }) {
                         {marker.category}</Text>
                     <Text>{marker.description}</Text>
                 </View>
-                <Image
+                {marker.image && <Image
                     source={{ uri: marker.image[0] }}
                     style={styles.image}
-                />
+                />}
                 <Button
                     style={styles.button}
                     onPress={clearMarker}

@@ -10,20 +10,28 @@ import {
   StyleSheet, View, TouchableOpacity, Button, StatusBar
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import AppNavigator from './navigation/AppNavigator';
-import Loader from './components/Loader'
-import Login from './components/Login'
 
-export default class App extends React.Component {
+import HomeScreen from './screens/HomeScreen'
+
+import * as firebase from 'firebase';
+
+import { firebaseConfig } from './constants/config'
+
+
+class App extends React.Component {
   state = {
     isReady: false,
     okButton: false
   };
+  componentDidMount() {
+    // Initialize firebase...
+    firebase.initializeApp(firebaseConfig)
+  }
   validate = () => {
     this.setState({ okButton: true })
   }
   render() {
-    const { deviceName } = Constants
+
     if (!this.state.isReady) {
       return (
         <AppLoading
@@ -35,45 +43,11 @@ export default class App extends React.Component {
     }
 
     else
-      //Splash screen
+
       return (
         <Provider store={store}>
-          {!this.state.okButton ?
-            <View style={styles.container}>
-              <ScrollView
-                style={styles.container}
-                contentContainerStyle={styles.contentContainer}>
-                <Loader />
-                <Text style={styles.getStartedText}>
-                  Your current device  {deviceName} does not have Galileo chipset
-          </Text>
-                <View style={styles.helpContainer}>
-                  <TouchableOpacity onPress={handleHelpPress} style={styles.helpLink}>
-                    <Text style={styles.helpLinkText}>
-                      Learn more about Galileo...
-            </Text>
-                  </TouchableOpacity>
-                </View>
-                <View style={styles.elevationContainer}>
-                  <View style={styles.logInOption}>
-                    <Login />
-                  </View>
-                  <Button
-                    style={styles.button}
-                    onPress={this.validate}
-                    title="OK"
-                    color="#841584"
-                    accessibilityLabel="Start looking at issues around you"
-                  />
+          <HomeScreen />
 
-                </View>
-              </ScrollView>
-            </View> :
-            //main app
-            <View style={styles.container}>
-              {Platform.OS === 'ios' && <StatusBar barStyle="default" />}
-              <AppNavigator />
-            </View>}
         </Provider>
 
       );
@@ -181,3 +155,16 @@ const styles = StyleSheet.create({
 
   },
 });
+
+
+const mapStateToProp = (state) => {
+  return {
+    user: state.user,
+  }
+}
+const mapDispatchToProps = (dispatch) => {
+  return {
+
+  }
+}
+export default App

@@ -1,14 +1,16 @@
 import React from 'react';
+
 import ConfigDetails from '../components/ConfigDetails';
 import { connect } from 'react-redux'
-import { setRadius } from '../redux/actions/issuesActions'
-
+import { setRadius, getIssues } from '../redux/actions/issuesActions'
+import { logout } from '../redux/actions/userActions'
 import {
   ScrollView,
   View,
   StyleSheet,
   Slider,
-  Text
+  Text,
+  Button
 } from 'react-native';
 import { MonoText } from '../components/StyledText';
 
@@ -21,9 +23,12 @@ class SettingsScreen extends React.Component {
     // };
 
   }
+  componentWillUnmount() {
 
+  }
   handleRadiusChange = (radius) => {
     this.props.setRadius(radius)
+    this.props.getIssues()
 
   }
   render() {
@@ -48,7 +53,13 @@ class SettingsScreen extends React.Component {
                 minimumTrackTintColor="#000000"
                 maximumTrackTintColor="#ae2157"
               />
-
+              <Button
+                style={styles.button}
+                onPress={this.props.logout}
+                title="LOG OUT"
+                color="#841584"
+                accessibilityLabel="Log Out"
+              />
             </View>
           </ScrollView>
         </View>
@@ -91,7 +102,10 @@ const mapStateToProp = (state) => {
 }
 const mapDispatchToProps = (dispatch) => {
   return {
-    setRadius: (RADIUS) => dispatch(setRadius(RADIUS))
+    getIssues: () => dispatch(getIssues()),
+    setRadius: (RADIUS) => dispatch(setRadius(RADIUS)),
+    logout: () => dispatch(logout()),
+
   }
 }
 export default connect(mapStateToProp, mapDispatchToProps)(SettingsScreen)
