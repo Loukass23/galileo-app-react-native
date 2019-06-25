@@ -1,100 +1,220 @@
-import React, { Component } from 'react';
-import './IssueCategoryScreen.css';
-import { Camera, Permissions, } from 'expo';
+import React, { Component } from 'react'
+import {
+    StyleSheet,
+    Alert, 
+    TouchableOpacity,
+    Text,
+    View,
+} from 'react-native'
 
-class App extends Component {
-    state = {
-        issues: [
-            { photo: null, type: "type3", date: null, user: "User3", id: 1, region: [] }
-        ]
-    }
-    addIssue = (issue) => {
-        //but this would update everyting all at once, so I don't know that it's all that efficient, especially at scale
-        issue.id = Math.random();
-        issue.date = new Date;
-        issue.type = document.getElementById.value;
-        let issues = [...this.state.issues, issue];
-        this.setState({
-            issues: issues
-        })
-    }
-    deleteIssue = (id) => {
-        //but this would update everyting all at once, so I don't know that it's all that efficient, especially at scale
-        let issues = this.state.issues.filter(issue => {
-            return issue.id !== id;
-        });
-        this.setState({
-            issues: issues
-        })
-    }
-    handleChange = (e) => {
-        this.setState({
-            [e.target.id]: e.target.value
-        })
-    }
-    // constructor(props) {
-    //     super(props);
-    //     this.state = {
-    //         isCameraVisible: false
-    //     }
-    // }
-    // showCameraView = () => {
-    //     this.setState({ isCameraVisible: true });
-    // }
-    // render() {
-    //     const { isCameraVisible } = this.state;
-    //     return (
-    //         <View style={styles.container}>
-    //             {!isCameraVisible && <Button title="Take a photo" onPress={this.showCameraView} />}
-    //             {isCameraVisible &&
-    //                 <Camera
-    //                     ref={(cam) => {
-    //                         this.camera = cam;
-    //                     }}
-    //                     style={styles.preview}
-    //                     aspect={Camera.constants.Aspect.fill}>
-    //                     <Text style={styles.capture} onPress={this.takePicture.bind(this)}>[CAPTURE]</Text>
-    //                 </Camera>}
-    //         </View>
-    //     );
-    // }
-    componentDidMount() {
-        console.log("App.js Component mounted");
-    }
-    componentDidUpdate(prevProps, prevState) {
-        console.log("App.js Component updated")
+export default class IssueCategory extends React.Component {
+    //   constructor(props) {
+    //     super(props)
+    //     this.state = { count: 0 }
+    //   }
+
+    //   onPress = () => {
+    //     this.setState({
+    //       count: this.state.count+1
+    //     })
+    //   }
+    onPressButton() {
+        Alert.alert('You tapped the button!');
     }
     render() {
         return (
-            <div className="App">
-                <div className="d-flex justify-content-around">
-                    <div className="reportTypeContainer d-flex flex-column justify-content-center border border-dark">
-                        <div className="d-flex justify-content-center align-items-end">
-                            <h4> What kind of problem? </h4>
-                        </div>
-                        <form className="py-3">
-                            <div className="d-flex justify-content-around my-5">
-                                <input className="reportTypeButton" type="button" id="type1" value="type1" onchange={this.addIssue}> 1 </input>
-                                <input className="reportTypeButton" type="button" id="type2" value="type2" onchange={this.addIssue}> 2 </input>
-                                <input className="reportTypeButton" type="button"id="type3" value="type3" onchange={this.addIssue}> 3 </input>
-                            </div>
-                            <div className="d-flex justify-content-around my-5">
-                                <input className="reportTypeButton" type="button" id="type4" value="type4" onchange={this.addIssue}> 4 </input>
-                                <input className="reportTypeButton" type="button" id="type5" value="type5" onchange={this.addIssue}> 5 </input>
-                                <input className="reportTypeButton" type="button" id="type6" value="type6" onchange={this.addIssue}> 6 </input>
-                            </div>
-                            <div className="d-flex justify-content-around my-5">
-                                <input className="reportTypeButton" type="button" id="type7" value="type7" onchange={this.addIssue}> 7 </input>
-                                <input className="reportTypeButton" type="button" id="type8" value="type8" onchange={this.addIssue}> 8 </input>
-                                <input className="reportTypeButton" type="button" id="type9" value="type9" onchange={this.addIssue}> 9 </input>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        );
+            <View style={styles.container}>
+                <View
+                    style={styles.button}
+                    onPress={this.onPressButton}
+                >
+                    <Text> 1  </Text>
+                </View>
+                <View
+                    style={styles.button}
+                >
+                    <Text> 2  </Text>
+                </View>
+                <View
+                    style={styles.button}
+                >
+                    <Text> 3  </Text>
+                </View>
+                <View
+                    style={styles.button}
+                >
+                    <Text> 4  </Text>
+                </View>
+                <View
+                    style={styles.button}
+                >
+                    <Text> 5  </Text>
+                </View>
+                <View
+                    style={styles.button}
+                >
+                    <Text> 6  </Text>
+                </View>
+                <View
+                    style={styles.button}
+                >
+                    <Text> 7  </Text>
+                </View>
+                <View
+                    style={styles.button}
+                >
+                    <Text> 8  </Text>
+                </View>
+                <View
+                    style={styles.button}
+                >
+                    <Text> 9  </Text>
+                </View>
+                <View>
+                    <Text style={styles.issueHeading}> Please choose a category </Text>
+                </View>
+            </View>
+        )
     }
 }
 
+const styles = StyleSheet.create({
+    container: {
+        flexDirection: 'row',
+        flexWrap: 'wrap',
+        justifyContent: 'space-around',
+        alignContent: 'center',
+        paddingHorizontal: 10
+    },
+    button: {
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        borderRadius: 50,
+        backgroundColor: 'skyblue',
+        height: 100,
+        width: 100,
+        margin: 10
+    },
+    issueHeading: {
+        fontSize: 24,
+        marginTop: 30
+    }
+})
 
-export default App;
+// export default IssueCategory
+
+
+// import React, { Component } from 'react';
+// import { Text, View, TouchableOpacity, Button, StyleSheet } from "react-native";
+// import * as Permissions from "expo-permissions";
+// import { Camera } from "expo-camera";
+// import { Ionicons } from "@expo/vector-icons";
+// import {
+//     setPictureFile,
+//     setPictureLocation,
+//     setPictureLoader
+// } from "../redux/actions/pictureActions";
+// import Loader from "../components/Loader";
+// import { connect } from "react-redux";
+
+// class IssueCategory extends React.Component {
+//     // state = {
+//     //     issues: [
+//     //         { photo: null, type: "type3", date: null, user: "User3", id: 1, region: [] }
+//     //     ]
+//     // }
+//     // addIssue = (issue) => {
+//     //     //but this would update everyting all at once, so I don't know that it's all that efficient, especially at scale
+//     //     issue.id = Math.random();
+//     //     issue.date = new Date;
+//     //     issue.type = document.getElementById.value;
+//     //     let issues = [...this.state.issues, issue];
+//     //     this.setState({
+//     //         issues: issues
+//     //     })
+//     // }
+//     // deleteIssue = (id) => {
+//     //     //but this would update everyting all at once, so I don't know that it's all that efficient, especially at scale
+//     //     let issues = this.state.issues.filter(issue => {
+//     //         return issue.id !== id;
+//     //     });
+//     //     this.setState({
+//     //         issues: issues
+//     //     })
+//     // }
+//     // handleChange = (e) => {
+//     //     this.setState({
+//     //         [e.target.id]: e.target.value
+//     //     })
+//     // }
+//     // componentDidMount() {
+//     //     console.log("App.js Component mounted");
+//     // }
+//     // componentDidUpdate(prevProps, prevState) {
+//     //     console.log("App.js Component updated")
+//     // }
+//     render() {
+//         return (
+//             <View>
+//                 {/* <View >
+//                     <Text
+//                     title="What Kind of Issue?"
+//                     value="What Kind of Issue?"/>
+//                 </View> */}
+//                 <View style={styles.container}>
+//                     <View style={styles.issueStyle}>
+//                         <Button
+//                             style={styles.buttonStyle}
+//                             title="Button" />
+//                         <Button
+//                             style={styles.buttonStyle}
+//                             title="Button" />
+//                         <Button
+//                             style={styles.buttonStyle}
+//                             title="Button" />
+//                     </View>
+//                     {/* <View>
+//                         <Button
+//                         style={{buttonStyle}}
+//                         title="Button"/>
+//                         <Button
+//                         style={{buttonStyle}}
+//                         title="Button"/>
+//                         <Button
+//                         style={{buttonStyle}}
+//                         title="Button"/>
+//                     </View>
+//                     <View>
+//                         <Button
+//                         style={{buttonStyle}}
+//                         title="Button"/>
+//                         <Button
+//                         style={{buttonStyle}}
+//                         title="Button"/>
+//                         <Button
+//                         style={{buttonStyle}}
+//                         title="Button"/>
+//                     </View> */}
+//                 </View>
+//             </View>
+//         );
+//     }
+// }
+
+// const styles = StyleSheet.create({
+//     container: {
+//         ...StyleSheet.absoluteFillObject,
+//         justifyContent: 'flex-end',
+//         alignItems: 'center',
+//     },
+//     issueStyle: {
+//         flex: 1,
+//         flexDirection: "row"
+//     },
+//     buttonStyle: {
+//         width: 5
+//     }
+// });
+
+// export default IssueCategory;

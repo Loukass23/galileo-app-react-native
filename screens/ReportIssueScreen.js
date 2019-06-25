@@ -5,10 +5,57 @@ import Colors from "../constants/Colors";
 import Camera from "../components/Camera";
 import { connect } from "react-redux";
 import axios from "axios";
+import IssueCategory from "../components/IssueCategory";
+
 
 import * as firebase from "firebase";
 
 class ReportIssueScreen extends React.Component {
+<<<<<<< HEAD
+  state = {
+    // pictureURI: null,
+    category: "Traffic Light"
+  };
+
+  submitIssue = () => {
+    const { PICTURE_FILE } = this.props.pictureURI;
+    const { PICTURE_LOCATION } = this.props.pictureURI;
+    const { PICTURE_LOADER } = this.props.pictureURI;
+    console.log(PICTURE_FILE);
+    let api_key = "848653823763635";
+    let api_secret = "1yOwrzV2V4yXjXvmkN2SGSjovl0";
+    let cloud = "dgiubh3ed";
+    // let hash_string = 'timestamp=' + timestamp + api_secret
+    // let signature = CryptoJS.SHA1(hash_string).toString();
+    let upload_url =
+      "https://api.cloudinary.com/v1_1/" + cloud + "/image/upload";
+    axios
+      .post(upload_url, {
+        upload_preset: "issue-upload"
+      })
+      .then(res => {
+        console.log(res);
+      })
+      .catch(err => console.log(err));
+  };
+
+  render() {
+    console.log(this.props.pictureURI);
+    const { PICTURE_FILE } = this.props.pictureURI;
+    if (PICTURE_FILE == null) {
+      return (
+        <View >
+          <Camera />
+        </View>
+      );
+    }
+
+    //else if category has not been choosen yet, render category component
+    else {
+      if (this.props.pictureURI.PICTURE_LOCATION == null) {
+        return <Text>Loading..</Text>;
+      } else {
+=======
     constructor(props) {
         super(props);
         this.state = {
@@ -25,6 +72,7 @@ class ReportIssueScreen extends React.Component {
 
     submitIssue = () => {
         const { PICTURE_FILE } = this.props.pictureURI;
+>>>>>>> 3abf9437b3566966f368867919c2986f410ef7d0
         const { PICTURE_LOCATION } = this.props.pictureURI;
         const { PICTURE_LOADER } = this.props.pictureURI;
         const { ADDRESS } = this.props.location
