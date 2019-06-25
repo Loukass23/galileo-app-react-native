@@ -38,7 +38,7 @@ const initState = {
         //     },
         // },
     ],
-    ERR: "No issues to show",
+    ERR: null,
     INITIAL_POSITION: {
         latitude: 52.529015,
         longitude: 13.395032,
@@ -86,7 +86,7 @@ const issuesReducer = (state = initState, action) => {
                     ...state,
                     ISSUES: action.payload,
                     ISSUES_LOADING: false,
-                    ERR: `${issuesCount} issues found`
+                    ERR: `${issuesCount} issue(s) found`
                 }
             }
         case 'ISSUES_LOADING':
@@ -101,6 +101,11 @@ const issuesReducer = (state = initState, action) => {
             return {
                 ...state,
                 ERR: "Unable to retrieve issues"
+            }
+        case 'CLEAR_ERROR':
+            return {
+                ...state,
+                ERR: null
             }
         default:
             return state

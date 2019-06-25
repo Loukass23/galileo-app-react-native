@@ -5,6 +5,7 @@ import { CLEAR_MARKER } from './actionTypes'
 import { GET_ISSUES } from './actionTypes'
 import { ISSUES_LOADING } from './actionTypes'
 import { GET_ISSUES_ERROR } from './actionTypes'
+import { CLEAR_ERROR } from './actionTypes'
 import { START_TIMER } from 'redux-timer';
 import { getLocation } from './locationActions'
 
@@ -67,6 +68,8 @@ export const getIssues = () => {
                     type: GET_ISSUES,
                     payload: res.data
                 })
+                setTimeout(() => dispatch(clearFetchMessage()), 10000);
+
             }).catch((err) => {
                 console.log(err)
                 dispatch({
@@ -78,9 +81,15 @@ export const getIssues = () => {
 
 }
 
+export const clearFetchMessage = () => {
+    return dispatch => {
+        console.log('clear')
+        dispatch({
+            type: CLEAR_ERROR,
+        })
 
-
-
+    }
+}
 
 // export const startTimer = () => {
 //     return (dispatch, getState) => {

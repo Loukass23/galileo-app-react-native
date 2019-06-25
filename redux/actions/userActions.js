@@ -86,14 +86,26 @@ export const getStorageToken = () => {
         try {
             const token = await SecureStore.getItemAsync('secure_token');
             const username = await SecureStore.getItemAsync('username');
-            if (username && token) {
-                dispatch({
-                    type: SET_USER,
-                    payload: {
-                        username,
-                        token
-                    }
-                })
+            const date = await SecureStore.getItemAsync('timestamp');
+
+            const now = new Date()
+            const dateToken = new Date(date)
+            const ageTokenMinutes = (now - dateToken) / 60000;
+            console.log('Age Token (min):', ageTokenMinutes);
+            if (ageTokenMinutes <= 60) {
+                if (username && token) {
+                    dispatch({
+                        type: SET_USER,
+                        payload: {
+                            username,
+                            token
+                        }
+                    })
+                }
+            }
+            else {
+                removeStorageToken()
+                console.log('Token too old');
             }
 
 
@@ -104,10 +116,11 @@ export const getStorageToken = () => {
 }
 
 setStorageToken = async (token, username) => {
-
+    const date = new Date()
     try {
         await SecureStore.setItemAsync('secure_token', token);
         await SecureStore.setItemAsync('username', username);
+        await SecureStore.setItemAsync('timestamp', date.toISOString());
     } catch (e) {
         console.log('failed to set storage token', e);
     }
@@ -120,6 +133,7 @@ removeStorageToken = async () => {
     try {
         await SecureStore.deleteItemAsync('secure_token');
         await SecureStore.deleteItemAsync('username');
+        await SecureStore.deleteItemAsync('timestamp');
     } catch (e) {
         console.log('failed to delete storage token', e);
     }
