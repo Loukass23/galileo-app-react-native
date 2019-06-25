@@ -79,7 +79,7 @@ class HomeScreen extends React.Component {
         return (
             <View style={styles.container}>
                 {/* {!this.state.okButton ? <ScrollView */}
-                {!USER || !this.state.okButton ? <ScrollView
+                {!this.state.okButton ? <ScrollView
                     style={styles.container}
                     contentContainerStyle={styles.contentContainer}>
                     <Text style={styles.title}>Kietz</Text>

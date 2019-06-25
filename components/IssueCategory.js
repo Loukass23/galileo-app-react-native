@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import {
     StyleSheet,
-    Alert, 
+    Alert,
     TouchableOpacity,
     Text,
     View,
@@ -15,7 +15,7 @@ export default class IssueCategory extends React.Component {
 
     //   onPress = () => {
     //     this.setState({
-    //       count: this.state.count+1
+    //       count: this.state.type;
     //     })
     //   }
     onPressButton() {
@@ -24,56 +24,56 @@ export default class IssueCategory extends React.Component {
     render() {
         return (
             <View style={styles.container}>
-                <View
-                    style={styles.button}
-                    onPress={this.onPressButton}
-                >
-                    <Text> 1  </Text>
-                </View>
-                <View
+                <TouchableOpacity
                     style={styles.button}
                 >
-                    <Text> 2  </Text>
-                </View>
-                <View
+                    <Text> 1 </Text>
+                </TouchableOpacity>
+                <TouchableOpacity
                     style={styles.button}
                 >
-                    <Text> 3  </Text>
-                </View>
-                <View
+                    <Text> 2 </Text>
+                </TouchableOpacity>
+                <TouchableOpacity
                     style={styles.button}
                 >
-                    <Text> 4  </Text>
-                </View>
-                <View
+                    <Text> 3 </Text>
+                </TouchableOpacity>
+                <TouchableOpacity
                     style={styles.button}
                 >
-                    <Text> 5  </Text>
-                </View>
-                <View
+                    <Text> 4 </Text>
+                </TouchableOpacity>
+                <TouchableOpacity
                     style={styles.button}
                 >
-                    <Text> 6  </Text>
-                </View>
-                <View
+                    <Text> 5 </Text>
+                </TouchableOpacity>
+                <TouchableOpacity
                     style={styles.button}
                 >
-                    <Text> 7  </Text>
-                </View>
-                <View
+                    <Text> 6 </Text>
+                </TouchableOpacity>
+                <TouchableOpacity
                     style={styles.button}
                 >
-                    <Text> 8  </Text>
-                </View>
-                <View
+                    <Text> 7 </Text>
+                </TouchableOpacity>
+                <TouchableOpacity
                     style={styles.button}
                 >
-                    <Text> 9  </Text>
-                </View>
-                <View>
-                    <Text style={styles.issueHeading}> Please choose a category </Text>
-                </View>
-            </View>
+                    <Text> 8 </Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                    style={styles.button}
+                >
+                    <Text> 9 </Text>
+                </TouchableOpacity>
+                <Text style={styles.issueHeading}> Please choose a category </Text>
+                <TouchableOpacity style={styles.submitButton}>
+                    <Text> Submit issue </Text>
+                </TouchableOpacity>
+            </View >
         )
     }
 }
@@ -96,8 +96,19 @@ const styles = StyleSheet.create({
         width: 100,
         margin: 10
     },
+    submitButton: {
+        width: 300, 
+        height: 150,
+        marginTop: 100,
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: 'purple'
+    },
     issueHeading: {
         fontSize: 24,
         marginTop: 30
+    },
+    submitText: {
+        fontSize: 48
     }
 })
