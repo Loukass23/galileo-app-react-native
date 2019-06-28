@@ -5,14 +5,12 @@ import AuthScreen from "./AuthScreen";
 import { connect } from 'react-redux'
 import { registerUser } from '../redux/actions/userActions'
 import Colors from '../constants/Colors';
-
-// This value should contain your REVERSE_CLIENT_ID
-// const { URLSchemes } = AppAuth;
+import { FontAwesome } from '@expo/vector-icons';
 
 import React from 'react';
 import {
-    Image, Platform, ScrollView, Text, Alert,
-    StyleSheet, View, TouchableOpacity, Button, StatusBar
+    Image, Platform, Alert,
+    StyleSheet, View,
 } from 'react-native';
 
 class Login extends React.Component {
@@ -107,14 +105,17 @@ class Login extends React.Component {
     render() {
         return (
             <View style={styles.logInOption}>
-                <Button style={styles.button2}
+                <FontAwesome onPress={this._handleFacebookLogin} name="facebook" size={80} style={{ color: Colors.primary }} />
+                <FontAwesome onPress={this._handleGoogleLogin} name="google" size={80} style={{ color: Colors.primary }} />
+                {/* 
+                <Button style={styles.button}
                     title="Login with Facebook"
                     onPress={this._handleFacebookLogin}
-                />
-                <Button style={styles.button2}
+                /> 
+                <Button style={styles.button}
                     title="Login with Google"
                     onPress={this._handleGoogleLogin}
-                />
+                />*/}
             </View>
         );
     }
@@ -124,12 +125,37 @@ const styles = StyleSheet.create({
     logInOption: {
         flex: 1,
         flexDirection: "row",
-        alignItems: 'center',
+        justifyContent: 'space-around',
 
+
+
+    },
+    button: Platform.select({
+        ios: {},
+        android: {
+            elevation: 4,
+            // Material design blue from https://material.google.com/style/color.html#color-color-palette
+            backgroundColor: '#2196F3',
+            borderRadius: 2,
+        },
+    }),
+    text: {
+        textAlign: 'center',
+        padding: 8,
+        ...Platform.select({
+            ios: {
+                // iOS blue from https://developer.apple.com/ios/human-interface-guidelines/visual-design/color/
+                color: '#007AFF',
+                fontSize: 18,
+            },
+            android: {
+                color: 'white',
+                fontWeight: '500',
+            },
+        }),
     },
     button2: {
         color: Colors.primary,
-        marginHorizontal: 10,
         flex: .4,
 
     },
