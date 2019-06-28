@@ -8,16 +8,15 @@ import {
 } from 'react-native'
 
 export default class IssueCategory extends React.Component {
-    //   constructor(props) {
+    // constructor(props) {
     //     super(props)
     //     this.state = { count: 0 }
-    //   }
-
-    //   onPress = () => {
+    // }
+    // onPress = () => {
     //     this.setState({
-    //       count: this.state.type;
+    //         count: this.state.type;
     //     })
-    //   }
+    // }
     onPressButton() {
         Alert.alert('You tapped the button!');
     }
@@ -97,7 +96,7 @@ const styles = StyleSheet.create({
         margin: 10
     },
     submitButton: {
-        width: 300, 
+        width: 300,
         height: 150,
         marginTop: 100,
         alignItems: 'center',
