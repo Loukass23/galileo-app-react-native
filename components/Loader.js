@@ -27,9 +27,7 @@ class Loader extends React.Component {
     }
 }
 const Styles = StyleSheet.create({
-    imageStyle: {
-        marginTop: "20%"
-    },
+
     welcomeContainer: {
         alignItems: 'center',
 
@@ -38,7 +36,7 @@ const Styles = StyleSheet.create({
         width: 200,
         height: 200,
         resizeMode: 'contain',
-        marginTop: '50%',
+
         marginLeft: -10,
     },
 })

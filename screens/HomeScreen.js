@@ -7,9 +7,10 @@ import { Asset } from 'expo-asset';
 import * as Font from 'expo-font';
 import React from 'react';
 import * as WebBrowser from 'expo-web-browser';
+import Colors from '../constants/Colors';
 import {
     Image, Platform, ScrollView, Text, Alert,
-    StyleSheet, View, TouchableOpacity, Button, StatusBar
+    StyleSheet, View, TouchableOpacity, Button, StatusBar, TouchableHighlight
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import AppNavigator from '../navigation/AppNavigator';
@@ -45,17 +46,16 @@ class HomeScreen extends React.Component {
         const device = await this.deviceIosAndroid()
 
         const galileoEnabled = galileoDevices.find(e => {
-            return e.Model == device
+            return e.Model.toUpperCase() == device.toUpperCase()
         })
-        console.log('resr', galileoEnabled);
         this.setState({ device, galileoEnabled })
     }
 
     deviceIosAndroid() {
         const { deviceName, platform } = Constants
-
-        if (platform == "ios") {
-            return platform.model
+        // console.log('platform', platform.ios)
+        if (platform.ios != null) {
+            return platform.ios.model
         }
         else {
             const device =
@@ -70,76 +70,112 @@ class HomeScreen extends React.Component {
     validate = () => {
         this.setState({ okButton: true })
     }
+    renderStartButton = (
 
-    render() {
-        const { deviceName } = Constants
-        const { USER, USER_INFO } = this.props.user
-        const { galileoEnabled, device } = this.state
-        //Splash screen
+        <TouchableOpacity style={styles.helpContainer} onPress={this.validate}>
+            <Text style={styles.getStartedText}> Start looking at issues around you</Text>
+            <Image
+                style={styles.highlight}
+                source={require('../assets/images/logo.png')}
+            />
+        </TouchableOpacity>
+    )
+    renderloginPlaceholder = (
+
+        <View style={styles.helpContainer} >
+            <Text style={styles.getStartedText}>Choose login mathod below</Text>
+            <Image
+                style={styles.highlight}
+                source={require('../assets/images/logo.png')}
+            />
+        </View>
+    )
+    renderLogOutUser = (username) => {
         return (
-            <View style={styles.container}>
-                {/* {!this.state.okButton ? <ScrollView */}
-                {!USER || !this.state.okButton ? <ScrollView
-                    style={styles.container}
-                    contentContainerStyle={styles.contentContainer}>
-                    <Text style={styles.title}>Kietz</Text>
-                    {USER && <Text style={styles.title}>Hi {USER.username}</Text>}
-                    {USER_INFO.loading && <Loader message={USER_INFO.message} />}
-                    {galileoEnabled ? <Text style={styles.getStartedText}>
-                        Accuracy matters! Your current device  {device} has a Galileo chipset!
-          </Text> :
-                        <Text style={styles.getStartedText}>
-                            Accuracy matters! Your current device  {device} does not have Galileo chipset
-          </Text>}
-                    <View style={styles.helpContainer}>
-                        <TouchableOpacity onPress={handleHelpPress} style={styles.helpLink}>
-                            <Text style={styles.helpLinkText}>
-                                Learn more about Galileo...
-            </Text>
-                        </TouchableOpacity>
-                    </View>
-                    <View style={styles.elevationContainer}>
-                        {!USER ?
-                            <View style={styles.logInOption}>
-                                <Login />
-
-                            </View> :
-                            <View>
-                                <Button
-                                    style={styles.button}
-                                    onPress={this.props.logout}
-                                    title="LOG OUT"
-                                    color="#841584"
-                                    accessibilityLabel="Log Out"
-                                />
-                                <Button
-                                    style={styles.button}
-                                    onPress={this.validate}
-                                    title="GO"
-                                    color="#841584"
-                                    accessibilityLabel="Start looking at issues around you"
-                                />
-
-                            </View>
-                        }
-
-                    </View>
-                </ScrollView> :
-
-                    //main app
-                    <View style={styles.container}>
-                        {Platform.OS === 'ios' && <StatusBar barStyle="default" />}
-                        <AppNavigator />
-                    </View>}
+            <View style={styles.countainer} >
+                <Text style={styles.halfHorizontal}>Your are not {username} ?</Text>
+                <Button
+                    style={styles.halfHorizontal}
+                    onPress={this.props.logout}
+                    title="LOG OUT"
+                    color={Colors.primary}
+                    accessibilityLabel="Log Out"
+                />
             </View>
         )
     }
 
+    render() {
+        const { USER, USER_INFO } = this.props.user
+        const { galileoEnabled, device } = this.state
 
+        if (!USER || !this.state.okButton)
+            //Render plash screen
+            return (
+                <View style={styles.container}>
+                    <ScrollView
+                        style={styles.scrollview}
+                        contentContainerStyle={styles.contentContainer}>
+
+                        <View>
+                            <Text style={styles.title}>Kietz</Text>
+                            {USER ? <View >
+                                <Text style={styles.title}>Hi {USER.username}</Text>
+                                {this.renderStartButton}
+                            </View> :
+                                <View >
+                                    <Text style={styles.title}>Please log in to access issues </Text>
+                                    {this.renderloginPlaceholder}
+                                </View>
+                            }
+                            <View style={styles.helpContainer}>
+                                {galileoEnabled ?
+                                    <Text style={styles.getStartedText}>
+                                        Accuracy matters! Horay, your current device {device} has a Galileo chipset!
+                    </Text> :
+                                    <Text style={styles.getStartedText}>
+                                        Accuracy matters! Unfotunately your current device {device} does not have Galileo chipset
+                    </Text>
+                                }
+
+                                <TouchableOpacity onPress={handleHelpPress} style={styles.helpLink}>
+                                    <Text style={styles.helpLinkText}>
+                                        Learn more about Galileo...
+                            </Text>
+                                </TouchableOpacity>
+
+                            </View>
+                        </View>
+
+                        {/* {USER_INFO.loading && <Loader message={USER_INFO.message} />} */}
+
+
+                    </ScrollView>
+                    {!USER_INFO.loading &&
+                        <View style={styles.footer}>
+                            {!USER ?
+                                <Login />
+                                :
+                                <View  >
+                                    {this.renderLogOutUser(USER.username)}
+                                </View>
+
+                            }
+                        </View>}
+                </View>
+            )
+        else
+            //Render Main App
+            return (<View style={styles.container}>
+                {Platform.OS === 'ios' && <StatusBar barStyle="default" />}
+                <AppNavigator />
+            </View>)
+    }
 
 }
 
-function handleHelpPress() {
+
+const handleHelpPress = () => {
     WebBrowser.openBrowserAsync(
         'https://www.usegalileo.eu/'
     );
@@ -150,14 +186,45 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: '#fff',
     },
-    row: {
+    containerRow: {
         flex: 1,
-        flexDirection: "row"
+        flexDirection: 'row'
     },
-    logInOption: {
+    footer: {
+        flex: .1
+    },
+    scrollview: {
+        flex: .9
+    },
+    halfHorizontal: {
+        flex: .5
+    },
+    logoutContainer: {
+        marginBottom: 0,
         flex: 1,
         flexDirection: "row",
+        justifyContent: 'flex-end',
 
+        marginHorizontal: 10,
+        paddingHorizontal: 2
+    },
+    bottom: {
+        flex: 1,
+        justifyContent: 'flex-end',
+        marginBottom: 36
+    },
+    highlight: {
+        width: 200,
+        height: 200,
+        resizeMode: 'contain',
+
+        marginLeft: -10,
+
+
+        width: 200,
+        height: 200,
+        resizeMode: 'contain',
+        marginTop: '10%',
     },
     contentContainer: {
         paddingTop: 30,
@@ -175,7 +242,6 @@ const styles = StyleSheet.create({
         textAlign: 'center',
     },
     elevationContainer: {
-
         ...Platform.select({
             ios: {
                 shadowColor: 'black',
@@ -187,20 +253,13 @@ const styles = StyleSheet.create({
                 elevation: 20,
             },
         }),
-        alignItems: 'center',
         backgroundColor: '#fbfbfb',
-        paddingVertical: 20,
+
+
     },
-    tabBarInfoText: {
-        fontSize: 17,
-        color: 'rgba(96,100,109, 1)',
-        textAlign: 'center',
-    },
-    navigationFilename: {
-        marginTop: 5,
-    },
+
     helpContainer: {
-        marginTop: 15,
+        marginTop: 20,
         alignItems: 'center',
     },
     helpLink: {
