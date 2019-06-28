@@ -8,6 +8,7 @@ import * as Font from 'expo-font';
 import React from 'react';
 import * as WebBrowser from 'expo-web-browser';
 import Colors from '../constants/Colors';
+import { Video } from 'expo-av';
 import {
     Image, Platform, ScrollView, Text, Alert,
     StyleSheet, View, TouchableOpacity, Button, StatusBar, TouchableHighlight
@@ -18,7 +19,6 @@ import Loader from '../components/Loader'
 import Login from '../components/Login'
 import { connect } from 'react-redux'
 import { SecureStore } from 'expo';
-
 
 
 
@@ -63,7 +63,8 @@ class HomeScreen extends React.Component {
                     return device.model == deviceName
                 })
             console.log(device);
-            return device == [] ? 'Device unknown' : device[0].market_name
+            const fullName = device[0].manufacturer + ' ' + device[0].market_name
+            return device == [] ? 'Device unknown' : fullName
         }
     }
 
@@ -73,7 +74,6 @@ class HomeScreen extends React.Component {
     renderStartButton = (
 
         <TouchableOpacity style={styles.helpContainer} onPress={this.validate}>
-            <Text style={styles.getStartedText}> Start looking at issues around you</Text>
             <Image
                 style={styles.highlight}
                 source={require('../assets/images/logo.png')}
@@ -83,11 +83,22 @@ class HomeScreen extends React.Component {
     renderloginPlaceholder = (
 
         <View style={styles.helpContainer} >
-            <Text style={styles.getStartedText}>Choose login mathod below</Text>
-            <Image
+
+            <Video
+                source={require('../assets/images/test.mp4')}
+                rate={1.0}
+
+                isMuted={true}
+                resizeMode="cover"
+                shouldPlay
+
+                style={{ width: 500, height: 300 }}
+            />
+
+            {/* <Image
                 style={styles.highlight}
                 source={require('../assets/images/logo.png')}
-            />
+            /> */}
         </View>
     )
     renderLogOutUser = (username) => {
@@ -105,6 +116,7 @@ class HomeScreen extends React.Component {
         )
     }
 
+
     render() {
         const { USER, USER_INFO } = this.props.user
         const { galileoEnabled, device } = this.state
@@ -117,24 +129,29 @@ class HomeScreen extends React.Component {
                         style={styles.scrollview}
                         contentContainerStyle={styles.contentContainer}>
 
-                        <View>
+                        {USER_INFO.loading ? <Loader message={USER_INFO.message} /> : <View>
                             <Text style={styles.title}>Kietz</Text>
                             {USER ? <View >
+
                                 <Text style={styles.title}>Hi {USER.username}</Text>
+                                <Text >Start looking at issues atound you</Text>
                                 {this.renderStartButton}
+
                             </View> :
                                 <View >
-                                    <Text style={styles.title}>Please log in to access issues </Text>
                                     {this.renderloginPlaceholder}
+
+
                                 </View>
                             }
                             <View style={styles.helpContainer}>
+                                <Text style={styles.title2}> Accuracy matters!</Text>
                                 {galileoEnabled ?
                                     <Text style={styles.getStartedText}>
-                                        Accuracy matters! Horay, your current device {device} has a Galileo chipset!
+                                        Hooray, your current device {device} has a Galileo chipset!
                     </Text> :
                                     <Text style={styles.getStartedText}>
-                                        Accuracy matters! Unfotunately your current device {device} does not have Galileo chipset
+                                       Unfotunately your current device {device} does not have Galileo chipset
                     </Text>
                                 }
 
@@ -145,16 +162,15 @@ class HomeScreen extends React.Component {
                                 </TouchableOpacity>
 
                             </View>
-                        </View>
-
-                        {/* {USER_INFO.loading && <Loader message={USER_INFO.message} />} */}
-
-
+                        </View>}
                     </ScrollView>
                     {!USER_INFO.loading &&
                         <View style={styles.footer}>
                             {!USER ?
-                                <Login />
+                                <View style={styles.elevationContainer}>
+                                    <Text style={styles.title2}>Please log in to access issues </Text>
+                                    <Login />
+                                </View>
                                 :
                                 <View  >
                                     {this.renderLogOutUser(USER.username)}
@@ -191,10 +207,11 @@ const styles = StyleSheet.create({
         flexDirection: 'row'
     },
     footer: {
-        flex: .1
+        flex: .2,
+        marginBottom: 2,
     },
     scrollview: {
-        flex: .9
+        flex: .8
     },
     halfHorizontal: {
         flex: .5
@@ -236,12 +253,19 @@ const styles = StyleSheet.create({
         textAlign: 'center',
     },
     title: {
-        fontSize: 20,
-        color: 'rgb(174, 33, 87)',
-        lineHeight: 24,
+        fontSize: 45,
+        color: Colors.primary,
+        lineHeight: 50,
+        textAlign: 'center',
+    },
+    title2: {
+        fontSize: 25,
+        color: Colors.secondary,
+        lineHeight: 30,
         textAlign: 'center',
     },
     elevationContainer: {
+        flex: 1,
         ...Platform.select({
             ios: {
                 shadowColor: 'black',
@@ -276,10 +300,7 @@ const styles = StyleSheet.create({
         right: 0,
 
     },
-    button2: {
-        paddingHorizontal: 10
 
-    },
 });
 
 

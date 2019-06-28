@@ -57,8 +57,8 @@ class App extends React.Component {
   async _cacheResourcesAsync() {
     await Promise.all([
       Asset.loadAsync([
-        // require('./assets/images/Galileo_logo_animation_3.gif'),
-        // require('./assets/images/logo.png'),
+        require('./assets/images/test.mp4'),
+        require('./assets/images/logo.png'),
       ]),
       Font.loadAsync({
         // This is the font that we are using for our tab bar
