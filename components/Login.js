@@ -4,6 +4,8 @@ import { AppAuth } from 'expo-app-auth';
 import AuthScreen from "./AuthScreen";
 import { connect } from 'react-redux'
 import { registerUser } from '../redux/actions/userActions'
+import Colors from '../constants/Colors';
+
 // This value should contain your REVERSE_CLIENT_ID
 // const { URLSchemes } = AppAuth;
 
@@ -104,101 +106,31 @@ class Login extends React.Component {
     };
     render() {
         return (
-            <View style={styles.container}>
-                {/* <AuthScreen /> */}
-                <View style={styles.elevationContainer}>
-                    <View style={styles.logInOption}>
-                        <Button style={styles.button2}
-                            title="Login with Facebook"
-                            onPress={this._handleFacebookLogin}
-                        />
-                        <Button style={styles.button2}
-                            title="Login with Google"
-                            onPress={this._handleGoogleLogin}
-                        />
-                    </View>
-
-                </View>
+            <View style={styles.logInOption}>
+                <Button style={styles.button2}
+                    title="Login with Facebook"
+                    onPress={this._handleFacebookLogin}
+                />
+                <Button style={styles.button2}
+                    title="Login with Google"
+                    onPress={this._handleGoogleLogin}
+                />
             </View>
         );
     }
 }
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: '#fff',
-    },
-    row: {
-        flex: 1,
-        flexDirection: "row"
-    },
+
     logInOption: {
         flex: 1,
         flexDirection: "row",
-        marginHorizontal: 10
-
-    },
-    contentContainer: {
-        paddingTop: 30,
-    },
-    getStartedText: {
-        fontSize: 17,
-        color: 'rgba(96,100,109, 1)',
-        lineHeight: 24,
-        textAlign: 'center',
-    },
-    title: {
-        fontSize: 20,
-        color: 'rgb(174, 33, 87)',
-        lineHeight: 24,
-        textAlign: 'center',
-    },
-    elevationContainer: {
-
-        ...Platform.select({
-            ios: {
-                shadowColor: 'black',
-                shadowOffset: { width: 0, height: -3 },
-                shadowOpacity: 0.1,
-                shadowRadius: 3,
-            },
-            android: {
-                elevation: 20,
-            },
-        }),
         alignItems: 'center',
-        backgroundColor: '#fbfbfb',
-        paddingVertical: 20,
-    },
-    tabBarInfoText: {
-        fontSize: 17,
-        color: 'rgba(96,100,109, 1)',
-        textAlign: 'center',
-    },
-    navigationFilename: {
-        marginTop: 5,
-    },
-    helpContainer: {
-        marginTop: 15,
-        alignItems: 'center',
-    },
-    helpLink: {
-        paddingVertical: 15,
-    },
-    helpLinkText: {
-        fontSize: 14,
-        color: '#2e78b7',
-    },
-    button: {
-        position: 'absolute',
-        bottom: 0,
-        left: 0,
-        right: 0,
 
     },
     button2: {
+        color: Colors.primary,
         marginHorizontal: 10,
-        paddingHorizontal: 10
+        flex: .4,
 
     },
 });
