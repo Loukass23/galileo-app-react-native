@@ -73,7 +73,7 @@ class HomeScreen extends React.Component {
     }
     renderStartButton = (
 
-        <TouchableOpacity style={styles.helpContainer} onPress={this.validate}>
+        <TouchableOpacity style={styles.startContainer} onPress={this.validate}>
             <Image
                 style={styles.highlight}
                 source={require('../assets/images/logo.png')}
@@ -82,7 +82,7 @@ class HomeScreen extends React.Component {
     )
     renderloginPlaceholder = (
 
-        <View style={styles.helpContainer} >
+        <View style={styles.videoContainer} >
 
             <Video
                 source={require('../assets/images/test.mp4')}
@@ -103,10 +103,10 @@ class HomeScreen extends React.Component {
     )
     renderLogOutUser = (username) => {
         return (
-            <View style={styles.countainer} >
+            <View  >
                 <Text style={styles.halfHorizontal}>Your are not {username} ?</Text>
                 <Button
-                    style={styles.halfHorizontal}
+                    style={styles.button}
                     onPress={this.props.logout}
                     title="LOG OUT"
                     color={Colors.primary}
@@ -131,10 +131,9 @@ class HomeScreen extends React.Component {
 
                         {USER_INFO.loading ? <Loader message={USER_INFO.message} /> : <View>
                             <Text style={styles.title}>Kietz</Text>
-                            {USER ? <View >
+                            {USER ? <View  >
 
-                                <Text style={styles.title}>Hi {USER.username}</Text>
-                                <Text >Start looking at issues atound you</Text>
+                                <Text style={styles.title2}>Hi {USER.username}</Text>
                                 {this.renderStartButton}
 
                             </View> :
@@ -151,7 +150,7 @@ class HomeScreen extends React.Component {
                                         Hooray, your current device {device} has a Galileo chipset!
                     </Text> :
                                     <Text style={styles.getStartedText}>
-                                       Unfotunately your current device {device} does not have Galileo chipset
+                                        Unfotunately your current device {device} does not have Galileo chipset
                     </Text>
                                 }
 
@@ -168,11 +167,12 @@ class HomeScreen extends React.Component {
                         <View style={styles.footer}>
                             {!USER ?
                                 <View style={styles.elevationContainer}>
-                                    <Text style={styles.title2}>Please log in to access issues </Text>
+                                    <Text style={styles.title3}>Please log in to access issues </Text>
                                     <Login />
                                 </View>
                                 :
-                                <View  >
+                                <View style={styles.elevationContainer} >
+                                    <Text style={styles.getStartedText}>Not {USER.username}?</Text>
                                     {this.renderLogOutUser(USER.username)}
                                 </View>
 
@@ -200,17 +200,18 @@ const handleHelpPress = () => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#fff',
+        backgroundColor: Colors.background,
     },
     containerRow: {
         flex: 1,
         flexDirection: 'row'
     },
     footer: {
-        flex: .2,
-        marginBottom: 2,
+        flex: .15,
+        marginBottom: 1,
     },
     scrollview: {
+        marginTop: 1,
         flex: .8
     },
     halfHorizontal: {
@@ -241,7 +242,7 @@ const styles = StyleSheet.create({
         width: 200,
         height: 200,
         resizeMode: 'contain',
-        marginTop: '10%',
+
     },
     contentContainer: {
         paddingTop: 30,
@@ -264,6 +265,12 @@ const styles = StyleSheet.create({
         lineHeight: 30,
         textAlign: 'center',
     },
+    title3: {
+        fontSize: 12,
+        color: Colors.secondary,
+        lineHeight: 20,
+        textAlign: 'center',
+    },
     elevationContainer: {
         flex: 1,
         ...Platform.select({
@@ -279,11 +286,18 @@ const styles = StyleSheet.create({
         }),
         backgroundColor: '#fbfbfb',
 
-
     },
 
     helpContainer: {
-        marginTop: 20,
+        marginTop: 5,
+        alignItems: 'center',
+    },
+    startContainer: {
+
+        alignItems: 'center',
+    },
+    videoContainer: {
+
         alignItems: 'center',
     },
     helpLink: {
@@ -294,10 +308,8 @@ const styles = StyleSheet.create({
         color: '#2e78b7',
     },
     button: {
-        position: 'absolute',
-        bottom: 0,
-        left: 0,
-        right: 0,
+        backgroundColor: Colors.secondary,
+        width: 50,
 
     },
 

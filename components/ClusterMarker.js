@@ -1,5 +1,7 @@
 import React from "react";
 import { StyleSheet, View, Text } from "react-native";
+import Colors from '../constants/Colors';
+
 
 const Style = StyleSheet.create({
     container: {
@@ -10,10 +12,10 @@ const Style = StyleSheet.create({
         flex: 0,
         flexDirection: "row",
         alignSelf: "flex-start",
-        backgroundColor: "#ae2157",
-        padding: 4,
-        borderRadius: 8,
-        borderColor: "#ae2157",
+        backgroundColor: Colors.primary,
+        padding: 10,
+        borderRadius: 15,
+        borderColor: Colors.primary,
         borderWidth: 1
     },
     count: {

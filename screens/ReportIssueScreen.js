@@ -31,7 +31,7 @@ class ReportIssueScreen extends React.Component {
       photoURL: null,
       photoUploading: false,
       // pictureURI: null,
-      category: "Traffic Light"
+      category: ""
     };
   }
   componentDidMount() {}
@@ -108,10 +108,10 @@ class ReportIssueScreen extends React.Component {
         </View>
       );
     }   //else if category has not been choosen yet, render category component
-    else {
-      if (this.props.pictureURI.PICTURE_LOCATION == null) {
-        return <Text>Loading..</Text>;
-      } else {
+    else if(!this.state.category){
+       return (<IssueCategory/>) 
+      }
+      else {
         const { PICTURE_LOCATION } = this.props.pictureURI;
         // const { username } = this.props.user.USER;
         // const { token } = this.props.user.USER;
@@ -147,7 +147,8 @@ class ReportIssueScreen extends React.Component {
       }
     }
   }
-}
+  
+
 const styleCamera = {
   width: "100%",
   height: "100%"
