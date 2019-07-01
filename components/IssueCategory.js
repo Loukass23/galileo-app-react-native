@@ -1,12 +1,13 @@
 import React, { Component } from 'react'
 import {
     StyleSheet,
-    Alert, 
+    Alert,
     TouchableOpacity,
+    Image,
     Text,
     View,
 } from 'react-native'
-
+import { categories } from '../constants/Issues';
 export default class IssueCategory extends React.Component {
     //   constructor(props) {
     //     super(props)
@@ -24,13 +25,18 @@ export default class IssueCategory extends React.Component {
     render() {
         return (
             <View style={styles.container}>
-                <View
-                    style={styles.button}
-                    onPress={this.onPressButton}
-                >
-                    <Text> 1  </Text>
-                </View>
-                <View
+                {categories.map(category => {
+                    return (
+                        <TouchableOpacity key={category.name} style={styles.startContainer} onPress={this.validate}>
+                            <Image
+                                style={styles.highlight}
+                                source={category.image}
+                            />
+                            <Text>{category.name}</Text>
+                        </TouchableOpacity>
+                    )
+                })}
+                {/* <View
                     style={styles.button}
                 >
                     <Text> 2  </Text>
@@ -69,7 +75,7 @@ export default class IssueCategory extends React.Component {
                     style={styles.button}
                 >
                     <Text> 9  </Text>
-                </View>
+                </View> */}
                 <View>
                     <Text style={styles.issueHeading}> Please choose a category </Text>
                 </View>

@@ -12,10 +12,10 @@ const Style = StyleSheet.create({
         flex: 0,
         flexDirection: "row",
         alignSelf: "flex-start",
-        backgroundColor: Colors.primary,
+        backgroundColor: Colors.secondary,
         padding: 10,
         borderRadius: 15,
-        borderColor: Colors.primary,
+        borderColor: Colors.secondary,
         borderWidth: 1
     },
     count: {
