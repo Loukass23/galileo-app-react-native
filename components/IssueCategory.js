@@ -13,15 +13,18 @@ import { categories } from '../constants/Issues';
 import { setCategory } from '../redux/actions/postIssueActions'
 class IssueCategory extends React.Component {
 
+
     handleCategory(category) {
         this.props.setCategory(category)
     }
+
     onPressButton() {
         Alert.alert('You tapped the button!');
     }
     render() {
         return (
             <View style={styles.container}>
+
                 {categories.map(category => {
                     return (
                         <TouchableOpacity key={category.name} style={styles.startContainer} onPress={() => this.handleCategory(category.name)}>
@@ -38,6 +41,7 @@ class IssueCategory extends React.Component {
                     <Text style={styles.issueHeading}> Please choose a category </Text>
                 </View>
             </View>
+
         )
     }
 }
@@ -60,10 +64,22 @@ const styles = StyleSheet.create({
         width: 100,
         margin: 10
     },
+    submitButton: {
+        width: 300,
+        height: 150,
+        marginTop: 100,
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: 'purple'
+    },
     issueHeading: {
         fontSize: 24,
         marginTop: 30
+    },
+    submitText: {
+        fontSize: 48
     }
+
 })
 
 
@@ -79,3 +95,4 @@ const mapDispatchToProps = dispatch => {
 };
 
 export default connect(mapStateToProp, mapDispatchToProps)(IssueCategory);
+
