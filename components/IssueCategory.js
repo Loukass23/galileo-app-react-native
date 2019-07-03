@@ -9,6 +9,15 @@ import {
     Text,
     View,
 } from 'react-native'
+import { categories } from '../constants/Issues';
+import { setCategory } from '../redux/actions/postIssueActions'
+class IssueCategory extends React.Component {
+
+
+    handleCategory(category) {
+        this.props.setCategory(category)
+    }
+
 
 import { categories } from '../constants/Issues';
 import { setCategory } from '../redux/actions/postIssueActions'
@@ -22,6 +31,7 @@ export default class IssueCategory extends React.Component {
     handleCategory(category) {
         this.props.setCategory(category)
     }
+
 
     onPressButton() {
         Alert.alert('You tapped the button!');
