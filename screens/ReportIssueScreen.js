@@ -1,5 +1,5 @@
-import React, { Component } from "react";
-import { SecureStore } from "expo";
+import React from "react";
+
 import {
   Text,
   View,
@@ -7,20 +7,21 @@ import {
   StyleSheet,
   TextInput,
   Button,
-  ProgressBarAndroid
+  ProgressBarAndroid,
+  ScrollView
 } from "react-native";
+import * as ImagePicker from 'expo-image-picker'
 import Colors from "../constants/Colors";
 import Camera from "../components/Camera";
 import { connect } from "react-redux";
 
 
 import { postIssue } from "../redux/actions/issuesActions";
-
-import axios from "axios";
 import IssueCategory from "../components/IssueCategory";
 
 
 import * as firebase from "firebase";
+import { clearPost } from "../redux/actions/postIssueActions";
 
 class ReportIssueScreen extends React.Component {
 
@@ -30,33 +31,97 @@ class ReportIssueScreen extends React.Component {
       progress: 0,
       photoURL: null,
       photoUploading: false,
-      // pictureURI: null,
-      category: ""
+      pictureURI: null,
+      category: "",
+      description: ""
     };
   }
-  componentDidMount() { }
 
+  // nativeCamera = async () => {
+  //   let result = await ImagePicker.launchCameraAsync();
+  //   //let result = await ImagePicker.launchImageLibraryAsync();
+
+  //   if (!result.cancelled) {
+  //     console.log('blob', result);
+  //     this.uploadImage(result.uri)
+  //   }
+  // }
+
+  // uploadImage = async (uri) => {
+  //   console.log('uri :', uri);
+  //   const storageService = firebase.storage();
+  //   const storageRef = storageService.ref();
+  //   const { PICTURE_LOCATION, CATEGORY } = this.props.issue;
+  //   const { ADDRESS } = this.props.location;
+  //   const id = `${ADDRESS.city}-${CATEGORY}-${new Date()}`;
+
+  //   const response = await fetch(uri);
+  //   const blob = await response.blob();
+
+  //   const uploadTask = storageRef.child(`issues/${id}`).put(blob);
+  //   uploadTask.on(
+  //     "state_changed",
+  //     snapshot => {
+  //       let progress = Math.round(
+  //         (snapshot.bytesTransferred * 100) / snapshot.totalBytes
+  //       );
+  //       this.setState({ progress: progress / 100 });
+  //       console.log(progress);
+  //     },
+  //     error => {
+  //       console.log(error);
+  //     },
+  //     () => {
+  //       console.log("success");
+  //       this.setState({ photoUploading: false });
+  //       firebase
+  //         .storage()
+  //         .ref("issues")
+  //         .child(`${id}`)
+  //         .getDownloadURL()
+  //         .then(photoURL => {
+  //           console.log(photoURL);
+  //           this.setState({ photoURL });
+
+  //         });
+  //     }
+  //   );
+  // }
+  handleChange(event) {
+    this.setState({ description: event.target.value });
+  }
 
   submitIssue = () => {
     const { PICTURE_FILE, PICTURE_LOCATION, PICTURE_LOADER } = this.props.issue;
-
-
-
     console.log("FILE IN REPORT ISSUE" + PICTURE_FILE);
     this.setState({ photoUploading: true });
 
     fetch(PICTURE_FILE).then(res => {
+      console.log('res :', res);
       this.getPictureLink(res);
     });
   };
   getPictureLink = res => {
+    const { navigate } = this.props.navigation;
     const storageService = firebase.storage();
     const storageRef = storageService.ref();
     const { PICTURE_LOCATION, CATEGORY } = this.props.issue;
-    const { ADDRESS } = this.props.location;
+    const { ADDRESS, USER_POSITION, POI_LOCATION } = this.props.location;
+    const { description } = this.state
     const id = `${ADDRESS.city}-${CATEGORY}-${new Date()}`;
-    console.log(id);
-    console.log(res);
+    let location
+    if (POI_LOCATION) {
+      location = {
+        longitude: POI_LOCATION.longitude,
+        latitude: POI_LOCATION.latitude
+      }
+    }
+    else {
+      location = {
+        longitude: USER_POSITION.longitude,
+        latitude: USER_POSITION.latitude
+      }
+    }
     const blob = res._bodyBlob;
 
     const uploadTask = storageRef.child(`issues/${id}`).put(blob);
@@ -85,13 +150,13 @@ class ReportIssueScreen extends React.Component {
             this.setState({ photoURL });
             const issue = {
               imageUrls: [photoURL],
-              location: {
-                longitude: PICTURE_LOCATION.longitude,
-                latitude: PICTURE_LOCATION.latitude
-              },
-              category: CATEGORY
+              location,
+              category: CATEGORY,
+              description
             };
             this.props.postIssue(issue);
+            this.props.clearPost()
+            navigate('Maps')
           });
       }
     );
@@ -100,11 +165,12 @@ class ReportIssueScreen extends React.Component {
     console.log(this.props.issue);
     const { PICTURE_FILE, CATEGORY } = this.props.issue;
     const { PICTURE_LOADER } = this.props.postIssue;
-    const { ADDRESS } = this.props.location;
-    console.log('PICTURE_FILE :', PICTURE_FILE);
-    if (PICTURE_FILE == null) {
+    const { ADDRESS, POI_ADDRESS } = this.props.location;
+    console.log(this.state.description);
+    if (!PICTURE_FILE) {
       return (
-        <View style={styleCamera}>
+        <View style={Styles.styleCamera}>
+          {/* <Button title="Choose image..." onPress={this.nativeCamera} /> */}
           <Camera />
         </View>
       );
@@ -113,52 +179,82 @@ class ReportIssueScreen extends React.Component {
       return (<IssueCategory />)
     }
     else {
-      const { PICTURE_LOCATION } = this.props.issue;
-      // const { username } = this.props.user.USER;
-      // const { token } = this.props.user.USER;
-      // console.log(username);
-      // console.log(token);
       return (
         <View style={{ flex: 1, alignItems: "center" }}>
-          <Image style={stylePicture} source={{ uri: PICTURE_FILE }} />
-          <Text>Selected Issue</Text>
-          <View style={styleCategory}>
-            <Text
-              style={{ textAlign: "center", fontSize: 20, color: "white" }}
-            >
-              {CATEGORY}
-            </Text>
-          </View>
 
-          <Text>Comment</Text>
-          <TextInput style={styleInput} />
-          <Button
-            onPress={this.submitIssue}
-            title="SUBMIT"
-            color="#841584"
-            accessibilityLabel="SUBMIT"
-          />
-          <ProgressBarAndroid
-            styleAttr="Horizontal"
-            indeterminate={false}
-            progress={this.state.progress}
-          />
+          <Image style={Styles.stylePicture}
+            source={{ uri: PICTURE_FILE }} />
+          <ScrollView
+            style={Styles.scrollview}>
+            {POI_ADDRESS ?
+              <Text>{POI_ADDRESS.formatted}</Text> :
+              <Text>{ADDRESS.formatted}</Text>
+            }
+
+            <View style={styleCategory}>
+              <Text>
+                {CATEGORY}
+              </Text>
+            </View>
+
+            <TextInput style={styleInput} value={this.state.description} onChange={this.handleChange} />
+            <View style={Styles.buttonsContainer}>
+              <Button
+                style={Styles.button}
+                onPress={this.props.clearPost}
+                title="Cancel"
+                color='red'
+                accessibilityLabel="SUBMIT"
+              />
+              <Button
+                style={Styles.button}
+                onPress={this.submitIssue}
+                title="SUBMIT"
+                color={Colors.primary}
+                accessibilityLabel="SUBMIT"
+              />
+            </View>
+            <ProgressBarAndroid
+              styleAttr="Horizontal"
+              indeterminate={false}
+              progress={this.state.progress}
+            />
+          </ScrollView>
         </View>
       );
     }
   }
 }
 
+const Styles = StyleSheet.create({
 
-const styleCamera = {
-  width: "100%",
-  height: "100%"
-};
+  buttonsContainer: {
+    flex: 1,
+    flexDirection: "row",
+    justifyContent: 'space-around',
+  },
+  scrollViewContainer: {
+    flex: 1,
+    backgroundColor: Colors.background,
 
-const stylePicture = {
-  width: "70%",
-  height: "50%"
-};
+
+  },
+  button: {
+    flex: .5
+  },
+  stylePicture: {
+    width: "100%",
+    height: "60%"
+  },
+  styleCamera: {
+    width: "100%",
+    height: "100%"
+  }
+
+});
+
+
+
 
 const styleCategory = {
   width: "70%",
@@ -175,7 +271,8 @@ const styleInput = {
 };
 
 ReportIssueScreen.navigationOptions = {
-  title: "Report Issue"
+  //title: "Report Issue",
+  header: null
 };
 const mapStateToProp = state => {
   console.log('state :', state);
@@ -187,7 +284,8 @@ const mapStateToProp = state => {
 };
 const mapDispatchToProps = dispatch => {
   return {
-    postIssue: issue => dispatch(postIssue(issue))
+    postIssue: issue => dispatch(postIssue(issue)),
+    clearPost: () => dispatch(clearPost())
   };
 };
 

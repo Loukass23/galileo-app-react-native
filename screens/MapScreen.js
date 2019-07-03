@@ -8,7 +8,7 @@ import OnMapMessage from "../components/OnMapMessage";
 import Header from "../components/Header";
 import MapView, { Callout, Marker, Circle } from 'react-native-maps';
 import Loader from '../components/Loader'
-import { getLocation, startTimer } from '../redux/actions/locationActions'
+import { getLocation, setPOIlocation } from '../redux/actions/locationActions'
 import { getIssues, setMarker, } from '../redux/actions/issuesActions'
 import Colors from '../constants/Colors';
 import { markerImages } from '../constants/Issues';
@@ -48,22 +48,18 @@ class MapScreen extends React.Component {
     console.log(marker)
     this.props.setMarker(marker)
   }
-  poiClick(marker) {
-    console.log(marker)
+  poiClick(poi) {
+    console.log('poi :', poi);
     const { navigate } = this.props.navigation;
-    this.props.setMarker(marker)
+
+    this.props.setPOIlocation(poi.coordinate)
+    navigate('ReportIssue')
   }
   mapLongClick(e) {
     console.log(e.nativeEvent)
     const poi = e.nativeEvent;
-
-    this.setState({
-      poi,
-    });
-
+    this.setState({ poi });
   }
-
-
 
   renderMarker = (marker, index) => {
     const key = index + marker.geometry.coordinates[0];
@@ -106,10 +102,10 @@ class MapScreen extends React.Component {
     );
   };
   render() {
-    const { viewRegion, showMessage } = this.state;
+    const { viewRegion, poi } = this.state;
     const { RADIUS, ISSUES, MARKER, ISSUES_LOADING, ERR } = this.props.issues
     const { USER_POSITION } = this.props.location
-    const { navigate } = this.props.navigation;
+    // const { navigate } = this.props.navigation;
 
 
     const allCoords = ISSUES.map(issue => ({
@@ -124,7 +120,7 @@ class MapScreen extends React.Component {
 
     if (MARKER) return (<IssueDetails marker={MARKER} />)
     return (
-      <View >
+      <View style={Style.mapViewContainer} >
         {/* {ISSUES_LOADING ? < Loader message="Loading Issues" /> : */}
         <View style={{ paddingBottom: this.state.hackHeight, flex: 1 }}>
           <MapView
@@ -151,12 +147,12 @@ class MapScreen extends React.Component {
                 fillColor={Colors.radius}
               />
             }
-            {this.state.poi && (
-              <Marker coordinate={this.state.poi.coordinate}
+            {poi && (
+              <Marker coordinate={poi.coordinate}
               >
                 <Callout
-                  onPress={() => navigate('ReportIssue')}
-                // onPress={() => this.markerClick(this.state.poi)}
+                  //onPress={() => navigate('ReportIssue')}
+                  onPress={() => this.poiClick(poi)}
                 >
                   <View>
                     <Text>Add Issue Here</Text>
@@ -177,8 +173,8 @@ class MapScreen extends React.Component {
   }
 }
 MapScreen.navigationOptions = {
-  title: 'Issues Map',
-  //header: null
+  //title: 'Issues Map',
+  header: null
   // header: <Header message={"test"} />
 
 };
@@ -198,6 +194,9 @@ const Style = StyleSheet.create({
     lineHeight: 20,
     textAlign: 'center',
   },
+  mapViewContainer: {
+    marginTop: 20
+  },
   makerText: {
     fontSize: 12,
     lineHeight: 20,
@@ -215,8 +214,8 @@ const mapStateToProp = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     getLocation: () => dispatch(getLocation()),
+    setPOIlocation: (region) => dispatch(setPOIlocation(region)),
     setMarker: (marker) => dispatch(setMarker(marker)),
-    startTimer: () => dispatch(startTimer()),
     getIssues: () => dispatch(getIssues())
 
   }

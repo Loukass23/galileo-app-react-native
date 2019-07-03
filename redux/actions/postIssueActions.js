@@ -2,7 +2,15 @@ import { SET_PICTURE_FILE } from "./actionTypes";
 import { SET_PICTURE_LOCATION } from "./actionTypes";
 import { SET_PICTURE_LOADER } from "./actionTypes";
 import { SET_CATEGORY } from "./actionTypes";
+import { CLEAR_POST } from "./actionTypes";
 
+export function clearPost() {
+  return async dispatch => {
+    dispatch({
+      type: CLEAR_POST,
+    });
+  };
+}
 export function setPictureFile(pictureURI) {
   console.log(pictureURI);
   return async dispatch => {

@@ -26,7 +26,7 @@ class IssueCategory extends React.Component {
                     return (
                         <TouchableOpacity key={category.name} style={styles.startContainer} onPress={() => this.handleCategory(category.name)}>
                             <Image
-                                style={styles.highlight}
+                                width='100'
                                 source={category.image}
                             />
                             <Text>{category.name}</Text>

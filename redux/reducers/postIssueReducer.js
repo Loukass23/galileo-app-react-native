@@ -7,6 +7,14 @@ const initState = {
 
 const postIssueReducer = (state = initState, action) => {
     switch (action.type) {
+        case "CLEAR_POST":
+            console.log("Cancelled ");
+            return {
+                ...state,
+                PICTURE_FILE: null,
+                CATEGORY: null
+
+            };
         case "SET_PICTURE_FILE":
             console.log("Picture File ", action.payload);
             return {
