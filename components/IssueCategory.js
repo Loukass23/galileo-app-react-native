@@ -1,4 +1,6 @@
-import React, { Component } from 'react'
+import React from 'react'
+import { connect } from 'react-redux'
+
 import {
     StyleSheet,
     Alert,
@@ -8,7 +10,8 @@ import {
     View,
 } from 'react-native'
 import { categories } from '../constants/Issues';
-export default class IssueCategory extends React.Component {
+import { setCategory } from '../redux/actions/postIssueActions'
+class IssueCategory extends React.Component {
     //   constructor(props) {
     //     super(props)
     //     this.state = { count: 0 }
@@ -19,6 +22,9 @@ export default class IssueCategory extends React.Component {
     //       count: this.state.count+1
     //     })
     //   }
+    handleCategory(category) {
+        this.props.setCategory(category)
+    }
     onPressButton() {
         Alert.alert('You tapped the button!');
     }
@@ -27,7 +33,7 @@ export default class IssueCategory extends React.Component {
             <View style={styles.container}>
                 {categories.map(category => {
                     return (
-                        <TouchableOpacity key={category.name} style={styles.startContainer} onPress={this.validate}>
+                        <TouchableOpacity key={category.name} style={styles.startContainer} onPress={() => this.handleCategory(category.name)}>
                             <Image
                                 style={styles.highlight}
                                 source={category.image}
@@ -108,119 +114,16 @@ const styles = StyleSheet.create({
     }
 })
 
-// export default IssueCategory
 
+const mapStateToProp = state => {
+    return {
 
-// import React, { Component } from 'react';
-// import { Text, View, TouchableOpacity, Button, StyleSheet } from "react-native";
-// import * as Permissions from "expo-permissions";
-// import { Camera } from "expo-camera";
-// import { Ionicons } from "@expo/vector-icons";
-// import {
-//     setPictureFile,
-//     setPictureLocation,
-//     setPictureLoader
-// } from "../redux/actions/pictureActions";
-// import Loader from "../components/Loader";
-// import { connect } from "react-redux";
+    };
+};
+const mapDispatchToProps = dispatch => {
+    return {
+        setCategory: category => dispatch(setCategory(category))
+    };
+};
 
-// class IssueCategory extends React.Component {
-//     // state = {
-//     //     issues: [
-//     //         { photo: null, type: "type3", date: null, user: "User3", id: 1, region: [] }
-//     //     ]
-//     // }
-//     // addIssue = (issue) => {
-//     //     //but this would update everyting all at once, so I don't know that it's all that efficient, especially at scale
-//     //     issue.id = Math.random();
-//     //     issue.date = new Date;
-//     //     issue.type = document.getElementById.value;
-//     //     let issues = [...this.state.issues, issue];
-//     //     this.setState({
-//     //         issues: issues
-//     //     })
-//     // }
-//     // deleteIssue = (id) => {
-//     //     //but this would update everyting all at once, so I don't know that it's all that efficient, especially at scale
-//     //     let issues = this.state.issues.filter(issue => {
-//     //         return issue.id !== id;
-//     //     });
-//     //     this.setState({
-//     //         issues: issues
-//     //     })
-//     // }
-//     // handleChange = (e) => {
-//     //     this.setState({
-//     //         [e.target.id]: e.target.value
-//     //     })
-//     // }
-//     // componentDidMount() {
-//     //     console.log("App.js Component mounted");
-//     // }
-//     // componentDidUpdate(prevProps, prevState) {
-//     //     console.log("App.js Component updated")
-//     // }
-//     render() {
-//         return (
-//             <View>
-//                 {/* <View >
-//                     <Text
-//                     title="What Kind of Issue?"
-//                     value="What Kind of Issue?"/>
-//                 </View> */}
-//                 <View style={styles.container}>
-//                     <View style={styles.issueStyle}>
-//                         <Button
-//                             style={styles.buttonStyle}
-//                             title="Button" />
-//                         <Button
-//                             style={styles.buttonStyle}
-//                             title="Button" />
-//                         <Button
-//                             style={styles.buttonStyle}
-//                             title="Button" />
-//                     </View>
-//                     {/* <View>
-//                         <Button
-//                         style={{buttonStyle}}
-//                         title="Button"/>
-//                         <Button
-//                         style={{buttonStyle}}
-//                         title="Button"/>
-//                         <Button
-//                         style={{buttonStyle}}
-//                         title="Button"/>
-//                     </View>
-//                     <View>
-//                         <Button
-//                         style={{buttonStyle}}
-//                         title="Button"/>
-//                         <Button
-//                         style={{buttonStyle}}
-//                         title="Button"/>
-//                         <Button
-//                         style={{buttonStyle}}
-//                         title="Button"/>
-//                     </View> */}
-//                 </View>
-//             </View>
-//         );
-//     }
-// }
-
-// const styles = StyleSheet.create({
-//     container: {
-//         ...StyleSheet.absoluteFillObject,
-//         justifyContent: 'flex-end',
-//         alignItems: 'center',
-//     },
-//     issueStyle: {
-//         flex: 1,
-//         flexDirection: "row"
-//     },
-//     buttonStyle: {
-//         width: 5
-//     }
-// });
-
-// export default IssueCategory;
+export default connect(mapStateToProp, mapDispatchToProps)(IssueCategory);

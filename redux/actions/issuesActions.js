@@ -6,8 +6,7 @@ import { GET_ISSUES } from './actionTypes'
 import { ISSUES_LOADING } from './actionTypes'
 import { GET_ISSUES_ERROR } from './actionTypes'
 import { CLEAR_ERROR } from './actionTypes'
-import { START_TIMER } from 'redux-timer';
-import { getLocation } from './locationActions'
+
 
 
 
@@ -127,25 +126,3 @@ export const clearFetchMessage = () => {
 }
 
 
-// export const startTimer = () => {
-//     return (dispatch, getState) => {
-//         const state = getState();
-//         dispatch({
-//             type: START_TIMER,
-//             payload: {
-//                 name: 'getIssueTimer',
-//                 action: async () => {
-//                     console.log('timer', state);
-//                     const token =
-//                         "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0ZXN0THVjYXMiLCJyb2xlIjpbIlJPTEVfVVNFUiJdLCJleHAiOjE1NjEwMjU5OTEsImlhdCI6MTU2MTAyMjM5MX0.3e0lX7UYRQaJtvdEEKf1J937Td1dkutUoQVY7MDft28NBsXN-nJkXUI4b1E_GfC54WuwSHeWeWOvNUw8Nw-IMw"
-
-//                     if (state.location.USER_POSITION)
-//                         dispatch(getIssues(state.issues.RADIUS, state.location.USER_POSITION, token));
-
-//                 },
-//                 interval: 10000,
-//                 runImmediately: false
-//             }
-//         });
-//     }
-// }

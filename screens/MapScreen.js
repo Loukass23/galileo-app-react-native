@@ -48,6 +48,11 @@ class MapScreen extends React.Component {
     console.log(marker)
     this.props.setMarker(marker)
   }
+  poiClick(marker) {
+    console.log(marker)
+    const { navigate } = this.props.navigation;
+    this.props.setMarker(marker)
+  }
   mapLongClick(e) {
     console.log(e.nativeEvent)
     const poi = e.nativeEvent;
@@ -104,6 +109,7 @@ class MapScreen extends React.Component {
     const { viewRegion, showMessage } = this.state;
     const { RADIUS, ISSUES, MARKER, ISSUES_LOADING, ERR } = this.props.issues
     const { USER_POSITION } = this.props.location
+    const { navigate } = this.props.navigation;
 
 
     const allCoords = ISSUES.map(issue => ({
@@ -149,9 +155,11 @@ class MapScreen extends React.Component {
               <Marker coordinate={this.state.poi.coordinate}
               >
                 <Callout
-                  onPress={() => this.markerClick(this.state.poi)}>
+                  onPress={() => navigate('ReportIssue')}
+                // onPress={() => this.markerClick(this.state.poi)}
+                >
                   <View>
-                    <Text>Add Issue Here (WIP)</Text>
+                    <Text>Add Issue Here</Text>
                     {/* <Text>Name: {this.state.poi.name}</Text> */}
                   </View>
                 </Callout>
@@ -169,7 +177,7 @@ class MapScreen extends React.Component {
   }
 }
 MapScreen.navigationOptions = {
-   title: 'Issues Map',
+  title: 'Issues Map',
   //header: null
   // header: <Header message={"test"} />
 

@@ -81,14 +81,14 @@ class HomeScreen extends React.Component {
         <View style={styles.videoContainer} >
 
             <Video
-                source={require('../assets/images/test.mp4')}
+                source={require('../assets/images/Kietz_Intro.mp4')}
                 rate={1.0}
 
                 isMuted={true}
-                resizeMode="cover"
+                resizeMode="contain"
                 shouldPlay
 
-                style={{ width: 500, height: 300 }}
+                style={{ width: 500, height: 450 }}
             />
 
             {/* <Image
@@ -99,6 +99,7 @@ class HomeScreen extends React.Component {
     )
     renderLogOutUser = (username) => {
         return (
+
             <View style={styles.containerRow}  >
                 <Text style={styles.halfHorizontal}>Not {username} ?</Text>
 
@@ -121,19 +122,20 @@ class HomeScreen extends React.Component {
         if (!USER || !this.state.okButton)
             //Render plash screen
             return (
+
                 <View style={styles.container}>
                     <ScrollView
                         style={styles.scrollview}
                         contentContainerStyle={styles.contentContainer}>
                         <View style={styles.scrollViewContainer}>
                             {USER_INFO.loading ? <Loader message={USER_INFO.message} /> : <View>
-                                <Text style={styles.title}>Kietz</Text>
-                                {USER ? <View  >
 
-                                    <Text style={styles.title2}>Hi {USER.username}</Text>
+                                {USER ? <React.Fragment  >
                                     {this.renderStartButton}
+                                    <Text style={styles.title2}>Hi {USER.username}</Text>
 
-                                </View> :
+                                    {/* <Text style={styles.title}>Kietz</Text> */}
+                                </React.Fragment> :
                                     <View >
                                         {this.renderloginPlaceholder}
 
@@ -147,7 +149,7 @@ class HomeScreen extends React.Component {
                                             Hooray, your current device {device} has a Galileo chipset!
                     </Text> :
                                         <Text style={styles.getStartedText}>
-                                            Unfotunately your current device {device} does not have Galileo chipset
+                                            Unfortunately your current device {device} does not have Galileo chipset
                     </Text>
                                     }
 
@@ -206,7 +208,7 @@ const styles = StyleSheet.create({
         flexDirection: 'column',
         justifyContent: 'space-between',
         alignItems: 'center',
-        padding : 5
+        padding: 5
     },
     containerRow: {
         flex: 1,
@@ -298,9 +300,7 @@ const styles = StyleSheet.create({
 
     helpContainer: {
         marginTop: 5,
-        alignItems: 'center',
-        flexDirection: 'column',
-        justifyContent: 'space-between',
+
         alignItems: 'center'
     },
     startContainer: {

@@ -105,8 +105,8 @@ class Login extends React.Component {
     render() {
         return (
             <View style={styles.logInOption}>
-                <FontAwesome onPress={this._handleFacebookLogin} name="facebook" size={60} style={{ color: Colors.primary }} />
-                <FontAwesome onPress={this._handleGoogleLogin} name="google" size={60} style={{ color: Colors.primary }} />
+                <FontAwesome onPress={this._handleFacebookLogin} name="facebook" size={50} style={{ color: Colors.primary }} />
+                <FontAwesome onPress={this._handleGoogleLogin} name="google" size={50} style={{ color: Colors.primary }} />
                 {/* 
                 <Button style={styles.button}
                     title="Login with Facebook"

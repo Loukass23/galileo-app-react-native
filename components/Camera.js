@@ -7,7 +7,7 @@ import {
   setPictureFile,
   setPictureLocation,
   setPictureLoader
-} from "../redux/actions/pictureActions";
+} from "../redux/actions/postIssueActions";
 import Loader from "../components/Loader";
 import { connect } from "react-redux";
 import * as ImageManipulator from "expo-image-manipulator";
