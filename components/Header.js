@@ -9,23 +9,18 @@ class OnMapMessage extends React.Component {
 
     }
 
-    componentDidMount() {
-
-
-    }
 
     render() {
         const { message } = this.props
         return (
-            <React.Fragment>
-                <View style={Styles.welcomeContainer}>
-                    <Image
-                        source={require('../assets/images/Galileo_logo_animation_3.gif')}
-                        style={Styles.welcomeImage}
-                    />
-                    <Text style={Styles.text}>{message}</Text>
-                </View >
-            </React.Fragment>
+            <View >
+                <Image
+                    source={require('../assets/images/Galileo_logo_animation_3.gif')}
+                    style={Styles.welcomeImage}
+                />
+                <Text style={Styles.text}>{message}</Text>
+            </View >
+
         );
     }
 }

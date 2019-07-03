@@ -4,6 +4,7 @@ export default {
   primary: "#880e4f",
   secondary: "#673ab7",
   background: '#fff',
+  radius: "rgba(163, 48, 87, 0.3)",
   tintColor,
   tabIconDefault: '#ccc',
   tabIconSelected: tintColor,

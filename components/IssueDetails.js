@@ -9,28 +9,40 @@ import {
     Button
 } from 'react-native';
 import { clearMarker } from '../redux/actions/issuesActions'
+import Colors from '../constants/Colors';
+
 
 function IssueDetails({ marker, clearMarker }) {
     return (
         <View style={styles.container} >
             <ScrollView>
-                <View style={styles.view} >
-                    <Text style={styles.title}>
-                        {marker.category}</Text>
-                    <Text>{marker.description}</Text>
-                </View>
+
                 {marker.image && <Image
                     source={{ uri: marker.image[0] }}
                     style={styles.image}
                 />}
-                <Button
-                    style={styles.button}
-                    onPress={clearMarker}
-                    title="OK"
-                    color="#841584"
-                    accessibilityLabel="Start looking at issues around you"
-                />
 
+                <View style={styles.view} >
+                    <Text style={styles.title}>
+                        {marker.category}</Text>
+                    <Text style={styles.text}>{marker.description}</Text>
+                </View>
+                <View>
+                    <Button
+                        style={styles.button}
+                        onPress={clearMarker}
+                        title="Back"
+                        color="#841584"
+                        accessibilityLabel="Back"
+                    />
+                    <Button
+                        style={styles.button}
+
+                        title="Verify"
+                        color="#841584"
+                        accessibilityLabel="Verify"
+                    />
+                </View>
             </ScrollView>
         </View>
     )
@@ -39,22 +51,28 @@ function IssueDetails({ marker, clearMarker }) {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#fff',
+        backgroundColor: Colors.background,
         alignItems: 'center',
     },
     title: {
         fontSize: 20,
-        color: 'rgb(174, 33, 87)',
+        color: Colors.primary,
         lineHeight: 24,
+        textAlign: 'center',
+    },
+    text: {
+        fontSize: 15,
+        lineHeight: 20,
         textAlign: 'center',
     },
     view: {
 
     },
     button: {
-        marginTop: 10,
-        paddingHorizontal: 50,
-        marginBottom: 0
+        height: 100,
+        width: 100,
+        margin: 10,
+        backgroundColor: Colors.primary,
     },
     image: { width: 400, height: 400 }
 })

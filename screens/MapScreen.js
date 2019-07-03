@@ -5,20 +5,16 @@ import ClusterMarker from "../components/ClusterMarker";
 import { getCluster } from "../components/MapUtils";
 import IssueDetails from "../components/IssueDetails";
 import OnMapMessage from "../components/OnMapMessage";
+import Header from "../components/Header";
 import MapView, { Callout, Marker, Circle } from 'react-native-maps';
 import Loader from '../components/Loader'
 import { getLocation, startTimer } from '../redux/actions/locationActions'
 import { getIssues, setMarker, } from '../redux/actions/issuesActions'
+import Colors from '../constants/Colors';
+import { markerImages } from '../constants/Issues';
 
 const { width, height } = Dimensions.get('window');
-const markerImages = {
-  Trash: require('../assets/images/Marker1.png'),
-  Road: require('../assets/images/Marker2.png'),
-  Vandalism: require('../assets/images/Marker3.png'),
-  Traffic: require('../assets/images/Marker4.png'),
-  Category5: require('../assets/images/Marker5.png'),
 
-};
 
 class MapScreen extends React.Component {
   constructor(props) {
@@ -96,9 +92,9 @@ class MapScreen extends React.Component {
         <Callout
           onPress={() => this.markerClick(marker)}>
           <View >
-            <Text>
-              {marker.category}{"\n"}
-              {marker.description}</Text>
+            <Text style={Style.makerTitle}>
+              {marker.category}</Text>
+            <Text style={Style.makerText}> {marker.description}</Text>
           </View>
         </Callout>
       </MapView.Marker>
@@ -146,7 +142,7 @@ class MapScreen extends React.Component {
               <Circle
                 center={USER_POSITION}
                 radius={RADIUS}
-                fillColor="rgba(163, 48, 87, 0.5)"
+                fillColor={Colors.radius}
               />
             }
             {this.state.poi && (
@@ -173,7 +169,9 @@ class MapScreen extends React.Component {
   }
 }
 MapScreen.navigationOptions = {
-  title: 'Issues Map',
+   title: 'Issues Map',
+  //header: null
+  // header: <Header message={"test"} />
 
 };
 
@@ -186,11 +184,16 @@ const Style = StyleSheet.create({
   map: {
     ...StyleSheet.absoluteFillObject,
   },
-  calloutText: {
-
+  makerTitle: {
+    fontSize: 12,
+    color: Colors.secondary,
+    lineHeight: 20,
+    textAlign: 'center',
   },
-  customView: {
-
+  makerText: {
+    fontSize: 12,
+    lineHeight: 20,
+    textAlign: 'center',
   }
 });
 
