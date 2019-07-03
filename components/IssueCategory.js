@@ -12,16 +12,7 @@ import {
 import { categories } from '../constants/Issues';
 import { setCategory } from '../redux/actions/postIssueActions'
 class IssueCategory extends React.Component {
-    //   constructor(props) {
-    //     super(props)
-    //     this.state = { count: 0 }
-    //   }
 
-    //   onPress = () => {
-    //     this.setState({
-    //       count: this.state.count+1
-    //     })
-    //   }
     handleCategory(category) {
         this.props.setCategory(category)
     }
@@ -42,46 +33,7 @@ class IssueCategory extends React.Component {
                         </TouchableOpacity>
                     )
                 })}
-                {/* <View
-                    style={styles.button}
-                >
-                    <Text> 2  </Text>
-                </View>
-                <View
-                    style={styles.button}
-                >
-                    <Text> 3  </Text>
-                </View>
-                <View
-                    style={styles.button}
-                >
-                    <Text> 4  </Text>
-                </View>
-                <View
-                    style={styles.button}
-                >
-                    <Text> 5  </Text>
-                </View>
-                <View
-                    style={styles.button}
-                >
-                    <Text> 6  </Text>
-                </View>
-                <View
-                    style={styles.button}
-                >
-                    <Text> 7  </Text>
-                </View>
-                <View
-                    style={styles.button}
-                >
-                    <Text> 8  </Text>
-                </View>
-                <View
-                    style={styles.button}
-                >
-                    <Text> 9  </Text>
-                </View> */}
+
                 <View>
                     <Text style={styles.issueHeading}> Please choose a category </Text>
                 </View>
