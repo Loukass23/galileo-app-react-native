@@ -255,7 +255,7 @@ const styles = StyleSheet.create({
 
     },
     contentContainer: {
-        paddingTop: 30,
+        // paddingTop: 30,
     },
     getStartedText: {
         fontSize: 17,

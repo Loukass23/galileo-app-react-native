@@ -1,9 +1,15 @@
 import { Location, Permissions } from 'expo';
 import { googleAPIkey } from '../../constants/config'
 import { START_TIMER } from 'redux-timer';
-import { SET_USER_LOCATION } from './actionTypes'
-import { SET_USER_LOCATION_STATUS } from './actionTypes'
-import { SET_ADDRESS } from './actionTypes'
+import {
+    SET_USER_LOCATION,
+    SET_USER_LOCATION_STATUS,
+    SET_ADDRESS,
+    SET_POI_LOCATION,
+    SET_POI_ADDRESS
+} from './actionTypes'
+
+
 
 export function getLocation() {
     return async dispatch => {
@@ -30,7 +36,7 @@ export function getLocation() {
                 latitudeDelta: 1,
                 longitudeDelta: 1
             };
-            dispatch(getAddress(region));
+            dispatch(getAddress(region, 'user'));
             dispatch({
                 type: SET_USER_LOCATION,
                 payload: region
@@ -39,7 +45,17 @@ export function getLocation() {
 
     }
 }
-export const getAddress = (region) => {
+export const setPOIlocation = (region) => {
+    return (dispatch) => {
+        dispatch(getAddress(region, 'POI'));
+        dispatch({
+            type: SET_POI_LOCATION,
+            payload: region
+        })
+    }
+}
+
+export const getAddress = (region, type) => {
     return (dispatch) => {
         fetch('https://maps.googleapis.com/maps/api/geocode/json?address=' + region.latitude + ',' + region.longitude + '&key=' + googleAPIkey)
             .then((response) => response.json())
@@ -50,11 +66,19 @@ export const getAddress = (region) => {
                     city: array[array.length - 3].short_name,
                     country: array[array.length - 2].short_name
                 }
+                if (type === 'user') {
+                    dispatch({
+                        type: SET_ADDRESS,
+                        payload: address
+                    })
+                }
+                else {
+                    dispatch({
+                        type: SET_POI_ADDRESS,
+                        payload: address
+                    })
+                }
 
-                dispatch({
-                    type: SET_ADDRESS,
-                    payload: address
-                })
             })
     }
 }

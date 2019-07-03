@@ -92,7 +92,9 @@ export const postIssue = issue => {
     const string2 =
       '{\n    "category": "' +
       issue.category +
-      '",\n    "description": "Trash talk",\n    "imageUrls": [\n        "' +
+      '",\n    "description": "' +
+      issue.description +
+      '",\n    "imageUrls": [\n        "' +
       issue.imageUrls +
       '"\n    ],\n    "latitude": ' +
       issue.location.latitude +

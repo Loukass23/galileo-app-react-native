@@ -7,7 +7,9 @@ const initState = {
         longitudeDelta: 1
     },
     STATUS: "",
-    ADDRESS: null
+    ADDRESS: null,
+    POI_LOCATION: null,
+    POI_ADDRESS: null
 }
 
 const locationReducer = (state = initState, action) => {
@@ -29,6 +31,17 @@ const locationReducer = (state = initState, action) => {
             return {
                 ...state,
                 ADDRESS: action.payload
+            }
+        case 'SET_POI_LOCATION':
+            return {
+                ...state,
+                POI_LOCATION: action.payload
+            }
+        case 'SET_POI_ADDRESS':
+            console.log('POI Address: ', action.payload)
+            return {
+                ...state,
+                POI_ADDRESS: action.payload
             }
         default:
             return state
