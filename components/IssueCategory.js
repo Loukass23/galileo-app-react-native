@@ -1,78 +1,52 @@
-import React, { Component } from 'react'
+import React from 'react'
+import { connect } from 'react-redux'
+
 import {
     StyleSheet,
     Alert,
     TouchableOpacity,
+    Image,
     Text,
     View,
 } from 'react-native'
 
+import { categories } from '../constants/Issues';
+import { setCategory } from '../redux/actions/postIssueActions'
+class IssueCategory extends React.Component {
+    //   constructor(props) {
+
+
 export default class IssueCategory extends React.Component {
     // constructor(props) {
-    //     super(props)
-    //     this.state = { count: 0 }
-    // }
-    // onPress = () => {
-    //     this.setState({
-    //         count: this.state.type;
-    //     })
-    // }
+
+    handleCategory(category) {
+        this.props.setCategory(category)
+    }
+
     onPressButton() {
         Alert.alert('You tapped the button!');
     }
     render() {
         return (
             <View style={styles.container}>
-                <TouchableOpacity
-                    style={styles.button}
-                >
-                    <Text> 1 </Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                    style={styles.button}
-                >
-                    <Text> 2 </Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                    style={styles.button}
-                >
-                    <Text> 3 </Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                    style={styles.button}
-                >
-                    <Text> 4 </Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                    style={styles.button}
-                >
-                    <Text> 5 </Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                    style={styles.button}
-                >
-                    <Text> 6 </Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                    style={styles.button}
-                >
-                    <Text> 7 </Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                    style={styles.button}
-                >
-                    <Text> 8 </Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                    style={styles.button}
-                >
-                    <Text> 9 </Text>
-                </TouchableOpacity>
-                <Text style={styles.issueHeading}> Please choose a category </Text>
-                <TouchableOpacity style={styles.submitButton}>
-                    <Text> Submit issue </Text>
-                </TouchableOpacity>
-            </View >
+
+                {categories.map(category => {
+                    return (
+                        <TouchableOpacity key={category.name} style={styles.startContainer} onPress={() => this.handleCategory(category.name)}>
+                            <Image
+                                style={styles.highlight}
+                                source={category.image}
+                            />
+                            <Text>{category.name}</Text>
+                        </TouchableOpacity>
+                    )
+                })}
+
+                <View>
+                    <Text style={styles.issueHeading}> Please choose a category </Text>
+                </View>
+            </View>
+
         )
     }
 }
@@ -110,4 +84,20 @@ const styles = StyleSheet.create({
     submitText: {
         fontSize: 48
     }
+
 })
+
+
+const mapStateToProp = state => {
+    return {
+
+    };
+};
+const mapDispatchToProps = dispatch => {
+    return {
+        setCategory: category => dispatch(setCategory(category))
+    };
+};
+
+export default connect(mapStateToProp, mapDispatchToProps)(IssueCategory);
+

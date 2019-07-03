@@ -21,19 +21,7 @@ import {
 } from 'react-navigation';
 
 
-const ReportIssueStack = createStackNavigator({
-  ReportIssue: ReportIssueScreen
-});
 
-ReportIssueStack.navigationOptions = {
-  tabBarLabel: "Report",
-  tabBarIcon: ({ focused }) => (
-    <TabBarIcon
-      focused={focused}
-      name={Platform.OS === "ios" ? "ios-camera" : "md-camera"}
-    />
-  )
-};
 
 const MapStack = createStackNavigator({
   Maps: MapView,
@@ -64,6 +52,32 @@ SettingsStack.navigationOptions = {
     />
   )
 };
+const ReportIssueStack = createStackNavigator({
+  ReportIssue: ReportIssueScreen
+});
+
+ReportIssueStack.navigationOptions = {
+  tabBarLabel: "Report",
+  tabBarIcon: ({ focused }) => (
+    <TabBarIcon
+      focused={focused}
+      name={Platform.OS === "ios" ? "ios-camera" : "md-camera"}
+    />
+  )
+};
+
+const MainNavigator = createStackNavigator({
+  Maps: { screen: MapView },
+  Settings: { screen: SettingsScreen },
+  ReportIssue: { screen: ReportIssueScreen },
+});
+
+export default createBottomTabNavigator({
+  MapStack,
+  SettingsStack,
+  ReportIssueStack
+});
+
 // const StackWithTranslucentHeader = createStackNavigator(
 //   {
 //     Home: {
@@ -94,8 +108,4 @@ SettingsStack.navigationOptions = {
 //     //   } as TransitionConfig)
 //   }
 // );
-export default createBottomTabNavigator({
-  MapStack,
-  SettingsStack,
-  ReportIssueStack
-});
+

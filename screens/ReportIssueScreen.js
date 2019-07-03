@@ -34,13 +34,12 @@ class ReportIssueScreen extends React.Component {
       category: ""
     };
   }
-  componentDidMount() {}
+  componentDidMount() { }
 
 
   submitIssue = () => {
-    const { PICTURE_FILE } = this.props.pictureURI;
-    const { PICTURE_LOCATION } = this.props.pictureURI;
-    const { PICTURE_LOADER } = this.props.pictureURI;
+    const { PICTURE_FILE, PICTURE_LOCATION, PICTURE_LOADER } = this.props.issue;
+
 
 
     console.log("FILE IN REPORT ISSUE" + PICTURE_FILE);
@@ -53,9 +52,9 @@ class ReportIssueScreen extends React.Component {
   getPictureLink = res => {
     const storageService = firebase.storage();
     const storageRef = storageService.ref();
-    const { PICTURE_LOCATION } = this.props.pictureURI;
+    const { PICTURE_LOCATION, CATEGORY } = this.props.issue;
     const { ADDRESS } = this.props.location;
-    const id = `${ADDRESS.city}-${this.state.category}-${new Date()}`;
+    const id = `${ADDRESS.city}-${CATEGORY}-${new Date()}`;
     console.log(id);
     console.log(res);
     const blob = res._bodyBlob;
@@ -90,7 +89,7 @@ class ReportIssueScreen extends React.Component {
                 longitude: PICTURE_LOCATION.longitude,
                 latitude: PICTURE_LOCATION.latitude
               },
-              category: this.state.category
+              category: CATEGORY
             };
             this.props.postIssue(issue);
           });
@@ -98,9 +97,11 @@ class ReportIssueScreen extends React.Component {
     );
   };
   render() {
-    console.log(this.props.pictureURI);
-    const { PICTURE_FILE } = this.props.pictureURI;
-    const { PICTURE_LOADER } = this.props.pictureURI;
+    console.log(this.props.issue);
+    const { PICTURE_FILE, CATEGORY } = this.props.issue;
+    const { PICTURE_LOADER } = this.props.postIssue;
+    const { ADDRESS } = this.props.location;
+    console.log('PICTURE_FILE :', PICTURE_FILE);
     if (PICTURE_FILE == null) {
       return (
         <View style={styleCamera}>
@@ -108,46 +109,46 @@ class ReportIssueScreen extends React.Component {
         </View>
       );
     }   //else if category has not been choosen yet, render category component
-    else if(!this.state.category){
-       return (<IssueCategory/>) 
-      }
-      else {
-        const { PICTURE_LOCATION } = this.props.pictureURI;
-        // const { username } = this.props.user.USER;
-        // const { token } = this.props.user.USER;
-        // console.log(username);
-        // console.log(token);
-        return (
-          <View style={{ flex: 1, alignItems: "center" }}>
-            <Image style={stylePicture} source={{ uri: PICTURE_FILE }} />
-            <Text>Selected Issue</Text>
-            <View style={styleCategory}>
-              <Text
-                style={{ textAlign: "center", fontSize: 20, color: "white" }}
-              >
-                {this.state.category}
-              </Text>
-            </View>
-
-            <Text>Comment</Text>
-            <TextInput style={styleInput} />
-            <Button
-              onPress={this.submitIssue}
-              title="SUBMIT"
-              color="#841584"
-              accessibilityLabel="SUBMIT"
-            />
-            <ProgressBarAndroid
-              styleAttr="Horizontal"
-              indeterminate={false}
-              progress={this.state.progress}
-            />
+    else if (!CATEGORY) {
+      return (<IssueCategory />)
+    }
+    else {
+      const { PICTURE_LOCATION } = this.props.issue;
+      // const { username } = this.props.user.USER;
+      // const { token } = this.props.user.USER;
+      // console.log(username);
+      // console.log(token);
+      return (
+        <View style={{ flex: 1, alignItems: "center" }}>
+          <Image style={stylePicture} source={{ uri: PICTURE_FILE }} />
+          <Text>Selected Issue</Text>
+          <View style={styleCategory}>
+            <Text
+              style={{ textAlign: "center", fontSize: 20, color: "white" }}
+            >
+              {CATEGORY}
+            </Text>
           </View>
-        );        
-      }
+
+          <Text>Comment</Text>
+          <TextInput style={styleInput} />
+          <Button
+            onPress={this.submitIssue}
+            title="SUBMIT"
+            color="#841584"
+            accessibilityLabel="SUBMIT"
+          />
+          <ProgressBarAndroid
+            styleAttr="Horizontal"
+            indeterminate={false}
+            progress={this.state.progress}
+          />
+        </View>
+      );
     }
   }
-  
+}
+
 
 const styleCamera = {
   width: "100%",
@@ -177,8 +178,9 @@ ReportIssueScreen.navigationOptions = {
   title: "Report Issue"
 };
 const mapStateToProp = state => {
+  console.log('state :', state);
   return {
-    pictureURI: state.pictureURI,
+    issue: state.postIssue,
     location: state.location,
     user: state.user
   };

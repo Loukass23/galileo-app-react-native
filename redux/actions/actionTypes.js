@@ -8,12 +8,15 @@ export const ISSUES_LOADING = 'ISSUES_LOADING'
 export const GET_ISSUES_ERROR = 'GET_ISSUES_ERROR'
 export const CLEAR_ERROR = 'CLEAR_ERROR'
 
+
+
 /*Location Actions*/
 export const SET_USER_LOCATION = "SET_USER_LOCATION";
 export const SET_USER_LOCATION_STATUS = "SET_USER_LOCATION_STATUS";
 export const SET_ADDRESS = "SET_ADDRESS";
 
-/*Picture Actions*/
+/*Post Issue Actions*/
+export const SET_CATEGORY = 'SET_CATEGORY'
 export const SET_PICTURE_FILE = "SET_PICTURE_FILE";
 export const SET_PICTURE_LOCATION = "SET_PICTURE_LOCATION";
 export const SET_PICTURE_LOADER = "SET_PICTURE_LOADER";

@@ -1,5 +1,5 @@
 import React from 'react';
-
+import Colors from '../constants/Colors';
 import ConfigDetails from '../components/ConfigDetails';
 import { connect } from 'react-redux'
 import { setRadius, getIssues } from '../redux/actions/issuesActions'
@@ -39,7 +39,7 @@ class SettingsScreen extends React.Component {
         <ConfigDetails />
         <View style={styles.container}>
           <ScrollView
-            style={styles.container}
+            style={styles.scrollview}
             contentContainerStyle={styles.contentContainer}>
             <View style={styles.welcomeContainer}>
               <MonoText>Radius: {RADIUS}m</MonoText>
@@ -53,15 +53,20 @@ class SettingsScreen extends React.Component {
                 minimumTrackTintColor="#000000"
                 maximumTrackTintColor="#ae2157"
               />
+
+            </View>
+          </ScrollView>
+          <View style={styles.footer}>
+            <View style={styles.containerRow}  >
               <Button
-                style={styles.button}
+                style={styles.button3}
                 onPress={this.props.logout}
                 title="LOG OUT"
-                color="#841584"
+                color={Colors.primary}
                 accessibilityLabel="Log Out"
               />
             </View>
-          </ScrollView>
+          </View>
         </View>
       </React.Fragment>
     )
@@ -78,6 +83,19 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#fff',
   },
+  container: {
+    flex: 1,
+    backgroundColor: Colors.background,
+
+  },
+  scrollview: {
+    marginTop: 1,
+    flex: .8,
+  },
+  footer: {
+    flex: .15,
+    marginBottom: 1,
+  },
   developmentModeText: {
     marginBottom: 20,
     color: 'rgba(0,0,0,0.4)',
@@ -87,6 +105,18 @@ const styles = StyleSheet.create({
   },
   contentContainer: {
     paddingTop: 30,
+  },
+  containerRow: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+  button3: {
+    flex: .3,
+    backgroundColor: Colors.secondary,
+    width: 50,
+
   },
   welcomeContainer: {
     alignItems: 'center',

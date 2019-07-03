@@ -37,10 +37,6 @@ class HomeScreen extends React.Component {
         this.galileoEnabled()
         this.props.getLocation()
         this.props.getStorageToken()
-
-        // console.log(DeviceInfo.getManufacturer());
-        // console.log(DeviceInfo.getModel());
-
     };
     galileoEnabled = async () => {
         const device = await this.deviceIosAndroid()
@@ -85,14 +81,14 @@ class HomeScreen extends React.Component {
         <View style={styles.videoContainer} >
 
             <Video
-                source={require('../assets/images/test.mp4')}
+                source={require('../assets/images/Kietz_Intro.mp4')}
                 rate={1.0}
 
                 isMuted={true}
-                resizeMode="cover"
+                resizeMode="contain"
                 shouldPlay
 
-                style={{ width: 500, height: 300 }}
+                style={{ width: 500, height: 450 }}
             />
 
             {/* <Image
@@ -103,10 +99,12 @@ class HomeScreen extends React.Component {
     )
     renderLogOutUser = (username) => {
         return (
-            <View  >
-                <Text style={styles.halfHorizontal}>Your are not {username} ?</Text>
+
+            <View style={styles.containerRow}  >
+                <Text style={styles.halfHorizontal}>Not {username} ?</Text>
+
                 <Button
-                    style={styles.button}
+                    style={styles.button3}
                     onPress={this.props.logout}
                     title="LOG OUT"
                     color={Colors.primary}
@@ -124,44 +122,46 @@ class HomeScreen extends React.Component {
         if (!USER || !this.state.okButton)
             //Render plash screen
             return (
+
                 <View style={styles.container}>
                     <ScrollView
                         style={styles.scrollview}
                         contentContainerStyle={styles.contentContainer}>
+                        <View style={styles.scrollViewContainer}>
+                            {USER_INFO.loading ? <Loader message={USER_INFO.message} /> : <View>
 
-                        {USER_INFO.loading ? <Loader message={USER_INFO.message} /> : <View>
-                            <Text style={styles.title}>Kietz</Text>
-                            {USER ? <View  >
+                                {USER ? <React.Fragment  >
+                                    {this.renderStartButton}
+                                    <Text style={styles.title2}>Hi {USER.username}</Text>
 
-                                <Text style={styles.title2}>Hi {USER.username}</Text>
-                                {this.renderStartButton}
+                                    {/* <Text style={styles.title}>Kietz</Text> */}
+                                </React.Fragment> :
+                                    <View >
+                                        {this.renderloginPlaceholder}
 
-                            </View> :
-                                <View >
-                                    {this.renderloginPlaceholder}
 
+                                    </View>
+                                }
+                                <View style={styles.helpContainer}>
+                                    <Text style={styles.title2}> Accuracy matters!</Text>
+                                    {galileoEnabled ?
+                                        <Text style={styles.getStartedText}>
+                                            Hooray, your current device {device} has a Galileo chipset!
+                    </Text> :
+                                        <Text style={styles.getStartedText}>
+                                            Unfortunately your current device {device} does not have Galileo chipset
+                    </Text>
+                                    }
+
+                                    <TouchableOpacity onPress={handleHelpPress} style={styles.helpLink}>
+                                        <Text style={styles.helpLinkText}>
+                                            Learn more about Galileo...
+                            </Text>
+                                    </TouchableOpacity>
 
                                 </View>
-                            }
-                            <View style={styles.helpContainer}>
-                                <Text style={styles.title2}> Accuracy matters!</Text>
-                                {galileoEnabled ?
-                                    <Text style={styles.getStartedText}>
-                                        Hooray, your current device {device} has a Galileo chipset!
-                    </Text> :
-                                    <Text style={styles.getStartedText}>
-                                        Unfotunately your current device {device} does not have Galileo chipset
-                    </Text>
-                                }
-
-                                <TouchableOpacity onPress={handleHelpPress} style={styles.helpLink}>
-                                    <Text style={styles.helpLinkText}>
-                                        Learn more about Galileo...
-                            </Text>
-                                </TouchableOpacity>
-
-                            </View>
-                        </View>}
+                            </View>}
+                        </View>
                     </ScrollView>
                     {!USER_INFO.loading &&
                         <View style={styles.footer}>
@@ -172,7 +172,6 @@ class HomeScreen extends React.Component {
                                 </View>
                                 :
                                 <View style={styles.elevationContainer} >
-                                    <Text style={styles.getStartedText}>Not {USER.username}?</Text>
                                     {this.renderLogOutUser(USER.username)}
                                 </View>
 
@@ -201,10 +200,21 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: Colors.background,
+
+    },
+    scrollViewContainer: {
+        flex: 1,
+        backgroundColor: Colors.background,
+        flexDirection: 'column',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        padding: 5
     },
     containerRow: {
         flex: 1,
-        flexDirection: 'row'
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center'
     },
     footer: {
         flex: .15,
@@ -212,7 +222,7 @@ const styles = StyleSheet.create({
     },
     scrollview: {
         marginTop: 1,
-        flex: .8
+        flex: .8,
     },
     halfHorizontal: {
         flex: .5
@@ -290,10 +300,11 @@ const styles = StyleSheet.create({
 
     helpContainer: {
         marginTop: 5,
-        alignItems: 'center',
+
+        alignItems: 'center'
     },
     startContainer: {
-
+        height: 300,
         alignItems: 'center',
     },
     videoContainer: {
@@ -307,7 +318,8 @@ const styles = StyleSheet.create({
         fontSize: 14,
         color: '#2e78b7',
     },
-    button: {
+    button3: {
+        flex: .3,
         backgroundColor: Colors.secondary,
         width: 50,
 
