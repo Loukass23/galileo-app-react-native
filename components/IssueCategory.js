@@ -12,20 +12,6 @@ import {
 import { categories } from '../constants/Issues';
 import { setCategory } from '../redux/actions/postIssueActions'
 class IssueCategory extends React.Component {
-
-
-    handleCategory(category) {
-        this.props.setCategory(category)
-    }
-
-
-import { categories } from '../constants/Issues';
-import { setCategory } from '../redux/actions/postIssueActions'
-class IssueCategory extends React.Component {
-    //   constructor(props) {
-
-
-export default class IssueCategory extends React.Component {
     // constructor(props) {
 
     handleCategory(category) {
