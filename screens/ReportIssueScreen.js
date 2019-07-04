@@ -29,12 +29,13 @@ class ReportIssueScreen extends React.Component {
     super(props);
     this.state = {
       progress: 0,
-      photoURL: null,
       photoUploading: false,
       pictureURI: null,
       category: "",
       description: ""
     };
+    this.handleChange = this.handleChange.bind(this);
+
   }
 
   // nativeCamera = async () => {
@@ -96,11 +97,113 @@ class ReportIssueScreen extends React.Component {
     console.log("FILE IN REPORT ISSUE" + PICTURE_FILE);
     this.setState({ photoUploading: true });
 
-    fetch(PICTURE_FILE).then(res => {
-      console.log('res :', res);
-      this.getPictureLink(res);
+    fetch(PICTURE_FILE).then(blob => {
+      this.firebaseUpload(blob);
     });
   };
+
+  firebaseUpload = async () => {
+    const uri = this.props.issue.PICTURE_FILE
+    const id = `${this.props.location.ADDRESS.city}-${this.props.issue.CATEGORY}-${new Date()}`;
+
+    const response = await fetch(uri);
+    const blob = await response.blob();
+    console.log('blob :', blob);
+
+    return new Promise(function (resolve, reject) {
+      const storageRef = firebase
+        .storage()
+        .ref()
+        .child(`issues/${id}`);
+      const uploadTask = storageRef.put(blob)
+      uploadTask.on('state_changed',
+        snapshot => {
+          let progress = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100)
+          // this.setState({ progress: progress / 100 });
+          console.log(progress);
+        },
+        err => {
+          console.log('error', err)
+          reject()
+        },
+        () => {
+          uploadTask.snapshot.ref.getDownloadURL().then(downloadURL => {
+            console.log('downloadURL :', downloadURL);
+            resolve(downloadURL)
+          })
+        }
+      )
+    })
+    // uploadTask.on(
+    //   "state_changed",
+    //   snapshot => {
+    //     let progress = Math.round(
+    //       (snapshot.bytesTransferred * 100) / snapshot.totalBytes
+    //     );
+    //     this.setState({ progress: progress / 100 });
+    //     console.log(progress);
+    //   },
+    //   error => {
+    //     console.log(error);
+    //   },
+    //    () => {
+    //     console.log("success");
+    //     this.setState({ photoUploading: false });
+    //     firebase
+    //       .storage()
+    //       .ref("issues")
+    //       .child(`${id}`)
+    //       .getDownloadURL()
+    //       .then(photoURL => {
+    // ref.put(blob)
+    //   .then(snapshot => {
+    //     console.log('snapshot :', snapshot);
+    //     return snapshot.ref.getDownloadURL();
+    //   })
+    //   .then(downloadURL => {
+    //     console.log(`Successfully uploaded file and got download link - ${downloadURL}`);
+    //     this.postIssue(downloadURL)
+    //     return downloadURL;
+    //   });
+  }
+
+  handleSubmitIssue = async () => {
+
+    const { navigate } = this.props.navigation;
+    const { CATEGORY, PICTURE_FILE } = this.props.issue;
+    const { ADDRESS, USER_POSITION, POI_LOCATION, POI_ADDRESS } = this.props.location;
+    const { description } = this.state
+
+    const storageUrl = await this.firebaseUpload()
+    console.log(storageUrl)
+
+    console.log('photoURL :', storageUrl);
+    let location
+    if (POI_LOCATION) {
+      location = {
+        longitude: POI_LOCATION.longitude,
+        latitude: POI_LOCATION.latitude,
+        address: POI_ADDRESS.formatted
+      }
+    }
+    else {
+      location = {
+        longitude: USER_POSITION.longitude,
+        latitude: USER_POSITION.latitude,
+        address: ADDRESS.formatted
+      }
+    }
+    const issue = {
+      imageUrls: [storageUrl],
+      location,
+      category: CATEGORY,
+      description
+    };
+    this.props.postIssue(issue);
+    this.props.clearPost()
+    navigate('Maps')
+  }
+
   getPictureLink = res => {
     const { navigate } = this.props.navigation;
     const storageService = firebase.storage();
@@ -146,8 +249,6 @@ class ReportIssueScreen extends React.Component {
           .child(`${id}`)
           .getDownloadURL()
           .then(photoURL => {
-            console.log(photoURL);
-            this.setState({ photoURL });
             const issue = {
               imageUrls: [photoURL],
               location,
@@ -162,11 +263,10 @@ class ReportIssueScreen extends React.Component {
     );
   };
   render() {
-    console.log(this.props.issue);
+
     const { PICTURE_FILE, CATEGORY } = this.props.issue;
     const { PICTURE_LOADER } = this.props.postIssue;
     const { ADDRESS, POI_ADDRESS } = this.props.location;
-    console.log(this.state.description);
     if (!PICTURE_FILE) {
       return (
         <View style={Styles.styleCamera}>
@@ -197,7 +297,7 @@ class ReportIssueScreen extends React.Component {
               </Text>
             </View>
 
-            <TextInput style={styleInput} value={this.state.description} onChange={this.handleChange} />
+            <TextInput style={styleInput} value={this.state.description} onChangeText={(description) => this.setState({ description })} />
             <View style={Styles.buttonsContainer}>
               <Button
                 style={Styles.button}
@@ -208,7 +308,7 @@ class ReportIssueScreen extends React.Component {
               />
               <Button
                 style={Styles.button}
-                onPress={this.submitIssue}
+                onPress={this.handleSubmitIssue}
                 title="SUBMIT"
                 color={Colors.primary}
                 accessibilityLabel="SUBMIT"

@@ -48,8 +48,8 @@ class SettingsScreen extends React.Component {
                 style={{ width: 200, height: 40 }}
                 value={RADIUS}
                 step={50}
-                minimumValue={0}
-                maximumValue={10000}
+                minimumValue={5}
+                maximumValue={100000}
                 minimumTrackTintColor="#000000"
                 maximumTrackTintColor="#ae2157"
               />

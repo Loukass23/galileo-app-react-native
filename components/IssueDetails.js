@@ -12,7 +12,8 @@ import { clearMarker } from '../redux/actions/issuesActions'
 import Colors from '../constants/Colors';
 
 
-function IssueDetails({ marker, clearMarker }) {
+const IssueDetails = ({ marker, clearMarker }) => {
+    console.log('marker :', marker);
     return (
         <View style={styles.container} >
             <ScrollView>
