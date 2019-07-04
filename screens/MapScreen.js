@@ -114,7 +114,8 @@ class MapScreen extends React.Component {
       },
       category: issue.category,
       description: issue.description,
-      image: issue.imageUrls
+      image: issue.imageUrls,
+      id: issue.id
     }));
     const cluster = getCluster(allCoords, viewRegion);
 
