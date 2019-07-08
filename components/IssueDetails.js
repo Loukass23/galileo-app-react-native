@@ -8,15 +8,22 @@ import {
     Text,
     Button
 } from 'react-native';
-import { clearMarker } from '../redux/actions/issuesActions'
+import { clearMarker, verifyIssue } from '../redux/actions/issuesActions'
 import Colors from '../constants/Colors';
 
 
-const IssueDetails = ({ marker, clearMarker }) => {
-    console.log('marker :', marker);
-    return (
-        <View style={styles.container} >
-            <ScrollView>
+class IssueDetails extends React.Component {
+
+    handleVerify = () => {
+        const issueID = this.props.marker.id
+        this.props.verifyIssue(issueID)
+    }
+    render() {
+        const { marker, clearMarker } = this.props
+        console.log('marker :', marker);
+        return (
+            <View style={styles.container} >
+                {/* <ScrollView style={styles.container}> */}
 
                 {marker.image && <Image
                     source={{ uri: marker.image[0] }}
@@ -28,7 +35,7 @@ const IssueDetails = ({ marker, clearMarker }) => {
                         {marker.category}</Text>
                     <Text style={styles.text}>{marker.description}</Text>
                 </View>
-                <View>
+                <View style={styles.buttonContainer}>
                     <Button
                         style={styles.button}
                         onPress={clearMarker}
@@ -38,22 +45,23 @@ const IssueDetails = ({ marker, clearMarker }) => {
                     />
                     <Button
                         style={styles.button}
-
+                        onPress={this.handleVerify}
                         title="Verify"
                         color="#841584"
                         accessibilityLabel="Verify"
                     />
                 </View>
-            </ScrollView>
-        </View>
-    )
+                {/* </ScrollView> */}
+            </View>
+        )
+    }
 }
-
 const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: Colors.background,
         alignItems: 'center',
+        justifyContent: 'space-evenly'
     },
     title: {
         fontSize: 20,
@@ -69,10 +77,14 @@ const styles = StyleSheet.create({
     view: {
 
     },
+    buttonContainer: {
+        flex: 1,
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'flex-end'
+    },
     button: {
-        height: 100,
-        width: 100,
-        margin: 10,
+        flex: .2,
         backgroundColor: Colors.primary,
     },
     image: { width: 400, height: 400 }
@@ -87,6 +99,8 @@ const mapStateToProp = (state) => {
 const mapDispatchToProps = (dispatch) => {
     return {
         clearMarker: () => dispatch(clearMarker()),
+        verifyIssue: issueID => dispatch(verifyIssue(issueID)),
+
     }
 }
 export default connect(mapStateToProp, mapDispatchToProps)(IssueDetails)

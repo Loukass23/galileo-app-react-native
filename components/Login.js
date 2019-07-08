@@ -6,6 +6,7 @@ import { connect } from 'react-redux'
 import { registerUser } from '../redux/actions/userActions'
 import Colors from '../constants/Colors';
 import { FontAwesome } from '@expo/vector-icons';
+import { googleOAuth, fbOAuth } from '../constants/config'
 
 import React from 'react';
 import {
@@ -17,13 +18,7 @@ class Login extends React.Component {
 
     _handleGoogleLogin = async () => {
         try {
-            const { type, user } = await Google.logInAsync({
-                androidStandaloneAppClientId: '<ANDROID_CLIENT_ID>',
-                iosStandaloneAppClientId: '<IOS_CLIENT_ID>',
-                androidClientId: '173460738439-q9p2nt1fii1s09va4rfuq58bogebbc28.apps.googleusercontent.com',
-                iosClientId: '173460738439-9su8rvl99luou2c98hi6jsv1n4chk7t0.apps.googleusercontent.com',
-                scopes: ['profile', 'email']
-            });
+            const { type, user } = await Google.logInAsync(googleOAuth);
 
             switch (type) {
                 case 'success': {
@@ -60,7 +55,7 @@ class Login extends React.Component {
     _handleFacebookLogin = async () => {
         try {
             const { type, token } = await Facebook.logInWithReadPermissionsAsync(
-                '468611403684854', // Replace with your own app id in standalone app
+                fbOAuth, 
                 { permissions: ['public_profile'] }
             );
             switch (type) {

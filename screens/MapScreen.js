@@ -81,6 +81,10 @@ class MapScreen extends React.Component {
     return (
       <MapView.Marker
         key={key}
+        style={{
+          width: 100,
+          height: 100,
+        }}
         image={markerImages[marker.category]}
         coordinate={{
           latitude: marker.geometry.coordinates[1],
@@ -101,12 +105,11 @@ class MapScreen extends React.Component {
       </MapView.Marker>
     );
   };
+
   render() {
     const { viewRegion, poi } = this.state;
     const { RADIUS, ISSUES, MARKER, ISSUES_LOADING, ERR } = this.props.issues
     const { USER_POSITION } = this.props.location
-    // const { navigate } = this.props.navigation;
-
 
     const allCoords = ISSUES.map(issue => ({
       geometry: {

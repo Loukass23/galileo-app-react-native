@@ -8,9 +8,11 @@ import {
     Image,
     Text,
     View,
+    ScrollView
 } from 'react-native'
 import { categories } from '../constants/Issues';
 import { setCategory } from '../redux/actions/postIssueActions'
+import Colors from '../constants/Colors';
 class IssueCategory extends React.Component {
     // constructor(props) {
 
@@ -26,21 +28,28 @@ class IssueCategory extends React.Component {
         return (
             <View style={styles.container}>
 
-                {categories.map(category => {
-                    return (
-                        <TouchableOpacity key={category.name} style={styles.startContainer} onPress={() => this.handleCategory(category.name)}>
-                            <Image
-                                width='100'
-                                source={category.image}
-                            />
-                            <Text>{category.name}</Text>
-                        </TouchableOpacity>
-                    )
-                })}
+                <ScrollView>
+                    <Text style={styles.text}> Please choose a category </Text>
+                    <View style={styles.catContainer}>
 
-                <View>
-                    <Text style={styles.issueHeading}> Please choose a category </Text>
-                </View>
+                        {categories.map(category => {
+                            return (
+                                <TouchableOpacity key={category.name} style={styles.categoryTouch} onPress={() => this.handleCategory(category.name)}>
+                                    <Image
+                                        style={{
+                                            width: 150,
+                                            height: 150,
+                                            resizeMode: 'contain',
+                                        }}
+                                        source={category.image}
+                                    />
+                                    <Text style={styles.text2}>{category.name}</Text>
+                                </TouchableOpacity>
+                            )
+                        })}
+
+                    </View>
+                </ScrollView>
             </View>
 
         )
@@ -49,6 +58,16 @@ class IssueCategory extends React.Component {
 
 const styles = StyleSheet.create({
     container: {
+        flex: 1,
+        justifyContent: 'center',
+        marginTop: 20
+    },
+    categoryTouch: {
+
+        justifyContent: 'space-around',
+        alignContent: 'center',
+    },
+    catContainer: {
         flexDirection: 'row',
         flexWrap: 'wrap',
         justifyContent: 'space-around',
@@ -65,21 +84,19 @@ const styles = StyleSheet.create({
         width: 100,
         margin: 10
     },
-    submitButton: {
-        width: 300,
-        height: 150,
-        marginTop: 100,
-        alignItems: 'center',
-        justifyContent: 'center',
-        backgroundColor: 'purple'
+
+    text: {
+        fontSize: 20,
+        lineHeight: 25,
+        textAlign: 'center',
+        color: Colors.primary
     },
-    issueHeading: {
-        fontSize: 24,
-        marginTop: 30
+    text2: {
+        fontSize: 15,
+        lineHeight: 20,
+        textAlign: 'center',
+        color: Colors.secondary
     },
-    submitText: {
-        fontSize: 48
-    }
 
 })
 

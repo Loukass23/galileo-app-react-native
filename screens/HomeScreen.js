@@ -142,15 +142,16 @@ class HomeScreen extends React.Component {
 
                                     </View>
                                 }
+
                                 <View style={styles.helpContainer}>
                                     <Text style={styles.title2}> Accuracy matters!</Text>
                                     {galileoEnabled ?
                                         <Text style={styles.getStartedText}>
                                             Hooray, your current device {device} has a Galileo chipset!
-                    </Text> :
+                                    </Text> :
                                         <Text style={styles.getStartedText}>
                                             Unfortunately your current device {device} does not have Galileo chipset
-                    </Text>
+                                    </Text>
                                     }
 
                                     <TouchableOpacity onPress={handleHelpPress} style={styles.helpLink}>

@@ -24,7 +24,7 @@ export const categories = [
         image: require('../assets/images/Marker4.png')
     },
     {
-        name: "Test",
+        name: "Category5",
         image: require('../assets/images/Marker5.png')
     },
 
