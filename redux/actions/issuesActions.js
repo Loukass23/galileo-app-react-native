@@ -7,7 +7,8 @@ import {
   GET_ISSUES,
   ISSUES_LOADING,
   GET_ISSUES_ERROR,
-  CLEAR_ERROR
+  CLEAR_ERROR,
+  NO_ISSUE_LOCATION
 } from './actionTypes'
 
 
@@ -59,26 +60,32 @@ export const getIssues = () => {
     console.log(URL);
 
     //const response = await fetch(URL
+    if (region && token) {
+      return axios.get(URL, { headers: { "Authorization": `Bearer ${token}` } })
+        .then((res) => {
+          console.log(res.data);
+          dispatch({
+            type: GET_ISSUES,
+            payload: res.data
+          })
+          setTimeout(() => dispatch(clearFetchMessage()), 10000);
 
-    return axios.get(URL, { headers: { "Authorization": `Bearer ${token}` } })
-      .then((res) => {
-        console.log(res.data);
-        dispatch({
-          type: GET_ISSUES,
-          payload: res.data
+        }).catch((err) => {
+          console.log(err)
+          dispatch({
+            type: GET_ISSUES_ERROR,
+            payload: err
+          })
         })
-        setTimeout(() => dispatch(clearFetchMessage()), 10000);
 
-      }).catch((err) => {
-        console.log(err)
-        dispatch({
-          type: GET_ISSUES_ERROR,
-          payload: err
-        })
+    }
+    else {
+      dispatch({
+        type: NO_ISSUE_LOCATION,
+
       })
-
+    }
   }
-
 };
 
 export const verifyIssue = issueID => {
@@ -135,6 +142,14 @@ export const postIssue = issue => {
       },
       body
     });
+    if (response.ok) {
+      marker = await response.json()
+      console.log('marker :', marker);
+
+      dispatch(getIssues())
+      dispatch(setMarker(marker))
+
+    }
   };
 };
 

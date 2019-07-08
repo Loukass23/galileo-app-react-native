@@ -1,11 +1,11 @@
 const initState = {
-    USER_POSITION:
-    {
-        latitude: 1,
-        longitude: 1,
-        latitudeDelta: 1,
-        longitudeDelta: 1
-    },
+    USER_POSITION: null,
+    // {
+    //     latitude: 1,
+    //     longitude: 1,
+    //     latitudeDelta: 1,
+    //     longitudeDelta: 1
+    // },
     STATUS: "",
     ADDRESS: null,
     POI_LOCATION: null,

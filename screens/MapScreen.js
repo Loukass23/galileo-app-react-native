@@ -34,7 +34,7 @@ class MapScreen extends React.Component {
 
   componentDidMount() {
 
-    this.props.getIssues()
+    // this.props.getIssues()
   }
 
 
@@ -117,7 +117,7 @@ class MapScreen extends React.Component {
       },
       category: issue.category,
       description: issue.description,
-      image: issue.imageUrls,
+      imageUrls: issue.imageUrls,
       id: issue.id
     }));
     const cluster = getCluster(allCoords, viewRegion);

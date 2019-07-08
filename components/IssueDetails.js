@@ -25,8 +25,8 @@ class IssueDetails extends React.Component {
             <View style={styles.container} >
                 {/* <ScrollView style={styles.container}> */}
 
-                {marker.image && <Image
-                    source={{ uri: marker.image[0] }}
+                {marker.imageUrls && <Image
+                    source={{ uri: marker.imageUrls[0] }}
                     style={styles.image}
                 />}
 

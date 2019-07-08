@@ -47,7 +47,7 @@ const initState = {
     },
     RADIUS: 10000,
     MARKER: null,
-    
+
 
 }
 
@@ -107,6 +107,11 @@ const issuesReducer = (state = initState, action) => {
             return {
                 ...state,
                 ERR: null
+            }
+        case 'NO_ISSUE_LOCATION':
+            return {
+                ...state,
+                ERR: 'Waiting for location'
             }
         case 'VERIFY_ISSUE':
             console.log('Issue verified')
