@@ -18,10 +18,6 @@ import { MonoText } from '../components/StyledText';
 class SettingsScreen extends React.Component {
   constructor(props) {
     super(props);
-    // this.state = {
-    //   radius: 100
-    // };
-
   }
   componentWillUnmount() {
 

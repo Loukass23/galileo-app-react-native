@@ -47,6 +47,7 @@ const initState = {
     },
     RADIUS: 10000,
     MARKER: null,
+    
 
 }
 
@@ -106,6 +107,12 @@ const issuesReducer = (state = initState, action) => {
             return {
                 ...state,
                 ERR: null
+            }
+        case 'VERIFY_ISSUE':
+            console.log('Issue verified')
+            return {
+                ...state,
+
             }
         default:
             return state

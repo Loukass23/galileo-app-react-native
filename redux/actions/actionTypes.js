@@ -7,6 +7,7 @@ export const GET_ISSUES = 'GET_ISSUES'
 export const ISSUES_LOADING = 'ISSUES_LOADING'
 export const GET_ISSUES_ERROR = 'GET_ISSUES_ERROR'
 export const CLEAR_ERROR = 'CLEAR_ERROR'
+export const VERIFY_ISSUE = 'VERIFY_ISSUE'
 
 
 

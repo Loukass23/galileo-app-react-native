@@ -1,16 +1,14 @@
 import axios from 'axios';
-import { SET_RADIUS } from './actionTypes'
-import { SET_MARKER } from './actionTypes'
-import { CLEAR_MARKER } from './actionTypes'
-import { GET_ISSUES } from './actionTypes'
-import { ISSUES_LOADING } from './actionTypes'
-import { GET_ISSUES_ERROR } from './actionTypes'
-import { CLEAR_ERROR } from './actionTypes'
-
-
-
-
-
+import {
+  SET_RADIUS,
+  VERIFY_ISSUE,
+  SET_MARKER,
+  CLEAR_MARKER,
+  GET_ISSUES,
+  ISSUES_LOADING,
+  GET_ISSUES_ERROR,
+  CLEAR_ERROR
+} from './actionTypes'
 
 
 export const setRadius = (radius) => {
@@ -22,6 +20,7 @@ export const setRadius = (radius) => {
 
   }
 }
+
 export const setMarker = (marker) => {
   return (dispatch) => {
     dispatch({
@@ -39,14 +38,14 @@ export const clearMarker = () => {
     });
   };
 };
-//Cities loading
 export const getIssuesLoading = () => {
   return {
     type: ISSUES_LOADING
   };
 };
+
 export const getIssues = () => {
-  return (dispatch, getState) => {
+  return async (dispatch, getState) => {
     dispatch(getIssuesLoading());
 
     const state = getState();
@@ -55,11 +54,12 @@ export const getIssues = () => {
 
     //const radius = state.issues.RADIUS  //radius in m
     const radius = state.issues.RADIUS / 1000; //radius in km
-
-
     const URL = `http://kietz.herokuapp.com/api/issues?latitude=${region.latitude}
         &longitude=${region.longitude}&page=0&radius=${radius}`
     console.log(URL);
+
+    //const response = await fetch(URL
+
     return axios.get(URL, { headers: { "Authorization": `Bearer ${token}` } })
       .then((res) => {
         console.log(res.data);
@@ -81,7 +81,31 @@ export const getIssues = () => {
 
 };
 
+export const verifyIssue = issueID => {
+  return async (dispatch, getState) => {
 
+    const state = getState();
+    const { token } = state.user.USER;
+
+    const URL = `http://kietz.herokuapp.com/api/issues/${issueID}/verify`
+    const body = "{\n    \"category\": \"\",\n    \"description\": \"\",\n    \"imageUrls\": [\"\"],\n    \"latitude\":\"\",\n    \"longitude\": \"\"\n}"
+    const response = await fetch(URL, {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`
+      },
+      body
+    });
+    console.log('response :', response);
+    if (response.ok) {
+      dispatch({
+        type: VERIFY_ISSUE
+      })
+    }
+  };
+};
 
 export const postIssue = issue => {
   return async (dispatch, getState) => {
@@ -89,7 +113,7 @@ export const postIssue = issue => {
     const state = getState();
     const { token } = state.user.USER;
 
-    const string2 =
+    const body =
       '{\n    "category": "' +
       issue.category +
       '",\n    "description": "' +
@@ -102,14 +126,14 @@ export const postIssue = issue => {
       issue.location.longitude +
       "\n}";
 
-    const rawResponse = await fetch(URL, {
+    const response = await fetch(URL, {
       method: "POST",
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`
       },
-      body: string2
+      body
     });
   };
 };
