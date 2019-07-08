@@ -14,16 +14,20 @@ import { categories } from '../constants/Issues';
 import { setCategory } from '../redux/actions/postIssueActions'
 import Colors from '../constants/Colors';
 class IssueCategory extends React.Component {
+    // constructor(props) {
 
     handleCategory(category) {
         this.props.setCategory(category)
     }
+
+
     onPressButton() {
         Alert.alert('You tapped the button!');
     }
     render() {
         return (
             <View style={styles.container}>
+
                 <ScrollView>
                     <Text style={styles.text}> Please choose a category </Text>
                     <View style={styles.catContainer}>
@@ -47,6 +51,7 @@ class IssueCategory extends React.Component {
                     </View>
                 </ScrollView>
             </View>
+
         )
     }
 }
@@ -79,6 +84,7 @@ const styles = StyleSheet.create({
         width: 100,
         margin: 10
     },
+
     text: {
         fontSize: 20,
         lineHeight: 25,
@@ -91,6 +97,7 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         color: Colors.secondary
     },
+
 })
 
 
@@ -106,3 +113,4 @@ const mapDispatchToProps = dispatch => {
 };
 
 export default connect(mapStateToProp, mapDispatchToProps)(IssueCategory);
+
