@@ -4,6 +4,9 @@ import ConfigDetails from '../components/ConfigDetails';
 import { connect } from 'react-redux'
 import { setRadius, getIssues } from '../redux/actions/issuesActions'
 import { logout } from '../redux/actions/userActions'
+import { categories } from '../constants/Issues';
+import CheckboxFormX from 'react-native-checkbox-form';
+
 import {
   ScrollView,
   View,
@@ -27,8 +30,19 @@ class SettingsScreen extends React.Component {
     this.props.getIssues()
 
   }
+  _onSelect = (item) => {
+    console.log('item', item)
+  }
   render() {
     const { RADIUS } = this.props.issues
+    const { username } = this.props.user.USER
+    const mockData = categories.map(category => {
+      return {
+        label: category.name,
+        RNchecked: true
+      }
+    })
+
 
     return (
       <React.Fragment>
@@ -37,23 +51,39 @@ class SettingsScreen extends React.Component {
           <ScrollView
             style={styles.scrollview}
             contentContainerStyle={styles.contentContainer}>
+            <View style={styles.welcomeContainer} >
+              <CheckboxFormX
+                iconColor={Colors.primary}
+                style={{ width: '90%', height: 40 }}
+                dataSource={mockData}
+                itemShowKey="label"
+                itemCheckedKey="RNchecked"
+                iconSize={16}
+                formHorizontal={true}
+                labelHorizontal={false}
+                onChecked={(item) => this._onSelect(item)}
+              />
+            </View>
             <View style={styles.welcomeContainer}>
               <MonoText>Radius: {RADIUS}m</MonoText>
               <Slider
                 onValueChange={this.handleRadiusChange}
-                style={{ width: 200, height: 40 }}
+                style={{ width: '90%', height: 40 }}
                 value={RADIUS}
                 step={50}
                 minimumValue={5}
-                maximumValue={100000}
+                maximumValue={10000}
                 minimumTrackTintColor="#000000"
-                maximumTrackTintColor="#ae2157"
+                maximumTrackTintColor={Colors.primary}
               />
 
             </View>
           </ScrollView>
+
           <View style={styles.footer}>
             <View style={styles.containerRow}  >
+              <Text >Not {username} ?</Text>
+
               <Button
                 style={styles.button3}
                 onPress={this.props.logout}
@@ -71,7 +101,8 @@ class SettingsScreen extends React.Component {
 }
 
 SettingsScreen.navigationOptions = {
-  title: 'Settings',
+  // title: 'Settings',
+  header: null
 };
 
 const styles = StyleSheet.create({
@@ -90,7 +121,7 @@ const styles = StyleSheet.create({
   },
   footer: {
     flex: .15,
-    marginBottom: 1,
+    marginBottom: 5,
   },
   developmentModeText: {
     marginBottom: 20,
@@ -106,7 +137,7 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center'
+    justifyContent: 'space-evenly'
   },
   button3: {
     flex: .3,
@@ -123,6 +154,7 @@ const styles = StyleSheet.create({
 const mapStateToProp = (state) => {
   return {
     issues: state.issues,
+    user: state.user,
 
   }
 }

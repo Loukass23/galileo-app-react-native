@@ -8,6 +8,7 @@ import {
     SET_POI_LOCATION,
     SET_POI_ADDRESS
 } from './actionTypes'
+import { getIssues } from './issuesActions';
 
 
 
@@ -37,10 +38,13 @@ export function getLocation() {
                 longitudeDelta: 1
             };
             dispatch(getAddress(region, 'user'));
+
             dispatch({
                 type: SET_USER_LOCATION,
                 payload: region
             })
+
+            dispatch(getIssues())
         }
 
     }
