@@ -51,7 +51,7 @@ class SettingsScreen extends React.Component {
           <ScrollView
             style={styles.scrollview}
             contentContainerStyle={styles.contentContainer}>
-            <View style={styles.welcomeContainer} >
+            {/* <View style={styles.welcomeContainer} >
               <CheckboxFormX
                 iconColor={Colors.primary}
                 style={{ width: '90%', height: 40 }}
@@ -63,7 +63,7 @@ class SettingsScreen extends React.Component {
                 labelHorizontal={false}
                 onChecked={(item) => this._onSelect(item)}
               />
-            </View>
+            </View> */}
             <View style={styles.welcomeContainer}>
               <MonoText>Radius: {RADIUS}m</MonoText>
               <Slider

@@ -57,7 +57,7 @@ class App extends React.Component {
   async _cacheResourcesAsync() {
     await Promise.all([
       Asset.loadAsync([
-        require('./assets/images/Kietz_Intro.mp4'),
+        require('./assets/images/introAnimationLQ.mp4'),
         require('./assets/images/logo.png'),
       ]),
       Font.loadAsync({

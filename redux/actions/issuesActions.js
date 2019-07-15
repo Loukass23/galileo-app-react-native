@@ -51,7 +51,7 @@ export const getIssues = () => {
 
     const state = getState();
     const region = state.location.USER_POSITION;
-    const token = state.user.USER.token;
+    const token = await state.user.USER.token;
 
     //const radius = state.issues.RADIUS  //radius in m
     const radius = state.issues.RADIUS / 1000; //radius in km

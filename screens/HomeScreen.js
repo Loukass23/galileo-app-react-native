@@ -74,6 +74,7 @@ class HomeScreen extends React.Component {
                 style={styles.highlight}
                 source={require('../assets/images/logo.png')}
             />
+            <Text>Click here to start exploring issues</Text>
         </TouchableOpacity>
     )
     renderloginPlaceholder = (
@@ -81,7 +82,7 @@ class HomeScreen extends React.Component {
         <View style={styles.videoContainer} >
 
             <Video
-                source={require('../assets/images/Kietz_Intro.mp4')}
+                source={require('../assets/images/introAnimationLQ.mp4')}
                 rate={1.0}
 
                 isMuted={true}
